@@ -1,0 +1,524 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		620372501C66930300352617 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6203724F1C66930300352617 /* AppDelegate.swift */; };
+		620372521C66930300352617 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372511C66930300352617 /* ViewController.swift */; };
+		620372551C66930300352617 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 620372531C66930300352617 /* Main.storyboard */; };
+		620372581C66930300352617 /* DoctorBeaver.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 620372561C66930300352617 /* DoctorBeaver.xcdatamodeld */; };
+		6203725A1C66930300352617 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 620372591C66930300352617 /* Assets.xcassets */; };
+		6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6203725B1C66930300352617 /* LaunchScreen.storyboard */; };
+		620372681C66930400352617 /* DoctorBeaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372671C66930400352617 /* DoctorBeaverTests.swift */; };
+		620372731C66930400352617 /* DoctorBeaverUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372721C66930400352617 /* DoctorBeaverUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		620372641C66930400352617 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 620372441C66930300352617 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6203724B1C66930300352617;
+			remoteInfo = DoctorBeaver;
+		};
+		6203726F1C66930400352617 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 620372441C66930300352617 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6203724B1C66930300352617;
+			remoteInfo = DoctorBeaver;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		6203724C1C66930300352617 /* DoctorBeaver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoctorBeaver.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6203724F1C66930300352617 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		620372511C66930300352617 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		620372541C66930300352617 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		620372571C66930300352617 /* DoctorBeaver.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DoctorBeaver.xcdatamodel; sourceTree = "<group>"; };
+		620372591C66930300352617 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6203725C1C66930300352617 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6203725E1C66930300352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		620372631C66930400352617 /* DoctorBeaverTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoctorBeaverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		620372671C66930400352617 /* DoctorBeaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorBeaverTests.swift; sourceTree = "<group>"; };
+		620372691C66930400352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6203726E1C66930400352617 /* DoctorBeaverUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoctorBeaverUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		620372721C66930400352617 /* DoctorBeaverUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorBeaverUITests.swift; sourceTree = "<group>"; };
+		620372741C66930400352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		620372491C66930300352617 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		620372601C66930400352617 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6203726B1C66930400352617 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		620372431C66930300352617 = {
+			isa = PBXGroup;
+			children = (
+				6203724E1C66930300352617 /* DoctorBeaver */,
+				620372661C66930400352617 /* DoctorBeaverTests */,
+				620372711C66930400352617 /* DoctorBeaverUITests */,
+				6203724D1C66930300352617 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6203724D1C66930300352617 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6203724C1C66930300352617 /* DoctorBeaver.app */,
+				620372631C66930400352617 /* DoctorBeaverTests.xctest */,
+				6203726E1C66930400352617 /* DoctorBeaverUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6203724E1C66930300352617 /* DoctorBeaver */ = {
+			isa = PBXGroup;
+			children = (
+				6203724F1C66930300352617 /* AppDelegate.swift */,
+				620372511C66930300352617 /* ViewController.swift */,
+				620372531C66930300352617 /* Main.storyboard */,
+				620372591C66930300352617 /* Assets.xcassets */,
+				6203725B1C66930300352617 /* LaunchScreen.storyboard */,
+				6203725E1C66930300352617 /* Info.plist */,
+				620372561C66930300352617 /* DoctorBeaver.xcdatamodeld */,
+			);
+			path = DoctorBeaver;
+			sourceTree = "<group>";
+		};
+		620372661C66930400352617 /* DoctorBeaverTests */ = {
+			isa = PBXGroup;
+			children = (
+				620372671C66930400352617 /* DoctorBeaverTests.swift */,
+				620372691C66930400352617 /* Info.plist */,
+			);
+			path = DoctorBeaverTests;
+			sourceTree = "<group>";
+		};
+		620372711C66930400352617 /* DoctorBeaverUITests */ = {
+			isa = PBXGroup;
+			children = (
+				620372721C66930400352617 /* DoctorBeaverUITests.swift */,
+				620372741C66930400352617 /* Info.plist */,
+			);
+			path = DoctorBeaverUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6203724B1C66930300352617 /* DoctorBeaver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 620372771C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaver" */;
+			buildPhases = (
+				620372481C66930300352617 /* Sources */,
+				620372491C66930300352617 /* Frameworks */,
+				6203724A1C66930300352617 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DoctorBeaver;
+			productName = DoctorBeaver;
+			productReference = 6203724C1C66930300352617 /* DoctorBeaver.app */;
+			productType = "com.apple.product-type.application";
+		};
+		620372621C66930400352617 /* DoctorBeaverTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6203727A1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverTests" */;
+			buildPhases = (
+				6203725F1C66930400352617 /* Sources */,
+				620372601C66930400352617 /* Frameworks */,
+				620372611C66930400352617 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				620372651C66930400352617 /* PBXTargetDependency */,
+			);
+			name = DoctorBeaverTests;
+			productName = DoctorBeaverTests;
+			productReference = 620372631C66930400352617 /* DoctorBeaverTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		6203726D1C66930400352617 /* DoctorBeaverUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6203727D1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverUITests" */;
+			buildPhases = (
+				6203726A1C66930400352617 /* Sources */,
+				6203726B1C66930400352617 /* Frameworks */,
+				6203726C1C66930400352617 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				620372701C66930400352617 /* PBXTargetDependency */,
+			);
+			name = DoctorBeaverUITests;
+			productName = DoctorBeaverUITests;
+			productReference = 6203726E1C66930400352617 /* DoctorBeaverUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		620372441C66930300352617 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Anastasia Stepanova-Kolupakhina";
+				TargetAttributes = {
+					6203724B1C66930300352617 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					620372621C66930400352617 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 6203724B1C66930300352617;
+					};
+					6203726D1C66930400352617 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 6203724B1C66930300352617;
+					};
+				};
+			};
+			buildConfigurationList = 620372471C66930300352617 /* Build configuration list for PBXProject "DoctorBeaver" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 620372431C66930300352617;
+			productRefGroup = 6203724D1C66930300352617 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6203724B1C66930300352617 /* DoctorBeaver */,
+				620372621C66930400352617 /* DoctorBeaverTests */,
+				6203726D1C66930400352617 /* DoctorBeaverUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6203724A1C66930300352617 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */,
+				6203725A1C66930300352617 /* Assets.xcassets in Resources */,
+				620372551C66930300352617 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		620372611C66930400352617 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6203726C1C66930400352617 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		620372481C66930300352617 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				620372521C66930300352617 /* ViewController.swift in Sources */,
+				620372581C66930300352617 /* DoctorBeaver.xcdatamodeld in Sources */,
+				620372501C66930300352617 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6203725F1C66930400352617 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				620372681C66930400352617 /* DoctorBeaverTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6203726A1C66930400352617 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				620372731C66930400352617 /* DoctorBeaverUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		620372651C66930400352617 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6203724B1C66930300352617 /* DoctorBeaver */;
+			targetProxy = 620372641C66930400352617 /* PBXContainerItemProxy */;
+		};
+		620372701C66930400352617 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6203724B1C66930300352617 /* DoctorBeaver */;
+			targetProxy = 6203726F1C66930400352617 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		620372531C66930300352617 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				620372541C66930300352617 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		6203725B1C66930300352617 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6203725C1C66930300352617 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		620372751C66930400352617 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		620372761C66930400352617 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		620372781C66930400352617 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DoctorBeaver/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaver;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		620372791C66930400352617 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DoctorBeaver/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaver;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		6203727B1C66930400352617 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = DoctorBeaverTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DoctorBeaver.app/DoctorBeaver";
+			};
+			name = Debug;
+		};
+		6203727C1C66930400352617 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = DoctorBeaverTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DoctorBeaver.app/DoctorBeaver";
+			};
+			name = Release;
+		};
+		6203727E1C66930400352617 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = DoctorBeaverUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DoctorBeaver;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		6203727F1C66930400352617 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = DoctorBeaverUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DoctorBeaver;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		620372471C66930300352617 /* Build configuration list for PBXProject "DoctorBeaver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				620372751C66930400352617 /* Debug */,
+				620372761C66930400352617 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		620372771C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				620372781C66930400352617 /* Debug */,
+				620372791C66930400352617 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6203727A1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6203727B1C66930400352617 /* Debug */,
+				6203727C1C66930400352617 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6203727D1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6203727E1C66930400352617 /* Debug */,
+				6203727F1C66930400352617 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		620372561C66930300352617 /* DoctorBeaver.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				620372571C66930300352617 /* DoctorBeaver.xcdatamodel */,
+			);
+			currentVersion = 620372571C66930300352617 /* DoctorBeaver.xcdatamodel */;
+			path = DoctorBeaver.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 620372441C66930300352617 /* Project object */;
+}
