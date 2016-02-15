@@ -1,3 +1,0 @@
-# DoctorBeaver 
-
-from local
