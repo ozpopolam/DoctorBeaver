@@ -8,13 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		620372501C66930300352617 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6203724F1C66930300352617 /* AppDelegate.swift */; };
-		620372521C66930300352617 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372511C66930300352617 /* ViewController.swift */; };
-		620372551C66930300352617 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 620372531C66930300352617 /* Main.storyboard */; };
 		620372581C66930300352617 /* DoctorBeaver.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 620372561C66930300352617 /* DoctorBeaver.xcdatamodeld */; };
-		6203725A1C66930300352617 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 620372591C66930300352617 /* Assets.xcassets */; };
 		6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6203725B1C66930300352617 /* LaunchScreen.storyboard */; };
 		620372681C66930400352617 /* DoctorBeaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372671C66930400352617 /* DoctorBeaverTests.swift */; };
 		620372731C66930400352617 /* DoctorBeaverUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372721C66930400352617 /* DoctorBeaverUITests.swift */; };
+		620372811C66932400352617 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372801C66932400352617 /* Pet.swift */; };
+		620372891C66CE8A00352617 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372881C66CE8A00352617 /* ScheduleViewController.swift */; };
+		6203728C1C68137000352617 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6203728B1C68137000352617 /* Assets.xcassets */; };
+		620372901C69023900352617 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6203728F1C69023900352617 /* TabBarController.swift */; };
+		620372D11C6944CC00352617 /* ScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372D01C6944CC00352617 /* ScheduleTableViewController.swift */; };
+		620372D81C6A621000352617 /* ManyPetsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372D71C6A621000352617 /* ManyPetsCell.swift */; };
+		620372DA1C6AAC6800352617 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372D91C6AAC6800352617 /* HeaderCell.swift */; };
+		620373191C6BE98E00352617 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620373181C6BE98E00352617 /* HexColor.swift */; };
+		62A83B331C6CE13000A8DE8D /* VisualConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B321C6CE13000A8DE8D /* VisualConfiguration.swift */; };
+		62A83B351C6D052A00A8DE8D /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B341C6D052A00A8DE8D /* FilterViewController.swift */; };
+		62A83B8C1C6D278800A8DE8D /* FakeNavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B8A1C6D278800A8DE8D /* FakeNavigationBarView.swift */; };
+		62A83B8D1C6D278800A8DE8D /* FakeNavigationBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62A83B8B1C6D278800A8DE8D /* FakeNavigationBarView.xib */; };
+		62A83B8F1C6D287E00A8DE8D /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B8E1C6D287E00A8DE8D /* Image.swift */; };
+		62C587BB1C6E9F9100FA3968 /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C587BA1C6E9F9100FA3968 /* FilterCell.swift */; };
+		62C587BE1C6EA88900FA3968 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62C587BC1C6EA88900FA3968 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,10 +49,7 @@
 /* Begin PBXFileReference section */
 		6203724C1C66930300352617 /* DoctorBeaver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoctorBeaver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6203724F1C66930300352617 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		620372511C66930300352617 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		620372541C66930300352617 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		620372571C66930300352617 /* DoctorBeaver.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DoctorBeaver.xcdatamodel; sourceTree = "<group>"; };
-		620372591C66930300352617 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6203725C1C66930300352617 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6203725E1C66930300352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		620372631C66930400352617 /* DoctorBeaverTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoctorBeaverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,6 +58,21 @@
 		6203726E1C66930400352617 /* DoctorBeaverUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoctorBeaverUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		620372721C66930400352617 /* DoctorBeaverUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorBeaverUITests.swift; sourceTree = "<group>"; };
 		620372741C66930400352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		620372801C66932400352617 /* Pet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
+		620372881C66CE8A00352617 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		6203728B1C68137000352617 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6203728F1C69023900352617 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		620372D01C6944CC00352617 /* ScheduleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewController.swift; sourceTree = "<group>"; };
+		620372D71C6A621000352617 /* ManyPetsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManyPetsCell.swift; sourceTree = "<group>"; };
+		620372D91C6AAC6800352617 /* HeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
+		620373181C6BE98E00352617 /* HexColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
+		62A83B321C6CE13000A8DE8D /* VisualConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualConfiguration.swift; sourceTree = "<group>"; };
+		62A83B341C6D052A00A8DE8D /* FilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		62A83B8A1C6D278800A8DE8D /* FakeNavigationBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FakeNavigationBarView.swift; path = ../../myView/myView/FakeNavigationBarView.swift; sourceTree = "<group>"; };
+		62A83B8B1C6D278800A8DE8D /* FakeNavigationBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FakeNavigationBarView.xib; path = ../../myView/myView/FakeNavigationBarView.xib; sourceTree = "<group>"; };
+		62A83B8E1C6D287E00A8DE8D /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		62C587BA1C6E9F9100FA3968 /* FilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
+		62C587BD1C6EA88900FA3968 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = DoctorBeaver/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +103,7 @@
 		620372431C66930300352617 = {
 			isa = PBXGroup;
 			children = (
+				62C587BC1C6EA88900FA3968 /* Main.storyboard */,
 				6203724E1C66930300352617 /* DoctorBeaver */,
 				620372661C66930400352617 /* DoctorBeaverTests */,
 				620372711C66930400352617 /* DoctorBeaverUITests */,
@@ -99,13 +124,14 @@
 		6203724E1C66930300352617 /* DoctorBeaver */ = {
 			isa = PBXGroup;
 			children = (
-				6203724F1C66930300352617 /* AppDelegate.swift */,
-				620372511C66930300352617 /* ViewController.swift */,
-				620372531C66930300352617 /* Main.storyboard */,
-				620372591C66930300352617 /* Assets.xcassets */,
+				620372D61C6A61DD00352617 /* Data */,
+				620372D41C6A61AF00352617 /* Custom views */,
+				620372D51C6A61C600352617 /* View controllers */,
 				6203725B1C66930300352617 /* LaunchScreen.storyboard */,
+				6203724F1C66930300352617 /* AppDelegate.swift */,
 				6203725E1C66930300352617 /* Info.plist */,
 				620372561C66930300352617 /* DoctorBeaver.xcdatamodeld */,
+				6203728B1C68137000352617 /* Assets.xcassets */,
 			);
 			path = DoctorBeaver;
 			sourceTree = "<group>";
@@ -126,6 +152,48 @@
 				620372741C66930400352617 /* Info.plist */,
 			);
 			path = DoctorBeaverUITests;
+			sourceTree = "<group>";
+		};
+		620372D41C6A61AF00352617 /* Custom views */ = {
+			isa = PBXGroup;
+			children = (
+				62A83B901C6D289D00A8DE8D /* Custom controls */,
+				620372D91C6AAC6800352617 /* HeaderCell.swift */,
+				620372D71C6A621000352617 /* ManyPetsCell.swift */,
+				62C587BA1C6E9F9100FA3968 /* FilterCell.swift */,
+			);
+			name = "Custom views";
+			sourceTree = "<group>";
+		};
+		620372D51C6A61C600352617 /* View controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6203728F1C69023900352617 /* TabBarController.swift */,
+				620372881C66CE8A00352617 /* ScheduleViewController.swift */,
+				620372D01C6944CC00352617 /* ScheduleTableViewController.swift */,
+				62A83B341C6D052A00A8DE8D /* FilterViewController.swift */,
+			);
+			name = "View controllers";
+			sourceTree = "<group>";
+		};
+		620372D61C6A61DD00352617 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				620372801C66932400352617 /* Pet.swift */,
+				620373181C6BE98E00352617 /* HexColor.swift */,
+				62A83B321C6CE13000A8DE8D /* VisualConfiguration.swift */,
+				62A83B8E1C6D287E00A8DE8D /* Image.swift */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		62A83B901C6D289D00A8DE8D /* Custom controls */ = {
+			isa = PBXGroup;
+			children = (
+				62A83B8A1C6D278800A8DE8D /* FakeNavigationBarView.swift */,
+				62A83B8B1C6D278800A8DE8D /* FakeNavigationBarView.xib */,
+			);
+			name = "Custom controls";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,9 +300,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62C587BE1C6EA88900FA3968 /* Main.storyboard in Resources */,
+				6203728C1C68137000352617 /* Assets.xcassets in Resources */,
+				62A83B8D1C6D278800A8DE8D /* FakeNavigationBarView.xib in Resources */,
 				6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */,
-				6203725A1C66930300352617 /* Assets.xcassets in Resources */,
-				620372551C66930300352617 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,8 +328,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				620372521C66930300352617 /* ViewController.swift in Sources */,
+				620372811C66932400352617 /* Pet.swift in Sources */,
+				620372D11C6944CC00352617 /* ScheduleTableViewController.swift in Sources */,
+				620372D81C6A621000352617 /* ManyPetsCell.swift in Sources */,
+				62C587BB1C6E9F9100FA3968 /* FilterCell.swift in Sources */,
 				620372581C66930300352617 /* DoctorBeaver.xcdatamodeld in Sources */,
+				62A83B8C1C6D278800A8DE8D /* FakeNavigationBarView.swift in Sources */,
+				620372DA1C6AAC6800352617 /* HeaderCell.swift in Sources */,
+				62A83B8F1C6D287E00A8DE8D /* Image.swift in Sources */,
+				62A83B351C6D052A00A8DE8D /* FilterViewController.swift in Sources */,
+				62A83B331C6CE13000A8DE8D /* VisualConfiguration.swift in Sources */,
+				620372901C69023900352617 /* TabBarController.swift in Sources */,
+				620372891C66CE8A00352617 /* ScheduleViewController.swift in Sources */,
+				620373191C6BE98E00352617 /* HexColor.swift in Sources */,
 				620372501C66930300352617 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,20 +377,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		620372531C66930300352617 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				620372541C66930300352617 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6203725B1C66930300352617 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				6203725C1C66930300352617 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		62C587BC1C6EA88900FA3968 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				62C587BD1C6EA88900FA3968 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -488,6 +568,7 @@
 				620372791C66930400352617 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6203727A1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverTests" */ = {
 			isa = XCConfigurationList;
@@ -496,6 +577,7 @@
 				6203727C1C66930400352617 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6203727D1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverUITests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +586,7 @@
 				6203727F1C66930400352617 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
