@@ -1,4 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
+    <entity name="Pet" representedClassName=".Pet" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="selected" attributeType="Boolean" syncable="YES"/>
+        <relationship name="tasks" toMany="YES" deletionRule="Cascade" destinationEntity="Task" inverseName="pet" inverseEntity="Task" syncable="YES"/>
+    </entity>
+    <entity name="Realization" representedClassName=".Realization" syncable="YES">
+        <attribute name="date" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="done" attributeType="Transformable" syncable="YES"/>
+        <relationship name="task" maxCount="1" deletionRule="Nullify" destinationEntity="Task" inverseName="realizations" inverseEntity="Task" syncable="YES"/>
+    </entity>
+    <entity name="Task" representedClassName=".Task" syncable="YES">
+        <attribute name="comment" attributeType="String" syncable="YES"/>
+        <attribute name="doseForTimes" attributeType="Transformable" syncable="YES"/>
+        <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="endDaysOrTimes" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="frequency" attributeType="Transformable" syncable="YES"/>
+        <attribute name="minutesForTimes" attributeType="Transformable" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="specialFeature" attributeType="String" syncable="YES"/>
+        <attribute name="startDate" attributeType="Date" syncable="YES"/>
+        <attribute name="timesPerDay" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="typeId" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="pet" maxCount="1" deletionRule="Nullify" destinationEntity="Pet" inverseName="tasks" inverseEntity="Pet" syncable="YES"/>
+        <relationship name="realizations" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Realization" inverseName="task" inverseEntity="Realization" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Pet" positionX="-297" positionY="-18" width="128" height="120"/>
+        <element name="Realization" positionX="106" positionY="171" width="128" height="90"/>
+        <element name="Task" positionX="-81" positionY="18" width="128" height="240"/>
+    </elements>
 </model>

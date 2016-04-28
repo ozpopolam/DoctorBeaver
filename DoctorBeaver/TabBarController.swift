@@ -1,14 +1,17 @@
-//
-//  TabBarController.swift
-//  DoctorBeaver
-//
-//  Created by Anastasia Stepanova-Kolupakhina on 08.02.16.
-//  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
-//
-
-import UIKit
-
-class TabBarController: UITabBarController {
+ //
+ //  TabBarController.swift
+ //  DoctorBeaver
+ //
+ //  Created by Anastasia Stepanova-Kolupakhina on 08.02.16.
+ //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
+ //
+ 
+ import UIKit
+ import CoreData
+ 
+ class TabBarController: UITabBarController {
+  
+  var managedContext: NSManagedObjectContext!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -55,31 +58,92 @@ class TabBarController: UITabBarController {
         tabBarItems[i].selectedImage = tabBarSelectedImages[i]
       }
     }
+
+    populateManagedObjectContextWithJsonPetData()
     
     // начинаем со вкладки расписания
     self.selectedIndex = 1
+    delegate = self
+    tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
+  }
+  
+  func pmt(task: Task) {
+    
+    var s: String = ""
+    for mft in task.minutesForTimes {
+      s += " "
+      
+      let h = mft / 60
+      if h < 10 {
+        s += "0"
+      }
+      s += "\(h):"
+      
+      let m = mft % 60
+      if m < 10 {
+        s += "0"
+      }
+      s += "\(m)"
+    }
+    print("   timesPerDay: \(task.timesPerDay)")
+    print("   minutesForTimes: [" + s + " ]")
+    print("")
     
   }
   
-  func imageResize (image:UIImage, sizeChange:CGSize)-> UIImage{
+  func pdt(task: Task) {
     
-    let hasAlpha = true
-    let scale: CGFloat = 0.0 // Use scale factor of main screen
+    var s: String = ""
+    for dose in task.doseForTimes {
+      s += " "
+      
+      s += "\(dose)"
+    }
+    print("   timesPerDay: \(task.timesPerDay)")
+    print("   doseForTimes: [" + s + " ]")
+    print("")
     
-    UIGraphicsBeginImageContextWithOptions(sizeChange, !hasAlpha, scale)
-    image.drawInRect(CGRect(origin: CGPointZero, size: sizeChange))
-    
-    let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-    return scaledImage
   }
-  
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
   
-}
-
-
-
+  func populateManagedObjectContextWithJsonPetData(doItNow: Bool = true) {
+    if doItNow {
+      let jsonPetParser = JsonPetParser(withFileName: "Pets", andType: "json")
+      jsonPetParser.populateManagedObjectContextWithJsonPetData(managedContext)
+    }
+  }
+  
+ }
+ 
+ extension TabBarController: UITabBarControllerDelegate {
+  func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
+    
+    // "Расписание" внутри UINavigationController
+    if let viewController = viewController as? UINavigationController {
+      
+      if let destinationVC = viewController.viewControllers.first as? ManagedObjectContextSettableAndLoadable {
+        destinationVC.setManagedObjectContext(managedContext)
+      }
+    } else {
+      if let viewController = viewController as? ManagedObjectContextSettable {
+        viewController.setManagedObjectContext(managedContext)
+      }
+    }
+    
+  }
+ }
+ 
+ // обращения с CoreData
+ extension TabBarController: ManagedObjectContextSettable {
+  // устанавливаем ManagedObjectContext
+  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
+    self.managedContext = managedContext
+  }
+ }
+ 
+ 
+ 
