@@ -1,0 +1,83 @@
+{
+  "pets": [{
+           "name": "Белка",
+           "image": "dog",
+           "selected": true,
+           "tasks": [{
+                     "typeId": 0,
+                     "name": "Белка-Витамины",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [10, 15, 20],
+                     "doseForTimes": ["1;", "1;1/4", ";1/4"],
+                     "specialFeature": "независимо от еды",
+                     "startDate": "24.04.2016 17:00",
+                     "frequency": [],
+                     "endDays": 3,
+                     "comment": "Прятать в еду",
+                     "realizations": []
+                     }, {
+                     "typeId": 1,
+                     "name": "B6",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [600, 720, 930],
+                     "doseForTimes": ["1;0.5", "1;", ";0.5"],
+                     "specialFeature": "подкожно",
+                     "startDate": "24.04.2016 7:00",
+                     "frequency": [],
+                     "endDate": "15.05.2016 13:00",
+                     "comment": "",
+                     "realizations": []
+                     },
+                     
+                     {
+                     "typeId": 2,
+                     "name": "B12",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [340, 360, 400],
+                     "doseForTimes": [";0.5", "1;", ";0.5"],
+                     "specialFeature": "подкожно",
+                     "startDate": "24.04.2016 7:00",
+                     "frequency": [],
+                     "endDate": "2.06.2016 11:00",
+                     "comment": "",
+                     "realizations": []
+                     }]
+           }, {
+           "name": "Мяуч",
+           "image": "cat",
+           "selected": false,
+           "tasks": [{
+                     "typeId": 1,
+                     "name": "B6",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [560, 880, 1200],
+                     "doseForTimes": [";0.5", "1;", ";0.5"],
+                     "specialFeature": "подкожно",
+                     "startDate": "24.04.2016 7:00",
+                     "frequency": [],
+                     "endDate": "2.07.2016 11:00",
+                     "comment": "",
+                     "realizations": [{
+                                      "date": "19.03.2016",
+                                      "done": [true, false, false]
+                                      }]
+                     }]
+           }, {
+           "name": "Буб",
+           "image": "cat",
+           "selected": false,
+           "tasks": [{
+                     "typeId": 1,
+                     "name": "B6",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [560, 880, 1200],
+                     "doseForTimes": [";0.5", "1;", ";0.5"],
+                     "specialFeature": "подкожно",
+                     "startDate": "24.04.2016 8:00",
+                     "frequency": [],
+                     "endDays": 20,
+                     "comment": "",
+                     "realizations": []
+                     }]
+           }]
+}

@@ -1,0 +1,34 @@
+//
+//  Task+CoreDataProperties.swift
+//  DoctorBeaver
+//
+//  Created by Anastasia Stepanova-Kolupakhina on 16.03.16.
+//  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
+//
+//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
+//  to delete and recreate this implementation file for your updated model.
+//
+
+import Foundation
+import CoreData
+
+extension Task {
+  @NSManaged var pet: Pet
+  
+  @NSManaged var typeId: Int
+  @NSManaged var name: String
+  
+  @NSManaged var timesPerDay: Int
+  @NSManaged var minutesForTimes: [Int]
+  @NSManaged var doseForTimes: [String]
+  @NSManaged var specialFeature: String
+  
+  @NSManaged var startDate: NSDate
+  @NSManaged var frequency: [Int]
+  
+  @NSManaged var endDaysOrTimes: Int
+  @NSManaged var endDate: NSDate
+  @NSManaged var comment: String
+  
+  @NSManaged var realizations: NSOrderedSet
+}
