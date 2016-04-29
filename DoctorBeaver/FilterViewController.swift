@@ -181,17 +181,68 @@ extension FilterViewController: UITableViewDataSource {
       
       // считаем, сколько неоконченных заданий у питомца
       let activeTasks = countActiveTasks(ofPet: pet)
-      if activeTasks == 0 {
-        cell.remainTasksLabel.text = "нет активных заданий"
-      } else {
-        cell.remainTasksLabel.text = "активных заданий: \(activeTasks)"
-      }
-      
+      cell.remainTasksLabel.text = activeTasksToString(activeTasks)
       configureCellDoneState(cell, forRowAtIndexPath: indexPath)
       
       return cell
     }
     return UITableViewCell()
+  }
+  
+  // число активных заданий в читабельном виде
+  func activeTasksToString(actTs: Int) -> String {
+    guard actTs != 0 else {
+      return "нет активных заданий"
+    }
+    
+    var actTsStr = "\(actTs) "
+    
+    var divided = actTs
+    if actTs > 100 {
+      divided = divided % 100
+    }
+    
+    if 11...19 ~= divided {
+      actTsStr += "активных заданий"
+      return actTsStr
+    }
+    
+    let remainder = actTs % 10
+    switch remainder {
+    case 0:
+      actTsStr += "активных заданий"
+    case 1:
+      actTsStr += "активное задание"
+    case 2, 3, 4, 5, 6, 7, 8, 9:
+      actTsStr += "активных задания"
+    default:
+      break
+    }
+    
+    return actTsStr
+  }
+  
+  
+  // число раз в читабельном формате
+  func timeStringByIndex(index: Int) -> String {
+    var divided = index
+    if index > 100 {
+      divided = divided % 100
+    }
+    
+    if 11 <= divided && divided <= 19 {
+      return "раз"
+    }
+    
+    let remainder = index % 10
+    switch remainder {
+    case 2, 3, 4:
+      return "раза"
+    case 0, 1, 5, 6, 7, 8, 9:
+      return "раз"
+    default:
+      return ""
+    }
   }
   
   // считаем, сколько неоконченных заданий у питомца

@@ -15,7 +15,6 @@
   
   override func viewDidLoad() {
     super.viewDidLoad()
-  
     
     // настраиваем внешний вид Tab Bar
     UITabBar.appearance().barTintColor = UIColor.lightOrangeColor()

@@ -356,7 +356,7 @@
                                     <constraint firstAttribute="height" constant="64" id="kxl-f4-ZLk"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blank" translatesAutoresizingMaskIntoConstraints="NO" id="aRb-3F-S10">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="aRb-3F-S10">
                                 <rect key="frame" x="8" y="24" width="80" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="885-Sl-Uay"/>
@@ -1689,7 +1689,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="blank" width="20" height="20"/>
+        <image name="border" width="80" height="80"/>
         <image name="checkmark" width="19" height="19"/>
     </resources>
 </document>

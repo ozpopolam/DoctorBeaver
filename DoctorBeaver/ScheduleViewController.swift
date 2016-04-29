@@ -18,6 +18,8 @@ class ScheduleViewController: UIViewController {
   @IBOutlet weak var petNameLabel: UILabel!
   @IBOutlet weak var petsNamesText: UITextView!
   
+  var borderImage: UIImage?
+  
   @IBOutlet weak var warningView: UIView!
   @IBOutlet weak var warningLabel: UILabel!
   
@@ -58,6 +60,9 @@ class ScheduleViewController: UIViewController {
     
     // поначалу прячем все кнопки
     fakeNavigationBar.hideAllButtons()
+    
+    // фон для иконки питомца
+    borderImage = UIImage(named: "border")
     
     // проверяем, загружен ли контекст
     if viewIsReadyToBeLoaded(withManagedContext: managedContext) {
@@ -228,8 +233,7 @@ class ScheduleViewController: UIViewController {
         petImageView.layer.cornerRadius = petImageView.frame.size.width / 2
         petImageView.clipsToBounds = true
         
-        petBorderView.layer.cornerRadius = petBorderView.frame.size.width / 2
-        petBorderView.clipsToBounds = true
+        petBorderView.image = borderImage
       } else {
         petImageView.image = nil
         petBorderView.image = nil
