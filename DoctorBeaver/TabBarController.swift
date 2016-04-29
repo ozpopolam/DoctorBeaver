@@ -15,8 +15,7 @@
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    print("It's starter")
+  
     
     // настраиваем внешний вид Tab Bar
     UITabBar.appearance().barTintColor = UIColor.lightOrangeColor()
