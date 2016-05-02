@@ -27,25 +27,4 @@ class Realization: NSManagedObject {
       return nil
     }
   }
-  
-  func printInBlock() {
-    print("      Realization of \(task.name)")
-    print("      date: \(VisualConfiguration.stringFromDate(date))")
-    
-    var s: String = ""
-    
-    for ind in 0..<done.count {
-      switch done[ind] {
-      case 0:
-        s += " \(VisualConfiguration.minutesToString(task.minutesForTimes[ind])) -"
-      case 1:
-        s += " \(VisualConfiguration.minutesToString(task.minutesForTimes[ind])) +"
-      default:
-        break
-      }
-    }
-    print("      done: [" + s + " ]")
-    print("")
-  }
-  
 }

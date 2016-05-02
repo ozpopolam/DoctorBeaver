@@ -194,15 +194,11 @@ class ScheduleTableViewController: UIViewController {
     
     for task in tasks {
       if let realization = getRealization(fromRealizations: task.realizations, forDate: date) {
-        // если для даты есть список "сделано-несделано", то в эту дату не нужно делать задание (и нужно дабавить ее в итоговый список)
-        if realization.done.count != 0 {
-          realizations.append(realization)
-        }
+        // если для даты уже есть список "сделано-несделано", то добавляем его в итоговый список
+        realizations.append(realization)
       } else {
-        // добавить specificDateTask к task
-        
+        // списка нет - вычисляем новый список, добавляем его в базу
         let done = task.getDone(forDate: date)
-        
         if let realization = Realization(insertIntoManagedObjectContext: managedContext) {
           realization.task = task
           realization.date = date
@@ -210,8 +206,6 @@ class ScheduleTableViewController: UIViewController {
           
           realizations.append(realization)
           managedContext.saveOrRollback()
-          
-          //task.printInBlock()
         }
       }
     }
@@ -236,7 +230,7 @@ class ScheduleTableViewController: UIViewController {
     
     for realization in realizations {
       for time in 0..<realization.task.timesPerDay {
-        
+        // -1 - время не актуально
         if realization.done[time] != -1 {
           timeRealizations.append((timeInDay: time, realization: realization))
         }
@@ -358,7 +352,7 @@ extension ScheduleTableViewController: UITableViewDataSource {
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
     let minutes = tr.realization.task.minutesForTimes[tr.timeInDay]
-    let minutesString = VisualConfiguration.minutesToString(minutes)
+    let minutesString = DateHelper.minutesToString(minutes)
     cell.timeLabel.text = minutesString
     
     let iconName = tr.realization.task.type.iconName()

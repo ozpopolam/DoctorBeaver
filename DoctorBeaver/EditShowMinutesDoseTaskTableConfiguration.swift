@@ -242,7 +242,7 @@ class EditShowMinutesDoseTaskTableConfiguration {
     
     var selectedMinutes = 0
     var minimumMinutes = 0
-    var maximumMinutes = 24 * 60 - 1
+    var almostMaximumMinutes = DateHelper.maxMinutes - 1
     
     if tagIsInMinutesTags(tag) {
       let indInMinutesForTimes = ( tag - minutesStartTag ) / 2
@@ -253,10 +253,10 @@ class EditShowMinutesDoseTaskTableConfiguration {
       }
       
       if indInMinutesForTimes < task.timesPerDay - 1 {
-        maximumMinutes = task.minutesForTimes[indInMinutesForTimes + 1] - 1
+        almostMaximumMinutes = task.minutesForTimes[indInMinutesForTimes + 1] - 1
       }
     }
-    return (selectedMinutes: selectedMinutes, minimumMinutes: minimumMinutes, maximumMinutes: maximumMinutes)
+    return (selectedMinutes: selectedMinutes, minimumMinutes: minimumMinutes, maximumMinutes: almostMaximumMinutes)
   }
   
   // обновляем задания данными, полученными из picker view

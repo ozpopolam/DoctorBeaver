@@ -26,8 +26,6 @@ class ScheduleViewController: UIViewController {
   @IBOutlet weak var calendarContainerView: UIView!
   @IBOutlet weak var tableContainerView: UIView!
   
-  let vsCnfg = VisualConfiguration()
-  
   var managedContext: NSManagedObjectContext!
   var viewWasLoadedWithManagedContext = false
   
@@ -217,7 +215,7 @@ class ScheduleViewController: UIViewController {
     }
     petsNamesText.hidden = false
     petsNamesText.text = petsNames
-    petsNamesText.font = vsCnfg.petNameFont
+    petsNamesText.font = VisualConfiguration.petNameFont
     petsNamesText.textAlignment = .Center
     
     petNameLabel.hidden = true

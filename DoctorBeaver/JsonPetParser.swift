@@ -98,7 +98,7 @@ class JsonPetParser {
       else { return nil }
     
     var startDate: NSDate
-    if let startDateFromString = VisualConfiguration.dateFromString(startDateString, withFormat: .DateTime) {
+    if let startDateFromString = DateHelper.dateFromString(startDateString, withFormat: .DateTime) {
       startDate = startDateFromString
     } else {
       return nil
@@ -114,7 +114,7 @@ class JsonPetParser {
         endDaysOrTimes = et
       } else {
         if let endDateString = dict["endDate"] as? String {
-          if let endDateFromString = VisualConfiguration.dateFromString(endDateString, withFormat: .DateTime) {
+          if let endDateFromString = DateHelper.dateFromString(endDateString, withFormat: .DateTime) {
             endDate = endDateFromString
           } else {
             return nil
@@ -168,7 +168,7 @@ class JsonPetParser {
       else { return nil }
     
     var date: NSDate
-    if let dateFromString = VisualConfiguration.dateFromString(dateString, withFormat: .Date) {
+    if let dateFromString = DateHelper.dateFromString(dateString, withFormat: .Date) {
       date = dateFromString
     } else {
       return nil
