@@ -164,7 +164,7 @@ class TaskConfigurationByType {
       for ind in 0..<strings.count {
         if !strings[ind].isEmpty {
           if ind > 0 && !strings[ind - 1].isEmpty {
-            ds += String(task.doseSeparator)
+            ds.append(task.doseSeparator) // += String(task.doseSeparator)
           }
           ds += strings[ind]
         }

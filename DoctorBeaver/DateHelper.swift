@@ -8,19 +8,38 @@
 
 import UIKit
 
+
+enum DateFormatterFormat: String {
+  case DateTime = "d.MM.y HH:mm"
+  case Date = "d.MM.y"
+}
+
 struct DateHelper {
   static var calendar = NSCalendar.currentCalendar()
   
   static var dateFormatter: NSDateFormatter = {
       let dateFormatter = NSDateFormatter()
-      dateFormatter.dateFormat = "d.MM.y HH:mm"
+      dateFormatter.dateFormat = DateFormatterFormat.DateTime.rawValue
       dateFormatter.locale = NSLocale(localeIdentifier: "ru_RU")
       return dateFormatter
   }()
   
+  // дата в строку
+  static func dateFromString(dateString: String, withFormat format: DateFormatterFormat) -> NSDate? {
+    let df = dateFormatter
+    df.dateFormat = format.rawValue
+    return df.dateFromString(dateString)
+  }
+  
+  // дата из строки
+  static func dateToString(date: NSDate, withDateFormat dateFormat: String = DateFormatterFormat.DateTime.rawValue) -> String {
+    dateFormatter.dateFormat = dateFormat
+    return dateFormatter.stringFromDate(date)
+  }
+  
   static let maxMinutes = 24 * 60
   
-  // минуты в виде hh:mm
+  // минуты в виде строки hh:mm
   static func minutesToString(minutes: Int) -> String {
     var str: String = ""
     
@@ -39,15 +58,10 @@ struct DateHelper {
     return str
   }
   
-  static func dateToString(date: NSDate, withDateFormat dateFormat: String = "d.MM.y HH:mm") -> String {
-    dateFormatter.dateFormat = dateFormat
-    return dateFormatter.stringFromDate(date)
-  }
-  
   // получить минуты (компонента-часы * 60 + компонента-минуты) из даты
   static func getMinutes(fromDate date: NSDate) -> Int {
-    let hourComponent = VisualConfiguration.calendar.component(.Hour, fromDate: date)
-    let minuteComponent = VisualConfiguration.calendar.component(.Minute, fromDate: date)
+    let hourComponent = DateHelper.calendar.component(.Hour, fromDate: date)
+    let minuteComponent = DateHelper.calendar.component(.Minute, fromDate: date)
     let minutes = hourComponent * 60 + minuteComponent
     return minutes
   }

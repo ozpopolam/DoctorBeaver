@@ -573,7 +573,7 @@ class EditShowTaskTableConfiguration {
       task.startDate = value
       
       let order = DateHelper.calendar.compareDate(task.startDate, toDate: task.endDate,
-        toUnitGranularity: .Second)
+        toUnitGranularity: .Minute)
       // если начинаем, позже, чем заканчиваем - обновить "закончить"
       if order == .OrderedDescending {
         task.endDate = task.startDate
