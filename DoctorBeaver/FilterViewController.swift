@@ -146,7 +146,6 @@ class FilterViewController: UIViewController {
   // перегружаем всю таблицу с питомцами
   func reloadFilterTable() {
     pets = fetchAllPets(fromManagedContext: managedContext)
-    pets.sortInPlace(sortedNameASC)
     
     // запоминаем id питомцев, выбранных изначально
     for pet in pets {
@@ -159,12 +158,6 @@ class FilterViewController: UIViewController {
       tableView.reloadData()
     }
   }
-  
-  // сортируем питомцев по имени
-  func sortedNameASC(lh: Pet, rh: Pet) -> Bool {
-    return lh.name.localizedStandardCompare(rh.name) == .OrderedAscending
-  }
-  
 }
 
 extension FilterViewController: UITableViewDataSource {
@@ -314,7 +307,7 @@ extension FilterViewController: ManagedObjectContextSettableAndLoadable {
     
     do {
       if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results
+        return results.sort(sortedByIdDESC)
       } else {
         return []
       }
@@ -322,6 +315,11 @@ extension FilterViewController: ManagedObjectContextSettableAndLoadable {
       print("Fetching error!")
       return []
     }
+  }
+  
+  // сортируем питомцев по id
+  func sortedByIdDESC(lh: Pet, rh: Pet) -> Bool {
+    return lh.id > rh.id
   }
   
   // пользователь хочет применить фильтр
