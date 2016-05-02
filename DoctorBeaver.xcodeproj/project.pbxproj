@@ -20,7 +20,6 @@
 		620373191C6BE98E00352617 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620373181C6BE98E00352617 /* UIColor.swift */; };
 		6219B4741CA06605006E4E14 /* JsonPetParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6219B4731CA06605006E4E14 /* JsonPetParser.swift */; };
 		6232B06C1C870B38007D7D23 /* StgComplexPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6232B06B1C870B38007D7D23 /* StgComplexPickerCell.swift */; };
-		623B4FEF1C7400D70016EC92 /* PetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FEE1C7400D70016EC92 /* PetsViewController.swift */; };
 		623B4FF11C7508B80016EC92 /* BasicPetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF01C7508B80016EC92 /* BasicPetCell.swift */; };
 		623B4FF31C7648A50016EC92 /* EditShowTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF21C7648A50016EC92 /* EditShowTaskViewController.swift */; };
 		623B4FF71C76619C0016EC92 /* StgTitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */; };
@@ -56,6 +55,7 @@
 		62C64D601CD2D1E2006B4CEF /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D5A1CD2D1E2006B4CEF /* Task.swift */; };
 		62C64D611CD2D1E2006B4CEF /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D5B1CD2D1E2006B4CEF /* Task+CoreDataProperties.swift */; };
 		62C64D631CD7E8F0006B4CEF /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D621CD7E8F0006B4CEF /* DataExtensions.swift */; };
+		62C64D651CD7EF10006B4CEF /* PetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D641CD7EF10006B4CEF /* PetsViewController.swift */; };
 		62DCB0C71C77952C00ABF206 /* StgTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0C61C77952C00ABF206 /* StgTextFieldCell.swift */; };
 		62DCB0CC1C78DC1100ABF206 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0CB1C78DC1000ABF206 /* TaskType.swift */; };
 		62F0FEB71CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */; };
@@ -100,7 +100,6 @@
 		620373181C6BE98E00352617 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		6219B4731CA06605006E4E14 /* JsonPetParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonPetParser.swift; sourceTree = "<group>"; };
 		6232B06B1C870B38007D7D23 /* StgComplexPickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgComplexPickerCell.swift; sourceTree = "<group>"; };
-		623B4FEE1C7400D70016EC92 /* PetsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsViewController.swift; sourceTree = "<group>"; };
 		623B4FF01C7508B80016EC92 /* BasicPetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicPetCell.swift; sourceTree = "<group>"; };
 		623B4FF21C7648A50016EC92 /* EditShowTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = EditShowTaskViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTitleValueCell.swift; sourceTree = "<group>"; };
@@ -136,6 +135,7 @@
 		62C64D5A1CD2D1E2006B4CEF /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		62C64D5B1CD2D1E2006B4CEF /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		62C64D621CD7E8F0006B4CEF /* DataExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
+		62C64D641CD7EF10006B4CEF /* PetsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsViewController.swift; sourceTree = "<group>"; };
 		62DCB0C61C77952C00ABF206 /* StgTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTextFieldCell.swift; sourceTree = "<group>"; };
 		62DCB0CB1C78DC1000ABF206 /* TaskType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
 		62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditShowMinutesDoseTaskViewController.swift; sourceTree = "<group>"; };
@@ -281,7 +281,7 @@
 		6297A8031CA1D522004F3D7E /* Pets */ = {
 			isa = PBXGroup;
 			children = (
-				623B4FEE1C7400D70016EC92 /* PetsViewController.swift */,
+				62C64D641CD7EF10006B4CEF /* PetsViewController.swift */,
 			);
 			name = Pets;
 			sourceTree = "<group>";
@@ -505,7 +505,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				623B4FEF1C7400D70016EC92 /* PetsViewController.swift in Sources */,
 				6219B4741CA06605006E4E14 /* JsonPetParser.swift in Sources */,
 				628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */,
 				620372D11C6944CC00352617 /* ScheduleTableViewController.swift in Sources */,
@@ -519,6 +518,7 @@
 				628425171C84B1450016E32F /* StgTitleSegmentCell.swift in Sources */,
 				623BCD691CAC701C00784705 /* DateHelper.swift in Sources */,
 				62F0FEBA1CB557CF00C13132 /* EditShowMinutesDoseTaskTableConfiguration.swift in Sources */,
+				62C64D651CD7EF10006B4CEF /* PetsViewController.swift in Sources */,
 				623DBD731C766B3D00E705AB /* StgDataPickerCell.swift in Sources */,
 				62DCB0C71C77952C00ABF206 /* StgTextFieldCell.swift in Sources */,
 				628E3CE31C999BF6000C122A /* Realization.swift in Sources */,
