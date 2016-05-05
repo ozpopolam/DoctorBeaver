@@ -72,44 +72,6 @@
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
   
-  func pmt(task: Task) {
-    
-    var s: String = ""
-    for mft in task.minutesForTimes {
-      s += " "
-      
-      let h = mft / 60
-      if h < 10 {
-        s += "0"
-      }
-      s += "\(h):"
-      
-      let m = mft % 60
-      if m < 10 {
-        s += "0"
-      }
-      s += "\(m)"
-    }
-    print("   timesPerDay: \(task.timesPerDay)")
-    print("   minutesForTimes: [" + s + " ]")
-    print("")
-    
-  }
-  
-  func pdt(task: Task) {
-    
-    var s: String = ""
-    for dose in task.doseForTimes {
-      s += " "
-      
-      s += "\(dose)"
-    }
-    print("   timesPerDay: \(task.timesPerDay)")
-    print("   doseForTimes: [" + s + " ]")
-    print("")
-    
-  }
-  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
@@ -125,6 +87,16 @@
  }
  
  extension TabBarController: UITabBarControllerDelegate {
+  
+  func tabBarController(tabBarController: UITabBarController, shouldSelectViewController viewController: UIViewController) -> Bool {
+    if let viewControllers = tabBarController.viewControllers {
+      if viewController == viewControllers[2] {
+        return false
+      }
+    }
+    return true
+  }
+  
   func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
     
     // "Расписание" внутри UINavigationController

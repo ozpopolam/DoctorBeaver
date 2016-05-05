@@ -1,7 +1,7 @@
 {
   "pets": [{
            "name": "Белка",
-           "image": "dog",
+           "image": "dog1",
            "selected": true,
            "tasks": [{
                      "typeId": 0,
@@ -58,7 +58,7 @@
                      }]
            }, {
            "name": "Мяуч",
-           "image": "cat",
+           "image": "cat1",
            "selected": false,
            "tasks": [{
                      "typeId": 1,
@@ -78,7 +78,41 @@
                      }]
            }, {
            "name": "Буб",
-           "image": "cat",
+           "image": "cat2",
+           "selected": false,
+           "tasks": [{
+                     "typeId": 1,
+                     "name": "B6",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [560, 880, 1200],
+                     "doseForTimes": [";0.5", "1;", ";0.5"],
+                     "specialFeature": "подкожно",
+                     "startDate": "24.04.2016 8:00",
+                     "frequency": [],
+                     "endDays": 20,
+                     "comment": "",
+                     "realizations": []
+                     }]
+           }, {
+           "name": "Пуб",
+           "image": "dog2",
+           "selected": false,
+           "tasks": [{
+                     "typeId": 1,
+                     "name": "B6",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [560, 880, 1200],
+                     "doseForTimes": [";0.5", "1;", ";0.5"],
+                     "specialFeature": "подкожно",
+                     "startDate": "24.04.2016 8:00",
+                     "frequency": [],
+                     "endDays": 20,
+                     "comment": "",
+                     "realizations": []
+                     }]
+           }, {
+           "name": "Тубубуб",
+           "image": "cham",
            "selected": false,
            "tasks": [{
                      "typeId": 1,

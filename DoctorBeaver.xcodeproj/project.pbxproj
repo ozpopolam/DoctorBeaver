@@ -56,6 +56,7 @@
 		62C64D611CD2D1E2006B4CEF /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D5B1CD2D1E2006B4CEF /* Task+CoreDataProperties.swift */; };
 		62C64D631CD7E8F0006B4CEF /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D621CD7E8F0006B4CEF /* DataExtensions.swift */; };
 		62C64D651CD7EF10006B4CEF /* PetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D641CD7EF10006B4CEF /* PetsViewController.swift */; };
+		62C64D851CDA795C006B4CEF /* PetCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D841CDA795C006B4CEF /* PetCVCell.swift */; };
 		62DCB0C71C77952C00ABF206 /* StgTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0C61C77952C00ABF206 /* StgTextFieldCell.swift */; };
 		62DCB0CC1C78DC1100ABF206 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0CB1C78DC1000ABF206 /* TaskType.swift */; };
 		62F0FEB71CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */; };
@@ -136,6 +137,7 @@
 		62C64D5B1CD2D1E2006B4CEF /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		62C64D621CD7E8F0006B4CEF /* DataExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
 		62C64D641CD7EF10006B4CEF /* PetsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsViewController.swift; sourceTree = "<group>"; };
+		62C64D841CDA795C006B4CEF /* PetCVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetCVCell.swift; sourceTree = "<group>"; };
 		62DCB0C61C77952C00ABF206 /* StgTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTextFieldCell.swift; sourceTree = "<group>"; };
 		62DCB0CB1C78DC1000ABF206 /* TaskType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
 		62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditShowMinutesDoseTaskViewController.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 		620372D41C6A61AF00352617 /* Custom views */ = {
 			isa = PBXGroup;
 			children = (
+				62C64D841CDA795C006B4CEF /* PetCVCell.swift */,
 				62A83B901C6D289D00A8DE8D /* Custom controls */,
 				62DCB0C81C77969E00ABF206 /* Schedule Table Cells */,
 				628425151C82EEF90016E32F /* Settings Table cells */,
@@ -515,6 +518,7 @@
 				62C587BB1C6E9F9100FA3968 /* FilterCell.swift in Sources */,
 				62C64D521CCD33DB006B4CEF /* CalendarPopoverController.swift in Sources */,
 				62A83B8C1C6D278800A8DE8D /* FakeNavigationBarView.swift in Sources */,
+				62C64D851CDA795C006B4CEF /* PetCVCell.swift in Sources */,
 				628425171C84B1450016E32F /* StgTitleSegmentCell.swift in Sources */,
 				623BCD691CAC701C00784705 /* DateHelper.swift in Sources */,
 				62F0FEBA1CB557CF00C13132 /* EditShowMinutesDoseTaskTableConfiguration.swift in Sources */,

@@ -307,7 +307,7 @@ extension FilterViewController: ManagedObjectContextSettableAndLoadable {
     
     do {
       if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results.sort(sortedByIdDESC)
+        return results.sort{$0.name.localizedStandardCompare($1.name) == .OrderedAscending}
       } else {
         return []
       }
@@ -315,11 +315,6 @@ extension FilterViewController: ManagedObjectContextSettableAndLoadable {
       print("Fetching error!")
       return []
     }
-  }
-  
-  // сортируем питомцев по id
-  func sortedByIdDESC(lh: Pet, rh: Pet) -> Bool {
-    return lh.id > rh.id
   }
   
   // пользователь хочет применить фильтр

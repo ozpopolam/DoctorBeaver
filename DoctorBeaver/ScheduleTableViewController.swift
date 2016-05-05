@@ -244,7 +244,8 @@ class ScheduleTableViewController: UIViewController {
   func sortedByMinutesAndNameASC(lh: TimeRealization, rh: TimeRealization) -> Bool {
     if lh.realization.task.minutesForTimes[lh.timeInDay] == rh.realization.task.minutesForTimes[rh.timeInDay] {
       // время задания равно - соритуем по имени питомца
-      return lh.realization.task.pet.name < rh.realization.task.pet.name
+      
+      return lh.realization.task.pet.name.localizedStandardCompare(rh.realization.task.pet.name) == .OrderedAscending
     } else {
       
       var lhm = lh.realization.task.minutesForTimes[lh.timeInDay]

@@ -28,6 +28,11 @@ extension UIColor {
     return UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
   }
   
+//  class func mercuryColor() -> UIColor {
+//    // #E6E6E6
+//    return UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
+//  }
+  
   convenience init?(rgbHexName: String, alpha: CGFloat = 1.0) {
     // только шестибуквенное имя цвета
     guard rgbHexName.characters.count == 6 else { return nil }
