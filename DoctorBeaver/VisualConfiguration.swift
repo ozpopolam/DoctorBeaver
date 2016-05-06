@@ -14,6 +14,8 @@ struct VisualConfiguration {
   
   static let iconButtonSize = CGSize(width: 44.0, height: 44.0)
   
+  static let animationDuration: NSTimeInterval = 0.5
+  
   static let systemFontSize: CGFloat = 17.0
   
   static let navigationBarFont: UIFont = {
@@ -50,6 +52,8 @@ struct VisualConfiguration {
     if let font = UIFont(name: "GillSans-Light", size: 15.0) { return font }
     else { return UIFont.systemFontOfSize(systemFontSize) }
   }()
+  
+  static let cornerProportion: CGFloat = 6.4
   
   static let accentOnWhiteColor = UIColor.lightOrangeColor()
 

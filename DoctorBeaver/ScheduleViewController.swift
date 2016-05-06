@@ -166,6 +166,12 @@ class ScheduleViewController: UIViewController {
     }
   }
   
+  func updateCalendar(forDate date: NSDate) {
+    if let viewController = self.childViewControllers[0] as? CalendarController {
+      viewController.update(withDate: date)
+    }
+  }
+  
   // показываем view с предупреждением
   func showWarningMessage(message: String) {
     calendarContainerView.hidden = true
@@ -228,10 +234,10 @@ class ScheduleViewController: UIViewController {
       // есть изображение - устанавливаем его
       if let image = UIImage(named: image) {
         petImageView.image = image
-        petImageView.layer.cornerRadius = petImageView.frame.size.width / 6.4
+        petImageView.layer.cornerRadius = petImageView.frame.size.width / VisualConfiguration.cornerProportion
         petImageView.clipsToBounds = true
         
-        petBorderView.layer.cornerRadius = petBorderView.frame.size.width / 6.4
+        petBorderView.layer.cornerRadius = petBorderView.frame.size.width / VisualConfiguration.cornerProportion
         petBorderView.hidden = false
       } else {
         petImageView.image = nil
@@ -390,6 +396,7 @@ extension ScheduleViewController: UIPopoverPresentationControllerDelegate {
   func reloadScheduleTable(ForNewSelectedDate selectedDate: NSDate) {
     if DateHelper.calendar.compareDate(date, toDate: selectedDate, toUnitGranularity: .Day) != .OrderedSame {
       date = selectedDate
+      updateCalendar(forDate: date)
       reloadScheduleTable(forDate: selectedDate)
     }
   }

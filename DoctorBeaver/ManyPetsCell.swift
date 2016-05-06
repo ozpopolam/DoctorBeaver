@@ -13,7 +13,7 @@ class ManyPetsCell: BasicPetCell {
   @IBOutlet weak var petNameLabel: UILabel!
   @IBOutlet weak var petImageView: UIImageView! {
     didSet {
-      petImageView.layer.cornerRadius = petImageView.frame.size.width / 6.4
+      petImageView.layer.cornerRadius = petImageView.frame.size.width / VisualConfiguration.cornerProportion
       petImageView.clipsToBounds = true
     }
   }

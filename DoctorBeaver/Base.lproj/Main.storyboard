@@ -7,10 +7,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Calendar Controller-->
         <scene sceneID="iZ2-Q3-84K">
             <objects>
-                <viewController id="GSP-Yc-ZIO" sceneMemberID="viewController">
+                <viewController id="GSP-Yc-ZIO" customClass="CalendarController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7ae-2p-jkX"/>
                         <viewControllerLayoutGuide type="bottom" id="mIV-NR-FjT"/>
@@ -19,288 +19,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6bk-2f-ezs">
-                                <rect key="frame" x="144" y="0.0" width="22" height="44"/>
-                                <subviews>
-                                    <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="&lt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5x-t8-b4u">
-                                        <rect key="frame" x="6" y="13" width="10" height="17.5"/>
-                                        <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="22" id="5wV-kb-M1f"/>
-                                    <constraint firstAttribute="width" secondItem="6bk-2f-ezs" secondAttribute="height" multiplier="1:1" id="8ND-JD-VH5"/>
-                                    <constraint firstItem="S5x-t8-b4u" firstAttribute="centerY" secondItem="6bk-2f-ezs" secondAttribute="centerY" id="QVW-OK-utI"/>
-                                    <constraint firstItem="S5x-t8-b4u" firstAttribute="centerX" secondItem="6bk-2f-ezs" secondAttribute="centerX" id="kKD-6i-Gop"/>
-                                    <constraint firstAttribute="height" constant="44" id="qdj-I9-tg6"/>
-                                </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="8ND-JD-VH5"/>
-                                    </mask>
-                                </variation>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ovB-cy-Apr">
-                                <rect key="frame" x="174" y="0.0" width="44" height="44"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="pZg-0w-F2K">
-                                        <rect key="frame" x="6" y="5" width="33" height="35"/>
-                                        <subviews>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="ВТ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5g5-hc-wDs">
-                                                <rect key="frame" x="0.0" y="0.0" width="33" height="17.5"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="37" id="6LN-DQ-Osd"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="6LN-DQ-Osd"/>
-                                                    </mask>
-                                                </variation>
-                                            </label>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="16.02" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vvX-0v-2zb">
-                                                <rect key="frame" x="0.0" y="17" width="33" height="17.5"/>
-                                                <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="088-2w-xwg"/>
-                                    <constraint firstAttribute="width" secondItem="ovB-cy-Apr" secondAttribute="height" multiplier="1:1" id="5jd-Ct-jgj"/>
-                                    <constraint firstItem="pZg-0w-F2K" firstAttribute="centerX" secondItem="ovB-cy-Apr" secondAttribute="centerX" id="cfU-J7-lYx"/>
-                                    <constraint firstItem="pZg-0w-F2K" firstAttribute="centerY" secondItem="ovB-cy-Apr" secondAttribute="centerY" id="nw0-8l-Ba3"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WA5-SB-ng2">
-                                <rect key="frame" x="226" y="0.0" width="44" height="44"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="eSp-i9-2pG">
-                                        <rect key="frame" x="6" y="5" width="33" height="35"/>
-                                        <subviews>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="СР" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WQG-D5-LlX">
-                                                <rect key="frame" x="0.0" y="0.0" width="33" height="17.5"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="37" id="753-0b-qRo"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="753-0b-qRo"/>
-                                                    </mask>
-                                                </variation>
-                                            </label>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="17.02" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iLM-ao-qO0">
-                                                <rect key="frame" x="0.0" y="17" width="33" height="17.5"/>
-                                                <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="eSp-i9-2pG" firstAttribute="centerY" secondItem="WA5-SB-ng2" secondAttribute="centerY" id="DPH-bU-eFy"/>
-                                    <constraint firstItem="eSp-i9-2pG" firstAttribute="centerX" secondItem="WA5-SB-ng2" secondAttribute="centerX" id="RCk-I7-EM6"/>
-                                    <constraint firstAttribute="height" constant="44" id="VjS-6f-Ltx"/>
-                                    <constraint firstAttribute="width" secondItem="WA5-SB-ng2" secondAttribute="height" multiplier="1:1" id="os4-6C-9sn"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a9J-OT-a3d">
-                                <rect key="frame" x="278" y="0.0" width="44" height="44"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="WOD-TF-eEr">
-                                        <rect key="frame" x="6" y="5" width="33" height="35"/>
-                                        <subviews>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="ЧТ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uV-7u-XK7">
-                                                <rect key="frame" x="0.0" y="0.0" width="33" height="17.5"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="37" id="ZYZ-ZT-R4D"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="ZYZ-ZT-R4D"/>
-                                                    </mask>
-                                                </variation>
-                                            </label>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="18.02" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WOz-5C-8dR">
-                                                <rect key="frame" x="0.0" y="17" width="33" height="17.5"/>
-                                                <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="PeT-vB-af3"/>
-                                    <constraint firstItem="WOD-TF-eEr" firstAttribute="centerX" secondItem="a9J-OT-a3d" secondAttribute="centerX" id="TfA-OU-dBR"/>
-                                    <constraint firstAttribute="width" secondItem="a9J-OT-a3d" secondAttribute="height" multiplier="1:1" id="VAI-6d-8uS"/>
-                                    <constraint firstItem="WOD-TF-eEr" firstAttribute="centerY" secondItem="a9J-OT-a3d" secondAttribute="centerY" id="fzg-Ky-xEh"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hMa-ij-wTD">
-                                <rect key="frame" x="330" y="0.0" width="44" height="44"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Xe6-QZ-8Ml">
-                                        <rect key="frame" x="5" y="5" width="33" height="35"/>
-                                        <subviews>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="ПТ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYV-U2-bEm">
-                                                <rect key="frame" x="0.0" y="0.0" width="33" height="17.5"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="37" id="R37-3m-Nwv"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="R37-3m-Nwv"/>
-                                                    </mask>
-                                                </variation>
-                                            </label>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="19.02" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="95O-45-bEN">
-                                                <rect key="frame" x="0.0" y="17" width="33" height="17.5"/>
-                                                <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="7Bt-D0-63Z"/>
-                                    <constraint firstItem="Xe6-QZ-8Ml" firstAttribute="centerY" secondItem="hMa-ij-wTD" secondAttribute="centerY" id="8hd-8A-LcI"/>
-                                    <constraint firstItem="Xe6-QZ-8Ml" firstAttribute="centerX" secondItem="hMa-ij-wTD" secondAttribute="centerX" id="OKB-mu-kXJ"/>
-                                    <constraint firstAttribute="width" secondItem="hMa-ij-wTD" secondAttribute="height" multiplier="1:1" id="hyz-vq-aOh"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EbX-8f-Cdw">
-                                <rect key="frame" x="382" y="0.0" width="44" height="44"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="cI7-J3-eId">
-                                        <rect key="frame" x="5" y="5" width="33" height="35"/>
-                                        <subviews>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="СБ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PUE-0u-hFG">
-                                                <rect key="frame" x="0.0" y="0.0" width="33" height="17.5"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="37" id="M46-TP-DXR"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                                <variation key="default">
-                                                    <mask key="constraints">
-                                                        <exclude reference="M46-TP-DXR"/>
-                                                    </mask>
-                                                </variation>
-                                            </label>
-                                            <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="20.02" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vB1-Tb-Iug">
-                                                <rect key="frame" x="0.0" y="17" width="33" height="17.5"/>
-                                                <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="1vy-rx-Wtw"/>
-                                    <constraint firstItem="cI7-J3-eId" firstAttribute="centerY" secondItem="EbX-8f-Cdw" secondAttribute="centerY" id="gaj-mN-dHT"/>
-                                    <constraint firstAttribute="width" secondItem="EbX-8f-Cdw" secondAttribute="height" multiplier="1:1" id="iOk-v8-22h"/>
-                                    <constraint firstItem="cI7-J3-eId" firstAttribute="centerX" secondItem="EbX-8f-Cdw" secondAttribute="centerX" id="tih-7M-Qbc"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pdD-5u-bAg">
-                                <rect key="frame" x="434" y="0.0" width="22" height="44"/>
-                                <subviews>
-                                    <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAv-5E-kf4">
-                                        <rect key="frame" x="6" y="13" width="10" height="17.5"/>
-                                        <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="AAv-5E-kf4" firstAttribute="centerX" secondItem="pdD-5u-bAg" secondAttribute="centerX" id="Yxe-6s-wWm"/>
-                                    <constraint firstAttribute="width" secondItem="pdD-5u-bAg" secondAttribute="height" multiplier="1:1" id="fB4-DJ-wlp"/>
-                                    <constraint firstItem="AAv-5E-kf4" firstAttribute="centerY" secondItem="pdD-5u-bAg" secondAttribute="centerY" id="gXg-1f-AEP"/>
-                                    <constraint firstAttribute="height" constant="44" id="iQk-XN-ffd"/>
-                                    <constraint firstAttribute="width" constant="22" id="oqv-f6-qmQ"/>
-                                </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="fB4-DJ-wlp"/>
-                                    </mask>
-                                </variation>
-                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XNM-Ov-AgN">
+                                <rect key="frame" x="20" y="11.5" width="560" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="a9J-OT-a3d" firstAttribute="leading" secondItem="WA5-SB-ng2" secondAttribute="trailing" constant="8" id="85J-dV-FP5"/>
-                            <constraint firstItem="EbX-8f-Cdw" firstAttribute="width" secondItem="EbX-8f-Cdw" secondAttribute="height" multiplier="1:1" id="8vO-13-koy"/>
-                            <constraint firstItem="6bk-2f-ezs" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="BFz-Tw-h01"/>
-                            <constraint firstItem="EbX-8f-Cdw" firstAttribute="width" secondItem="EbX-8f-Cdw" secondAttribute="height" multiplier="1:1" id="Gn7-sz-0kj"/>
-                            <constraint firstItem="hMa-ij-wTD" firstAttribute="width" secondItem="hMa-ij-wTD" secondAttribute="height" multiplier="1:1" id="Gz6-bm-VrX"/>
-                            <constraint firstItem="a9J-OT-a3d" firstAttribute="centerX" secondItem="ELR-pJ-5FN" secondAttribute="centerX" id="Mnz-II-fZN"/>
-                            <constraint firstItem="ovB-cy-Apr" firstAttribute="leading" secondItem="6bk-2f-ezs" secondAttribute="trailing" constant="8" id="OzC-xH-Gvb"/>
-                            <constraint firstItem="hMa-ij-wTD" firstAttribute="leading" secondItem="a9J-OT-a3d" secondAttribute="trailing" constant="8" id="SbG-pb-uWN"/>
-                            <constraint firstItem="WA5-SB-ng2" firstAttribute="leading" secondItem="a9J-OT-a3d" secondAttribute="trailing" constant="-52" id="TSv-sf-9NE"/>
-                            <constraint firstItem="a9J-OT-a3d" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="WRh-Vp-YCp"/>
-                            <constraint firstItem="EbX-8f-Cdw" firstAttribute="leading" secondItem="hMa-ij-wTD" secondAttribute="trailing" constant="8" id="Zum-5K-bat"/>
-                            <constraint firstItem="pdD-5u-bAg" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="cZX-wI-TBO"/>
-                            <constraint firstItem="WA5-SB-ng2" firstAttribute="leading" secondItem="ovB-cy-Apr" secondAttribute="trailing" constant="8" id="f0K-nU-Fvd"/>
-                            <constraint firstItem="hMa-ij-wTD" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="psC-GY-qbu"/>
-                            <constraint firstItem="WA5-SB-ng2" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="ryy-tP-td3"/>
-                            <constraint firstItem="EbX-8f-Cdw" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="tJl-bw-3if"/>
-                            <constraint firstItem="ovB-cy-Apr" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="vOU-WN-u57"/>
-                            <constraint firstItem="pdD-5u-bAg" firstAttribute="leading" secondItem="EbX-8f-Cdw" secondAttribute="trailing" constant="8" id="vRJ-8l-N03"/>
+                            <constraint firstItem="XNM-Ov-AgN" firstAttribute="centerY" secondItem="ELR-pJ-5FN" secondAttribute="centerY" id="4Y2-wX-nDK"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="XNM-Ov-AgN" secondAttribute="trailing" id="KoU-ac-u0i"/>
+                            <constraint firstItem="XNM-Ov-AgN" firstAttribute="leading" secondItem="ELR-pJ-5FN" secondAttribute="leadingMargin" id="rqm-Gd-tTJ"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="TSv-sf-9NE"/>
-                            </mask>
-                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="dateLabel" destination="XNM-Ov-AgN" id="qaJ-l6-hdE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MpF-fD-q8D" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" id="Mc1-KV-ohS">
-                    <rect key="frame" x="0.0" y="0.0" width="33" height="35"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="ВТ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M1x-RX-f0w">
-                            <rect key="frame" x="0.0" y="0.0" width="33" height="17.5"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="37" id="ey2-Pk-pP5"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                            <variation key="default">
-                                <mask key="constraints">
-                                    <exclude reference="ey2-Pk-pP5"/>
-                                </mask>
-                            </variation>
-                        </label>
-                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="16.02" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qKN-rR-Ds7">
-                            <rect key="frame" x="0.0" y="17.5" width="33" height="17.5"/>
-                            <fontDescription key="fontDescription" name="GillSans-Light" family="Gill Sans" pointSize="15"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                </stackView>
             </objects>
             <point key="canvasLocation" x="2397" y="-2506"/>
         </scene>

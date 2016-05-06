@@ -1,129 +1,64 @@
 {
   "pets": [{
            "name": "Белка",
-           "image": "dog1",
+           "image": "dog2",
            "selected": true,
            "tasks": [{
                      "typeId": 0,
-                     "name": "Белка-Витамины",
+                     "name": "Витамины",
                      "timesPerDay": 3,
-                     "minutesForTimes": [10, 15, 20],
+                     "minutesForTimes": [10, 100, 350],
                      "doseForTimes": ["3;2/3", "1;1/4", ";1/4"],
                      "specialFeature": "независимо от еды",
-                     "startDate": "24.04.2016 17:00",
+                     "startDate": "1.05.2016 17:00",
                      "frequency": [],
-                     "endDays": 100,
+                     "endTimes": 30,
                      "comment": "Прятать в еду",
                      "realizations": []
                      }, {
                      "typeId": 1,
                      "name": "B6",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [200, 210, 220],
-                     "doseForTimes": ["1;0.5", "1;", ";0.5"],
+                     "timesPerDay": 2,
+                     "minutesForTimes": [380, 800],
+                     "doseForTimes": ["1;0.5", "1;"],
                      "specialFeature": "подкожно",
-                     "startDate": "24.08.2016 7:00",
+                     "startDate": "1.05.2016 17:00",
                      "frequency": [],
                      "endDate": "15.05.2016 13:00",
                      "comment": "",
                      "realizations": []
-                     },
-                     
-                     {
-                     "typeId": 3,
-                     "name": "B12",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [340, 360, 380],
-                     "doseForTimes": [],
-                     "specialFeature": "подкожно",
-                     "startDate": "24.08.2016 7:00",
-                     "frequency": [],
-                     "endDate": "2.06.2016 11:00",
-                     "comment": "",
-                     "realizations": []
-                     },
-                     
-                     {
-                     "typeId": 2,
-                     "name": "МММ",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [500, 510, 520],
-                     "doseForTimes": ["1", "2", "3"],
-                     "specialFeature": "подкожно",
-                     "startDate": "24.08.2016 7:00",
-                     "frequency": [],
-                     "endDate": "2.06.2016 11:00",
-                     "comment": "",
-                     "realizations": []
                      }]
            }, {
-           "name": "Мяуч",
+           "name": "Пушистус",
            "image": "cat1",
            "selected": false,
            "tasks": [{
-                     "typeId": 1,
-                     "name": "B6",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [560, 880, 1200],
-                     "doseForTimes": [";0.5", "1;", ";0.5"],
-                     "specialFeature": "подкожно",
-                     "startDate": "24.04.2016 7:00",
-                     "frequency": [],
-                     "endDate": "2.07.2016 11:00",
+                     "typeId": 2,
+                     "name": "Ципровет",
+                     "timesPerDay": 1,
+                     "minutesForTimes": [880],
+                     "doseForTimes": ["3"],
+                     "specialFeature": "в глаза",
+                     "startDate": "3.05.2016 7:00",
+                     "frequency": [1, 1],
+                     "endDays": 14,
                      "comment": "",
-                     "realizations": [{
-                                      "date": "19.03.2016",
-                                      "done": [true, false, false]
-                                      }]
+                     "realizations": []
                      }]
            }, {
-           "name": "Буб",
+           "name": "Гарфилд",
            "image": "cat2",
            "selected": false,
            "tasks": [{
-                     "typeId": 1,
-                     "name": "B6",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [560, 880, 1200],
-                     "doseForTimes": [";0.5", "1;", ";0.5"],
-                     "specialFeature": "подкожно",
-                     "startDate": "24.04.2016 8:00",
+                     "typeId": 3,
+                     "name": "Кубатол",
+                     "timesPerDay": 1,
+                     "minutesForTimes": [1150],
+                     "doseForTimes": [],
+                     "specialFeature": "на кожу",
+                     "startDate": "1.05.2016 8:00",
                      "frequency": [],
-                     "endDays": 20,
-                     "comment": "",
-                     "realizations": []
-                     }]
-           }, {
-           "name": "Пуб",
-           "image": "dog2",
-           "selected": false,
-           "tasks": [{
-                     "typeId": 1,
-                     "name": "B6",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [560, 880, 1200],
-                     "doseForTimes": [";0.5", "1;", ";0.5"],
-                     "specialFeature": "подкожно",
-                     "startDate": "24.04.2016 8:00",
-                     "frequency": [],
-                     "endDays": 20,
-                     "comment": "",
-                     "realizations": []
-                     }]
-           }, {
-           "name": "Тубубуб",
-           "image": "cham",
-           "selected": false,
-           "tasks": [{
-                     "typeId": 1,
-                     "name": "B6",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [560, 880, 1200],
-                     "doseForTimes": [";0.5", "1;", ";0.5"],
-                     "specialFeature": "подкожно",
-                     "startDate": "24.04.2016 8:00",
-                     "frequency": [],
-                     "endDays": 20,
+                     "endDate": "1.05.2017 8:00",
                      "comment": "",
                      "realizations": []
                      }]

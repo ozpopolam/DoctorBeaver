@@ -37,7 +37,7 @@ class EditShowMinutesDoseTaskViewController: UIViewController {
   let regularCellHeight: CGFloat = 44.0
   let pickerCellHeight: CGFloat = 216.0
   
-  let animationDuration: NSTimeInterval = 0.5
+  let animationDuration = VisualConfiguration.animationDuration
   
   // добавляем или редактируем задание
   var editState = false

@@ -12,6 +12,7 @@ import UIKit
 enum DateFormatterFormat: String {
   case DateTime = "d.MM.y HH:mm"
   case Date = "d.MM.y"
+  case DateVerbal = "d MMMM y, EEEE"
 }
 
 struct DateHelper {

@@ -72,7 +72,6 @@ class TaskConfigurationByType {
     }
   }
   
-  
   // дозировка
   // заголовки
   func doseForTimesTitle() -> String {

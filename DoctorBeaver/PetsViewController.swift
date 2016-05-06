@@ -31,6 +31,8 @@ class PetsViewController: UIViewController {
   // id питомца - обрезанное изображение
   var croppedPetImages: [Double: UIImage] = [ : ]
   
+  // длительность перерисовки иконок кнопок
+  let animationDuration = VisualConfiguration.animationDuration
   
   // тип сортировки
   var sortedAZ = true
@@ -42,7 +44,7 @@ class PetsViewController: UIViewController {
     fakeNavigationBar.titleLabel.text = "Питомцы".uppercaseString
     
     // кнопка сортировки
-    fakeNavigationBar.setButtonImage("sorting", forButton: .Left, withTintColor: UIColor.fogColor())
+    fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
     fakeNavigationBar.leftButton.addTarget(self, action: "sort:", forControlEvents: .TouchUpInside)
     
     // кнопка добавления нового питомца
@@ -82,7 +84,7 @@ class PetsViewController: UIViewController {
     let cellHeight = ceil(cellWidth + tempLabel.frame.size.height)
     cellSize = CGSize(width: cellWidth, height: cellHeight)
     
-    cellCornerRadius = cellWidth / CGFloat(6.4)
+    cellCornerRadius = cellWidth / CGFloat(VisualConfiguration.cornerProportion)
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -98,9 +100,11 @@ class PetsViewController: UIViewController {
   // была нажата кнопка "Сортировать"
   func sort(sender: UIButton) {
     if sortedAZ {
+      fakeNavigationBar.setButtonImage("sortingAZ", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       pets.sortInPlace(sortedByNameDESC)
       sortedAZ = false
     } else {
+      fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       pets.sortInPlace(sortedByNameASC)
       sortedAZ = true
     }
@@ -119,23 +123,17 @@ class PetsViewController: UIViewController {
     return lh.name.localizedStandardCompare(rh.name) == .OrderedDescending
   }
   
-  
   // была нажата кнопка "Добавить"
   func add(sender: UIButton) {
-    print("add")
+    ////
   }
   
-  // заполняем таблицу с нуля
+  // заполняем коллекцию с нуля
   // настраиваем внешний вид по инфо питомца и инициируем отображение расписания
   func fullyReloadPetCollection() {
     // настраиваем расположение кнопок и по необходимости выводим предупреждающие надписи
     if countAllPets(fromManagedContext: managedContext) == 0 {
       // не зарегестрировано ни одного питомца
-      // прячем все кнопки с nav bar
-      
-      //fakeNavigationBar.hideAllButtons()
-      
-      
       // показываем предупреждение
       showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
       
@@ -145,7 +143,7 @@ class PetsViewController: UIViewController {
     
   }
   
-  // загружаем только выбранных питомцев
+  // загружаем всех питомцев в collection view
   func reloadPetCollection(withNoFetchRequest noFetchRequest: Bool = false) {
     // прячем view с ошибкой
     hideWarningMessage()
@@ -183,17 +181,19 @@ class PetsViewController: UIViewController {
   
   // показываем view с предупреждением
   func showWarningMessage(message: String) {
+    if !collectionView.hidden {
+      collectionView.hidden = true
+    }
     warningLabel.text = message
   }
   
   // прячем view с предупреждением
   func hideWarningMessage() {
-//    if tableView.hidden {
-//      tableView.hidden = false
-//    }
+    if collectionView.hidden {
+      collectionView.hidden = false
+    }
     warningLabel.text = ""
   }
-  
   
 }
 
@@ -233,9 +233,7 @@ extension PetsViewController: UICollectionViewDataSource {
 extension PetsViewController: UICollectionViewDelegate {
   
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    
-    print(indexPath.row)
-    
+    ////
   }
 }
 
