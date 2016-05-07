@@ -99,29 +99,42 @@ class PetsViewController: UIViewController {
   
   // была нажата кнопка "Сортировать"
   func sort(sender: UIButton) {
-    if sortedAZ {
-      fakeNavigationBar.setButtonImage("sortingAZ", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-      pets.sortInPlace(sortedByNameDESC)
-      sortedAZ = false
-    } else {
-      fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-      pets.sortInPlace(sortedByNameASC)
-      sortedAZ = true
-    }
+    
+    fakeNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending :.OrderedAscending))
+    sortedAZ = !sortedAZ
+    
+    
+//    if sortedAZ {
+//      fakeNavigationBar.setButtonImage("sortingAZ", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+//      pets.sortInPlace(sortedByName(.OrderedDescending))
+//      sortedAZ = false
+//    } else {
+//      fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+//      pets.sortInPlace(sortedByName(.OrderedAscending))
+//      sortedAZ = true
+//    }
     
     collectionView.performBatchUpdates({
       self.collectionView.reloadSections(NSIndexSet(index: 0))
       }, completion: nil)
   }
   
-  // сортируем питомцев по имени в восходящем порядке
-  func sortedByNameASC(lh: Pet, rh: Pet) -> Bool {
-    return lh.name.localizedStandardCompare(rh.name) == .OrderedAscending
+//  // сортируем питомцев по имени в восходящем порядке
+//  func sortedByNameASC(lh: Pet, rh: Pet) -> Bool {
+//    return lh.name.localizedStandardCompare(rh.name) == .OrderedAscending
+//  }
+//  // в нисходящем порядке
+//  func sortedByNameDESC(lh: Pet, rh: Pet) -> Bool {
+//    return lh.name.localizedStandardCompare(rh.name) == .OrderedDescending
+//  }
+  
+  func sortedByName(direction:NSComparisonResult)->((lh: Pet, rh: Pet) -> Bool) {
+    return {(lh, rh)-> Bool in
+      return lh.name.localizedStandardCompare(rh.name) == direction
+    }
   }
-  // в нисходящем порядке
-  func sortedByNameDESC(lh: Pet, rh: Pet) -> Bool {
-    return lh.name.localizedStandardCompare(rh.name) == .OrderedDescending
-  }
+
   
   // была нажата кнопка "Добавить"
   func add(sender: UIButton) {
@@ -306,7 +319,7 @@ extension PetsViewController: ManagedObjectContextSettableAndLoadable {
     
     do {
       if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results.sort(sortedByNameASC)
+        return results.sort(sortedByName(.OrderedAscending))
       } else {
         return []
       }

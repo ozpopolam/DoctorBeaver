@@ -25,9 +25,6 @@
 		623B4FF71C76619C0016EC92 /* StgTitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */; };
 		623BCD691CAC701C00784705 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623BCD681CAC701C00784705 /* DateHelper.swift */; };
 		623DBD731C766B3D00E705AB /* StgDataPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623DBD721C766B3D00E705AB /* StgDataPickerCell.swift */; };
-		627082541C81C12400449A0F /* DateTimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627082521C81C12400449A0F /* DateTimePickerView.swift */; };
-		627082551C81C12400449A0F /* DateTimePickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 627082531C81C12400449A0F /* DateTimePickerView.xib */; };
-		627082571C81C2B300449A0F /* StgDateTimePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627082561C81C2B300449A0F /* StgDateTimePickerCell.swift */; };
 		6271ADCD1CBEF86A00CD0F5F /* StgDatePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271ADCC1CBEF86A00CD0F5F /* StgDatePickerCell.swift */; };
 		6271ADCF1CC0292700CD0F5F /* StgDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271ADCE1CC0292700CD0F5F /* StgDatePicker.swift */; };
 		627F2C9E1C8842DF00B9ADFF /* DataPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 627F2C9D1C8842DF00B9ADFF /* DataPickerView.xib */; };
@@ -107,9 +104,6 @@
 		623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTitleValueCell.swift; sourceTree = "<group>"; };
 		623BCD681CAC701C00784705 /* DateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		623DBD721C766B3D00E705AB /* StgDataPickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgDataPickerCell.swift; sourceTree = "<group>"; };
-		627082521C81C12400449A0F /* DateTimePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DateTimePickerView.swift; path = ../../custompicker/custompicker/DateTimePickerView.swift; sourceTree = "<group>"; };
-		627082531C81C12400449A0F /* DateTimePickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DateTimePickerView.xib; path = ../../custompicker/custompicker/DateTimePickerView.xib; sourceTree = "<group>"; };
-		627082561C81C2B300449A0F /* StgDateTimePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgDateTimePickerCell.swift; sourceTree = "<group>"; };
 		6271ADCC1CBEF86A00CD0F5F /* StgDatePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgDatePickerCell.swift; sourceTree = "<group>"; };
 		6271ADCE1CC0292700CD0F5F /* StgDatePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgDatePicker.swift; sourceTree = "<group>"; };
 		627F2C9D1C8842DF00B9ADFF /* DataPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DataPickerView.xib; sourceTree = "<group>"; };
@@ -198,7 +192,6 @@
 				62C64D551CCD43F0006B4CEF /* Extensions */,
 				620372D61C6A61DD00352617 /* Data */,
 				620372D41C6A61AF00352617 /* Custom views */,
-				627D509A1C8746CB004DE3E5 /* Need to redone */,
 				620372D51C6A61C600352617 /* View controllers */,
 				62C587BC1C6EA88900FA3968 /* Main.storyboard */,
 				6203725B1C66930300352617 /* LaunchScreen.storyboard */,
@@ -257,16 +250,6 @@
 				62DCB0CA1C78DBB600ABF206 /* Data Model */,
 			);
 			name = Data;
-			sourceTree = "<group>";
-		};
-		627D509A1C8746CB004DE3E5 /* Need to redone */ = {
-			isa = PBXGroup;
-			children = (
-				627082521C81C12400449A0F /* DateTimePickerView.swift */,
-				627082531C81C12400449A0F /* DateTimePickerView.xib */,
-				627082561C81C2B300449A0F /* StgDateTimePickerCell.swift */,
-			);
-			name = "Need to redone";
 			sourceTree = "<group>";
 		};
 		628425151C82EEF90016E32F /* Settings Table cells */ = {
@@ -484,7 +467,6 @@
 				6203728C1C68137000352617 /* Assets.xcassets in Resources */,
 				627F2C9E1C8842DF00B9ADFF /* DataPickerView.xib in Resources */,
 				62A83B8D1C6D278800A8DE8D /* FakeNavigationBarView.xib in Resources */,
-				627082551C81C12400449A0F /* DateTimePickerView.xib in Resources */,
 				628E3CC41C963A55000C122A /* Pets.json in Resources */,
 				6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */,
 			);
@@ -515,7 +497,6 @@
 				628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */,
 				620372D11C6944CC00352617 /* ScheduleTableViewController.swift in Sources */,
 				627F2CA01C88444A00B9ADFF /* DataPickerView.swift in Sources */,
-				627082541C81C12400449A0F /* DateTimePickerView.swift in Sources */,
 				620372D81C6A621000352617 /* ManyPetsCell.swift in Sources */,
 				62C64D5D1CD2D1E2006B4CEF /* Pet+CoreDataProperties.swift in Sources */,
 				62C587BB1C6E9F9100FA3968 /* FilterCell.swift in Sources */,
@@ -538,7 +519,6 @@
 				628E3CC61C974D6B000C122A /* CoreDataStack.swift in Sources */,
 				620372DA1C6AAC6800352617 /* HeaderCell.swift in Sources */,
 				62A83B8F1C6D287E00A8DE8D /* UIImage.swift in Sources */,
-				627082571C81C2B300449A0F /* StgDateTimePickerCell.swift in Sources */,
 				62C64D5E1CD2D1E2006B4CEF /* Realization+CoreDataProperties.swift in Sources */,
 				623B4FF11C7508B80016EC92 /* BasicPetCell.swift in Sources */,
 				62C64D631CD7E8F0006B4CEF /* DataExtensions.swift in Sources */,

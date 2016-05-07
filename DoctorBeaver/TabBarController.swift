@@ -61,15 +61,15 @@
 
     //populateManagedObjectContextWithJsonPetData()
     
-//    // начинаем со вкладки расписания
-//    self.selectedIndex = 1
-//    delegate = self
-//    tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
-    
-    // начинаем со вкладки с питомцами
-    self.selectedIndex = 0
+    // начинаем со вкладки расписания
+    self.selectedIndex = 1
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
+    
+//    // начинаем со вкладки с питомцами
+//    self.selectedIndex = 0
+//    delegate = self
+//    tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
   
   override func didReceiveMemoryWarning() {

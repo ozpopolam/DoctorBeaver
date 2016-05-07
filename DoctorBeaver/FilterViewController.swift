@@ -317,6 +317,8 @@ extension FilterViewController: ManagedObjectContextSettableAndLoadable {
     }
   }
   
+  
+  
   // пользователь хочет применить фильтр
   func done(sender: UIButton) {
     // проверяем, были ли изменения в выбранности
