@@ -59,8 +59,11 @@
       }
     }
 
-    //populateManagedObjectContextWithJsonPetData()
+    populateManagedObjectContextWithJsonPetData()
     
+    
+ 
+ 
     // начинаем со вкладки расписания
     self.selectedIndex = 1
     delegate = self

@@ -27,6 +27,8 @@ class TaskConfigurationByType {
     }
   }
   
+  
+  
   // значения: раз в день
   func timesPerDayOptions() -> [String] {
     switch task.type {

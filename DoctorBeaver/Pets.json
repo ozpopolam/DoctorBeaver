@@ -4,7 +4,7 @@
            "image": "dog2",
            "selected": true,
            "tasks": [{
-                     "typeId": 0,
+                     "typeId": 11,
                      "name": "Витамины",
                      "timesPerDay": 3,
                      "minutesForTimes": [10, 100, 350],
