@@ -13,12 +13,12 @@ import Foundation
 import CoreData
 
 extension TaskTypeItemBasicValues {
-
-    @NSManaged var taskNamePlaceholder: String?
-    @NSManaged var startDateTitle: String?
-    @NSManaged var daysOptions: String?
-    @NSManaged var timesOptions: String?
-    @NSManaged var endDaysOrTimes: String?
-    @NSManaged var typeItem: NSSet?
-
+  @NSManaged var typeItem: NSSet
+  
+  @NSManaged var taskNamePlaceholder: String
+  
+  @NSManaged var startDateTitle: String
+  @NSManaged var daysOptions: String
+  @NSManaged var endDaysOrTimesTitle: String
+  @NSManaged var timesOptions: String
 }

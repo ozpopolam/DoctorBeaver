@@ -1,5 +1,5 @@
 {
-  "TaskTypeItems": [{
+  "taskTypeItems": [{
             "id": 0,
             "name": "Таблетка",
             "iconName": "pill",

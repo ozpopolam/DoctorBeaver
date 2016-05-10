@@ -13,30 +13,32 @@ import Foundation
 import CoreData
 
 extension TaskTypeItem {
-
-    @NSManaged var id_: String?
-    @NSManaged var name_: String?
-    @NSManaged var iconName_: String?
-    @NSManaged var sectionTitles_: String?
-    @NSManaged var timesPerDayTitle_: String?
-    @NSManaged var timesPerDayOptions_: String?
-    @NSManaged var timesPerDayForInitialization_: String?
-    @NSManaged var minutesForTimesTitle_: String?
-    @NSManaged var minutesForTimesOrderTitles_: String?
-    @NSManaged var minutesForTimesForInitialization_: NSNumber?
-    @NSManaged var doseForTimesTitle_: String?
-    @NSManaged var doseForTimesEqualTitle_: String?
-    @NSManaged var doseForTimesOrderTitles_: String?
-    @NSManaged var doseForTimesOptions_: String?
-    @NSManaged var doseForTimesForInitialization_: String?
-    @NSManaged var specialFeatureTitle_: String?
-    @NSManaged var specialFeatureOptions_: String?
-    @NSManaged var specialFeatureForInitialization_: String?
-    @NSManaged var frequencyTitle_: String?
-    @NSManaged var frequencySegmentTitles_: String?
-    @NSManaged var frequencyPreposition_: String?
-    @NSManaged var frequencyOptions_: String?
-    @NSManaged var basicValues: NSManagedObject?
-    @NSManaged var task: NSSet?
-
+  
+  @NSManaged var id_: Int
+  
+  @NSManaged var doseForTimesEqualTitle_: String?
+  @NSManaged var doseForTimesForInitialization_: String?
+  @NSManaged var doseForTimesOptions_: String?
+  @NSManaged var doseForTimesOrderTitles_: String?
+  @NSManaged var doseForTimesTitle_: String?
+  @NSManaged var frequencyPreposition_: String?
+  @NSManaged var frequencySegmentTitles_: String?
+  @NSManaged var frequencyTitle_: String?
+  @NSManaged var iconName_: String?
+  
+  @NSManaged var minutesForTimesForInitialization_: NSNumber?
+  @NSManaged var minutesForTimesOrderTitles_: String?
+  @NSManaged var minutesForTimesTitle_: String?
+  @NSManaged var name_: String?
+  @NSManaged var sectionTitles_: String?
+  @NSManaged var specialFeatureForInitialization_: String?
+  @NSManaged var specialFeatureOptions_: String?
+  @NSManaged var specialFeatureTitle_: String?
+  @NSManaged var timesPerDayForInitialization_: NSNumber?
+  @NSManaged var timesPerDayOptions_: String?
+  @NSManaged var timesPerDayTitle_: String?
+  @NSManaged var basicValues: TaskTypeItemBasicValues?
+  
+  @NSManaged var task: NSSet
+  
 }

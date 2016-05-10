@@ -26,12 +26,19 @@ protocol ManagedObjectContextSettableAndLoadable: ManagedObjectContextSettable {
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
+  
   lazy var coreDataStack = CoreDataStack()
+  
+  let petsRepository = PetsRepository(withModelName: "DoctorBeaver")
   
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     
     if let viewController = window!.rootViewController as? ManagedObjectContextSettable {
       viewController.setManagedObjectContext(coreDataStack.context)
+    }
+    
+    if let viewController = window!.rootViewController as? TabBarController {
+      viewController.petsRepository = petsRepository
     }
     
     return true

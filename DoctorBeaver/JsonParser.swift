@@ -9,15 +9,57 @@
 import Foundation
 import CoreData
 
-class JsonPetParser {
-  
+class JsonParser {
+  let petsRepository: PetsRepository
   let fileName: String
   let fileType: String
   
-  init(withFileName fileName: String, andType fileType: String) {
+  init(forPetsRepository petsRepository: PetsRepository, withFileName fileName: String, andType fileType: String) {
+    self.petsRepository = petsRepository
     self.fileName = fileName
     self.fileType = fileType
   }
+}
+
+class JsonTaskTypeItemParser: JsonParser {
+  
+}
+
+class JsonTaskTypeItemBasicValuesParser: JsonParser {
+  
+  func populateRepository() {
+    if let filePath = NSBundle.mainBundle().pathForResource(fileName, ofType: fileType) {
+      if let data = NSData(contentsOfFile: filePath) {
+        do {
+          if let dict = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String: AnyObject] {
+            
+            guard let taskNamePlaceholder = dict["taskNamePlaceholder"] as? String,
+              let startDateTitle = dict["startDateTitle"] as? String,
+              let daysOptions = dict["daysOptions"] as? String,
+              let endDaysOrTimesTitle = dict["endDaysOrTimesTitle"] as? String,
+              let timesOptions = dict["timesOptions"] as? String
+              else { return }
+            
+            if let taskTypeItemBasicValues = petsRepository.insertTaskTypeItemBasicValues() {
+              taskTypeItemBasicValues.taskNamePlaceholder = taskNamePlaceholder
+              taskTypeItemBasicValues.startDateTitle = startDateTitle
+              taskTypeItemBasicValues.daysOptions = daysOptions
+              taskTypeItemBasicValues.endDaysOrTimesTitle = endDaysOrTimesTitle
+              taskTypeItemBasicValues.timesOptions = timesOptions
+              
+              petsRepository.saveOrRollback()
+            }
+          }
+        } catch {
+          print("Some error with JSON-file!")
+        }
+      }
+    }
+  }
+  
+}
+
+class JsonPetParser: JsonParser {
   
   func populateManagedObjectContextWithJsonPetData(managedContext: NSManagedObjectContext) {
     
@@ -134,6 +176,7 @@ class JsonPetParser {
     
     if let task = Task(insertIntoManagedObjectContext: managedContext) {
       task.typeId = typeId
+      
       task.name = name
       
       task.timesPerDay = timesPerDay
@@ -183,22 +226,5 @@ class JsonPetParser {
       return nil
     }
   }
-  
-//  func pishTask(task: Task, tpd: Int, sd: String) {
-//    
-//    task.endDaysOrTimes = tpd
-//    task.startDate = VisualConfiguration.dateFromString(sd, withFormat: .DateTime)!
-//    
-//    task.countEndDate()
-//    
-//    //    print("   times: \(tpd)")
-//    //    print(VisualConfiguration.stringFromDate(task.startDate))
-//    //    print(VisualConfiguration.stringFromDate(task.endDate))
-//    //    print("")
-//    
-//    
-//  }
-  
-  
   
 }

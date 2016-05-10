@@ -24,12 +24,12 @@ extension Task {
   @NSManaged var doseForTimes: [String]
   @NSManaged var specialFeature: String
   
-  @NSManaged var comment: String
-  
   @NSManaged var startDate: NSDate
   @NSManaged var frequency: [Int]
+  
   @NSManaged var endDaysOrTimes: Int
   @NSManaged var endDate: NSDate
+  @NSManaged var comment: String
   
   @NSManaged var realizations: NSOrderedSet
 }

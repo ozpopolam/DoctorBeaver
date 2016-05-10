@@ -16,11 +16,6 @@ class Pet: NSManagedObject {
     }
   }
   
-  enum Keys: String {
-    case name
-    case selected
-  }
-  
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
     if let entity = NSEntityDescription.entityForName(Pet.entityName, inManagedObjectContext: managedContext) {
       self.init(entity: entity, insertIntoManagedObjectContext: managedContext)

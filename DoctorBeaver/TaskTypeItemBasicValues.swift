@@ -11,7 +11,27 @@ import CoreData
 
 
 class TaskTypeItemBasicValues: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
-
+  
+  static var entityName: String {
+    get {
+      return "TaskTypeItemBasicValues"
+    }
+  }
+  
+  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
+    if let entity = NSEntityDescription.entityForName(TaskTypeItemBasicValues.entityName, inManagedObjectContext: managedContext) {
+      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
+      
+      typeItem = []
+      taskNamePlaceholder = ""
+      startDateTitle = ""
+      daysOptions = ""
+      endDaysOrTimesTitle = ""
+      timesOptions = ""
+      
+    } else {
+      return nil
+    }
+  }
+  
 }

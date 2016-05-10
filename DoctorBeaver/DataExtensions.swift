@@ -109,3 +109,16 @@ extension Realization {
     print("")
   }
 }
+
+extension TaskTypeItemBasicValues {
+  func printInBlock() {
+    print("TaskTypeItemBasicValues")
+    
+    print("      \(taskNamePlaceholder)")
+    print("      \(startDateTitle)")
+    
+    print("      \(daysOptions)")
+    print("      \(endDaysOrTimesTitle)")
+    print("      \(timesOptions)")
+  }
+}

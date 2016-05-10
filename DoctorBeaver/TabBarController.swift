@@ -11,6 +11,8 @@
  
  class TabBarController: UITabBarController {
   
+  var petsRepository: PetsRepository!
+  
   var managedContext: NSManagedObjectContext!
   
   override func viewDidLoad() {
@@ -59,10 +61,16 @@
       }
     }
 
-    populateManagedObjectContextWithJsonPetData()
+    //populateManagedObjectContextWithJsonPetData()
     
     
- 
+    //_helperDeleteAllTaskTypeItemBasicValues()
+    // if (first launch of application) || petsRepository.countAll(TaskTypeItemBasicValues.entityName) == 0 {
+    populatePetsRepositoryWithBasicValues()
+    
+    if let ttibv = petsRepository.fetchAllTaskTypeItemBasicValues().first {
+      ttibv.printInBlock()
+    }
  
     // начинаем со вкладки расписания
     self.selectedIndex = 1
@@ -77,15 +85,36 @@
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
   }
   
-  func populateManagedObjectContextWithJsonPetData(doItNow: Bool = true) {
-    if doItNow {
-      let jsonPetParser = JsonPetParser(withFileName: "Pets", andType: "json")
-      jsonPetParser.populateManagedObjectContextWithJsonPetData(managedContext)
-    }
+  func populatePetsRepositoryWithBasicValues() {
+    let jsonBasicValuesParser = JsonTaskTypeItemBasicValuesParser(forPetsRepository: petsRepository, withFileName: "RuTaskTypeItemBasicValues", andType: "json")
+    jsonBasicValuesParser.populateRepository()
   }
+  
+  func _helperDeleteAllTaskTypeItemBasicValues() {
+    petsRepository.deleteAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)
+  }
+  
+  func populatePetsRepositoryWithTaskTypeItems() {
+    let jsonBasicValuesParser = JsonTaskTypeItemBasicValuesParser(forPetsRepository: petsRepository, withFileName: "RuTaskTypeItemBasicValues", andType: "json")
+    jsonBasicValuesParser.populateRepository()
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+//  func populateManagedObjectContextWithJsonPetData(doItNow: Bool = true) {
+//    if doItNow {
+//      let jsonPetParser = JsonPetParser(withFileName: "Pets", andType: "json")
+//      jsonPetParser.populateManagedObjectContextWithJsonPetData(managedContext)
+//    }
+//  }
   
  }
  

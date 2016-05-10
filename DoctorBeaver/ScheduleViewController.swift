@@ -355,7 +355,7 @@ extension ScheduleViewController: ManagedObjectContextSettableAndLoadable {
   func fetchSelectedPets(fromManagedContext managedContext: NSManagedObjectContext) -> [Pet] {
     
     let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    let predicate = NSPredicate(format: "%K == YES", Pet.Keys.selected.rawValue)
+    let predicate = NSPredicate(format: "%K == YES", "selected")
     fetchRequest.predicate = predicate
     
     do {
