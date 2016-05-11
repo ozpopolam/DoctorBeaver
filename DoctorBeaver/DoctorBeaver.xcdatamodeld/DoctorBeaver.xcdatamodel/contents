@@ -34,6 +34,7 @@
         <attribute name="doseForTimesOptions_" attributeType="String" syncable="YES"/>
         <attribute name="doseForTimesOrderTitles_" attributeType="String" syncable="YES"/>
         <attribute name="doseForTimesTitle_" attributeType="String" syncable="YES"/>
+        <attribute name="doseUnit_" attributeType="String" syncable="YES"/>
         <attribute name="frequencyPreposition_" attributeType="String" syncable="YES"/>
         <attribute name="frequencySegmentTitles_" attributeType="String" syncable="YES"/>
         <attribute name="frequencyTitle_" attributeType="String" syncable="YES"/>
@@ -65,7 +66,7 @@
         <element name="Pet" positionX="-297" positionY="-144" width="128" height="118"/>
         <element name="Realization" positionX="106" positionY="-108" width="128" height="90"/>
         <element name="Task" positionX="-90" positionY="-243" width="128" height="253"/>
-        <element name="TaskTypeItem" positionX="-99" positionY="108" width="128" height="390"/>
+        <element name="TaskTypeItem" positionX="-99" positionY="108" width="128" height="405"/>
         <element name="TaskTypeItemBasicValues" positionX="-54" positionY="-45" width="128" height="135"/>
     </elements>
 </model>

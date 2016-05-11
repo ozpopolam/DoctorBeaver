@@ -63,13 +63,9 @@
 
     //populateManagedObjectContextWithJsonPetData()
     
-    
-    //_helperDeleteAllTaskTypeItemBasicValues()
-    // if (first launch of application) || petsRepository.countAll(TaskTypeItemBasicValues.entityName) == 0 {
-    populatePetsRepositoryWithBasicValues()
-    
-    if let ttibv = petsRepository.fetchAllTaskTypeItemBasicValues().first {
-      ttibv.printInBlock()
+    let firstLaunch = true
+    if firstLaunch {
+      preparePetsRepositoryForUse()
     }
  
     // начинаем со вкладки расписания
@@ -87,27 +83,14 @@
     super.didReceiveMemoryWarning()
   }
   
-  func populatePetsRepositoryWithBasicValues() {
-    let jsonBasicValuesParser = JsonTaskTypeItemBasicValuesParser(forPetsRepository: petsRepository, withFileName: "RuTaskTypeItemBasicValues", andType: "json")
-    jsonBasicValuesParser.populateRepository()
+  func preparePetsRepositoryForUse() -> Bool {
+    let jsonBasicValuesParser = JsonTaskPrimaryValuesParser(forPetsRepository: petsRepository)
+    return jsonBasicValuesParser.populateRepositoryWithTaskPrimaryValues(withFileName: "RuTaskPrimaryValues", andType: "json")
   }
   
   func _helperDeleteAllTaskTypeItemBasicValues() {
     petsRepository.deleteAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)
   }
-  
-  func populatePetsRepositoryWithTaskTypeItems() {
-    let jsonBasicValuesParser = JsonTaskTypeItemBasicValuesParser(forPetsRepository: petsRepository, withFileName: "RuTaskTypeItemBasicValues", andType: "json")
-    jsonBasicValuesParser.populateRepository()
-  }
-  
-  
-  
-  
-  
-  
-  
-  
   
 //  func populateManagedObjectContextWithJsonPetData(doItNow: Bool = true) {
 //    if doItNow {
