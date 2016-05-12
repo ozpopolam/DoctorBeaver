@@ -32,7 +32,6 @@
 		628425171C84B1450016E32F /* StgTitleSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628425161C84B1450016E32F /* StgTitleSegmentCell.swift */; };
 		628425191C85BA5C0016E32F /* HideShowSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628425181C85BA5C0016E32F /* HideShowSegmentedControl.swift */; };
 		628E3CC41C963A55000C122A /* RuPets.json in Resources */ = {isa = PBXBuildFile; fileRef = 628E3CC31C963A55000C122A /* RuPets.json */; };
-		628E3CC61C974D6B000C122A /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E3CC51C974D6B000C122A /* CoreDataStack.swift */; };
 		628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */; };
 		628E3CE31C999BF6000C122A /* Realization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E3CE21C999BF6000C122A /* Realization.swift */; };
 		62941C451CAEBBDA001D3182 /* TaskConfigurationByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */; };
@@ -54,7 +53,6 @@
 		62C64D651CD7EF10006B4CEF /* PetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D641CD7EF10006B4CEF /* PetsViewController.swift */; };
 		62C64D851CDA795C006B4CEF /* PetCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D841CDA795C006B4CEF /* PetCVCell.swift */; };
 		62C64D871CDCD48A006B4CEF /* CalendarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D861CDCD48A006B4CEF /* CalendarController.swift */; };
-		62C64D8B1CE234FA006B4CEF /* RuTaskTypeItem.json in Resources */ = {isa = PBXBuildFile; fileRef = 62C64D8A1CE234FA006B4CEF /* RuTaskTypeItem.json */; };
 		62C64D9F1CE28651006B4CEF /* TaskTypeItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D9A1CE28651006B4CEF /* TaskTypeItem+CoreDataProperties.swift */; };
 		62C64DA01CE28651006B4CEF /* TaskTypeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D9B1CE28651006B4CEF /* TaskTypeItem.swift */; };
 		62C64DA11CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D9C1CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift */; };
@@ -118,7 +116,6 @@
 		628425161C84B1450016E32F /* StgTitleSegmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTitleSegmentCell.swift; sourceTree = "<group>"; };
 		628425181C85BA5C0016E32F /* HideShowSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HideShowSegmentedControl.swift; sourceTree = "<group>"; };
 		628E3CC31C963A55000C122A /* RuPets.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuPets.json; sourceTree = "<group>"; };
-		628E3CC51C974D6B000C122A /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		628E3CC81C975947000C122A /* DoctorBeaver.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DoctorBeaver.xcdatamodel; sourceTree = "<group>"; };
 		628E3CE21C999BF6000C122A /* Realization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Realization.swift; sourceTree = "<group>"; };
 		62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskConfigurationByType.swift; sourceTree = "<group>"; };
@@ -140,7 +137,6 @@
 		62C64D641CD7EF10006B4CEF /* PetsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsViewController.swift; sourceTree = "<group>"; };
 		62C64D841CDA795C006B4CEF /* PetCVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetCVCell.swift; sourceTree = "<group>"; };
 		62C64D861CDCD48A006B4CEF /* CalendarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarController.swift; sourceTree = "<group>"; };
-		62C64D8A1CE234FA006B4CEF /* RuTaskTypeItem.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuTaskTypeItem.json; sourceTree = "<group>"; };
 		62C64D9A1CE28651006B4CEF /* TaskTypeItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TaskTypeItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		62C64D9B1CE28651006B4CEF /* TaskTypeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTypeItem.swift; sourceTree = "<group>"; };
 		62C64D9C1CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TaskTypeItemBasicValues+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -248,6 +244,7 @@
 		620372D51C6A61C600352617 /* View controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6203728F1C69023900352617 /* TabBarController.swift */,
 				6297A8031CA1D522004F3D7E /* Pets */,
 				62DCB0C91C7796B900ABF206 /* Schedule */,
 				62F0FEB51CB2EA8700C13132 /* Task */,
@@ -261,7 +258,6 @@
 				62C64DAA1CE292E3006B4CEF /* RuTaskPrimaryValues.json */,
 				628E3CC31C963A55000C122A /* RuPets.json */,
 				6219B4731CA06605006E4E14 /* JsonParser.swift */,
-				62C64D8A1CE234FA006B4CEF /* RuTaskTypeItem.json */,
 				62DCB0CA1C78DBB600ABF206 /* Data Model */,
 				62DCB0CB1C78DC1000ABF206 /* TaskType.swift */,
 				62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */,
@@ -331,6 +327,7 @@
 		62DCB0C91C7796B900ABF206 /* Schedule */ = {
 			isa = PBXGroup;
 			children = (
+				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
 				620372881C66CE8A00352617 /* ScheduleViewController.swift */,
 				62C64D511CCD33DB006B4CEF /* CalendarPopoverController.swift */,
 				62A83B341C6D052A00A8DE8D /* FilterViewController.swift */,
@@ -343,10 +340,7 @@
 		62DCB0CA1C78DBB600ABF206 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
-				6203728F1C69023900352617 /* TabBarController.swift */,
 				628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */,
-				628E3CC51C974D6B000C122A /* CoreDataStack.swift */,
 				62C64D571CD2D1E2006B4CEF /* Pet+CoreDataProperties.swift */,
 				62C64D561CD2D1E2006B4CEF /* Pet.swift */,
 				62C64DA41CE286AE006B4CEF /* Task+CoreDataProperties.swift */,
@@ -485,7 +479,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				62C587BE1C6EA88900FA3968 /* Main.storyboard in Resources */,
-				62C64D8B1CE234FA006B4CEF /* RuTaskTypeItem.json in Resources */,
 				6203728C1C68137000352617 /* Assets.xcassets in Resources */,
 				627F2C9E1C8842DF00B9ADFF /* DataPickerView.xib in Resources */,
 				62A83B8D1C6D278800A8DE8D /* FakeNavigationBarView.xib in Resources */,
@@ -542,7 +535,6 @@
 				623B4FF31C7648A50016EC92 /* EditShowTaskViewController.swift in Sources */,
 				62C64D541CCD437A006B4CEF /* UIButton.swift in Sources */,
 				62C64D871CDCD48A006B4CEF /* CalendarController.swift in Sources */,
-				628E3CC61C974D6B000C122A /* CoreDataStack.swift in Sources */,
 				620372DA1C6AAC6800352617 /* HeaderCell.swift in Sources */,
 				62C64DA01CE28651006B4CEF /* TaskTypeItem.swift in Sources */,
 				62A83B8F1C6D287E00A8DE8D /* UIImage.swift in Sources */,

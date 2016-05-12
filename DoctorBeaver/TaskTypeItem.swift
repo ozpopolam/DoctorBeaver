@@ -18,6 +18,10 @@ class TaskTypeItem: NSManagedObject {
     }
   }
   
+  enum Keys: String {
+    case id = "id_"
+  }
+  
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
     if let entity = NSEntityDescription.entityForName(TaskTypeItem.entityName, inManagedObjectContext: managedContext) {
       self.init(entity: entity, insertIntoManagedObjectContext: managedContext)

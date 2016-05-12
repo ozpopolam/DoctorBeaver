@@ -607,11 +607,11 @@ extension EditShowMinutesDoseTaskViewController: EqualSwitchDelegate {
 }
 
 // обращения с CoreData
-extension EditShowMinutesDoseTaskViewController: ManagedObjectContextSettable {
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-  }
-}
+//extension EditShowMinutesDoseTaskViewController: ManagedObjectContextSettable {
+//  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
+//    self.managedContext = managedContext
+//  }
+//}
 
 extension EditShowMinutesDoseTaskViewController: DatePickerDelegate {
   func datePicker(picker: UIDatePicker, didPickDate date: NSDate) { }

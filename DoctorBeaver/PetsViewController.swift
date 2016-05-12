@@ -271,7 +271,7 @@ extension PetsViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // обращения с CoreData
-extension PetsViewController: ManagedObjectContextSettableAndLoadable {
+extension PetsViewController {
   
   // устанавливаем ManagedObjectContext
   func setManagedObjectContext(managedContext: NSManagedObjectContext) {

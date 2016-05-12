@@ -19,8 +19,11 @@ class Task: NSManagedObject {
   }
   
   // разделитель для дозировки
-  let doseSeparator: Character = ";"
-  let whitespace: Character = " "
+  let separator: Character = "|"
+  let whitespace = " "
+  
+  
+  let doseSeparator: Character = "|"
   
   // тип задания
   var type: TaskType {
@@ -61,20 +64,6 @@ class Task: NSManagedObject {
     } else {
       return nil
     }
-  }
-  
-  
-  func configure(withTypeId typeId: Int) {
-    self.typeId = typeId
-    name = "Название"
-    
-    timesPerDay = 1
-    minutesForTimes = [540] // 9 утра
-    
-    let tskCnfg = TaskConfigurationByType(task: self)
-    doseForTimes = tskCnfg.doseForConfiguration()
-    specialFeature = tskCnfg.specialFeatureForConfiguration()
-    comment = ""
   }
   
   // подсчитать конечную дату, если задано число дней или число раз
@@ -559,89 +548,36 @@ class Task: NSManagedObject {
     }
   }
   
+  func getOneDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [String] {
+    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: false).map{String($0)}
+    return oneDimArray
+  }
+  
+  func getTwoDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [[String]] {
+    
+    let twoDimSeparator = String(separator) + String(separator)
+    var twoDimArray = [[String]]()
+    
+    let twoDimStringElements = string.componentsSeparatedByString(twoDimSeparator)
+    for twoDimStringElement in twoDimStringElements {
+      twoDimArray.append(getOneDimArrayOfStrings(fromUnseparatedString: twoDimStringElement, withSeparator: separator))
+    }
+    return twoDimArray
+  }
+  
+  
   // дозировка в читабельном виде
   func dosePrintable(forTime time: Int) -> String {
-    
     guard time < doseForTimes.count else { return "" }
     
-    // разделяем строку с дозами по ;
-    if doseForTimes[time].characters.contains(doseSeparator) {
-      let strsDFT = doseForTimes[time].characters.split(doseSeparator, maxSplit: doseForTimes[time].characters.count, allowEmptySlices: true).map{String($0)}
-      
-      var sum: Double?
-      // проверяем, все ли составляющие строки числа, которые можно сложить
-      for strDose in strsDFT {
-        if !strDose.isEmpty {
-          if let dblDose = Double(strDose) {
-            if let previousSum = sum {
-              sum = previousSum + dblDose
-            } else {
-              sum = dblDose
-            }
-          } else {
-            sum = nil
-            break
-          }
-        }
-      }
-      
-      if let sum = sum {
-        // строки-числа сложились в сумму
-        let roundSum = Int(sum)
-        
-        if sum == Double(roundSum) {
-          // сумма - круглое число
-          return String(roundSum)
-        } else {
-          // сумма - дробное
-          return String(sum)
-        }
-        
-      } else {
-        // заменяем все ; на пробелы
-        var strDFT = doseForTimes[time].stringByReplacingOccurrencesOfString(String(doseSeparator), withString: String(whitespace))
-        
-        // убираем лишние пробелы с начала и с конца
-        strDFT = dropAllFirst(whitespace, fromString: strDFT)
-        strDFT = dropAllLast(whitespace, fromString: strDFT)
-        
-        return strDFT
-      }
+    let stringDoses = getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator).filter{$0 != whitespace}
+    let numberDoses = stringDoses.map{ Double($0) }.flatMap{ $0 }
+    
+    if numberDoses.count == stringDoses.count {
+      return String(numberDoses.reduce(0, combine: { $0 + $1 }))
     } else {
-      return doseForTimes[time]
+      return stringDoses.reduce("", combine: { $0 == "" ? $1 : $0 + whitespace + $1 })
     }
   }
   
-  // убираем все первые заданные символы из строки
-  func dropAllFirst(character: Character, fromString string: String) -> String {
-    var s = string
-    while true {
-      if s.characters.count == 0 {
-        break
-      } else if let firstChar = s.characters.first {
-        if firstChar == character {
-          s = String(s.characters.dropFirst())
-        } else {
-          break
-        }
-      }
-    }
-    return s
-  }
-  // убираем все последние заданные символы из строки
-  func dropAllLast(character: Character, fromString string: String) -> String {
-    var s = string
-    while true {
-      if s.characters.count == 0 {
-        break
-      } else if let lastChar = s.characters.last {
-        if lastChar == character {
-          s = String(s.characters.dropLast())
-        } else {
-          break
-        }
-      }
-    }
-    return s
-  }
 }

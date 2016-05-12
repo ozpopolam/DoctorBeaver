@@ -12,7 +12,9 @@ import Foundation
 // оформление приложения
 struct VisualConfiguration {
   
-  static let iconButtonSize = CGSize(width: 44.0, height: 44.0)
+  static let buttonIconSize = CGSize(width: 44.0, height: 44.0)
+  
+  static let barIconSize = CGSize(width: 25, height: 25)
   
   static let animationDuration: NSTimeInterval = 0.5
   

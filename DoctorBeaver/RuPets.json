@@ -12,7 +12,7 @@
                      "specialFeature": "независимо от еды",
                      "startDate": "1.05.2016 17:00",
                      "frequency": [],
-                     "endTimes": 30,
+                     "endTimes": 50,
                      "comment": "Прятать в еду",
                      "realizations": []
                      }, {
@@ -25,40 +25,6 @@
                      "startDate": "1.05.2016 17:00",
                      "frequency": [],
                      "endDate": "15.05.2016 13:00",
-                     "comment": "",
-                     "realizations": []
-                     }]
-           }, {
-           "name": "Пушистус",
-           "image": "cat1",
-           "selected": false,
-           "tasks": [{
-                     "typeId": 2,
-                     "name": "Ципровет",
-                     "timesPerDay": 1,
-                     "minutesForTimes": [880],
-                     "doseForTimes": ["3"],
-                     "specialFeature": "в глаза",
-                     "startDate": "3.05.2016 7:00",
-                     "frequency": [1, 1],
-                     "endDays": 14,
-                     "comment": "",
-                     "realizations": []
-                     }]
-           }, {
-           "name": "Гарфилд",
-           "image": "cat2",
-           "selected": false,
-           "tasks": [{
-                     "typeId": 3,
-                     "name": "Кубатол",
-                     "timesPerDay": 1,
-                     "minutesForTimes": [1150],
-                     "doseForTimes": [],
-                     "specialFeature": "на кожу",
-                     "startDate": "1.05.2016 8:00",
-                     "frequency": [],
-                     "endDate": "1.05.2017 8:00",
                      "comment": "",
                      "realizations": []
                      }]

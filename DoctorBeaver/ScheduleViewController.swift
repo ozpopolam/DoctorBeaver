@@ -18,16 +18,14 @@ class ScheduleViewController: UIViewController {
   @IBOutlet weak var petNameLabel: UILabel!
   @IBOutlet weak var petsNamesText: UITextView!
   
-//  var borderImage: UIImage?
-  
   @IBOutlet weak var warningView: UIView!
   @IBOutlet weak var warningLabel: UILabel!
   
   @IBOutlet weak var calendarContainerView: UIView!
   @IBOutlet weak var tableContainerView: UIView!
   
-  var managedContext: NSManagedObjectContext!
-  var viewWasLoadedWithManagedContext = false
+  var petsRepository: PetsRepository!
+  var viewWasLoadedWithPetsRepository = false
   
   var calendarButton: UIButton!
   // дата для отображения расписания
@@ -59,11 +57,8 @@ class ScheduleViewController: UIViewController {
     // поначалу прячем все кнопки
     fakeNavigationBar.hideAllButtons()
     
-//    // фон для иконки питомца
-//    borderImage = UIImage(named: "border")
-    
     // проверяем, загружен ли контекст
-    if viewIsReadyToBeLoaded(withManagedContext: managedContext) {
+    if viewIsReadyToBeLoadedWithPetsRepository() {
       // настраиваем view
       fullyReloadSchedule()
     }
@@ -91,7 +86,7 @@ class ScheduleViewController: UIViewController {
   func fullyReloadSchedule() {
     
     // настраиваем расположение кнопок и по необходимости выводим предупреждающие надписи
-    if countAllPets(fromManagedContext: managedContext) == 0 {
+    if petsRepository.countAll(Pet.entityName) == 0 {
       // не зарегестрировано ни одного питомца
       // прячем все кнопки с nav bar
       fakeNavigationBar.hideAllButtons()
@@ -116,7 +111,7 @@ class ScheduleViewController: UIViewController {
     
     if !noFetchRequest {
       // загружаем питомцев, которых отметил пользователь
-      selectedPets = fetchSelectedPets(fromManagedContext: managedContext)
+      selectedPets = petsRepository.fetchAllSelectedPets()
     }
     
     if selectedPets.count == 0 {
@@ -162,7 +157,7 @@ class ScheduleViewController: UIViewController {
   
   func reloadScheduleTable(forDate date: NSDate) {
     if let viewController = self.childViewControllers[1] as? ScheduleTableViewController {
-      viewController.setSchedule(withManagedContext: managedContext, withPets: selectedPets, andDate: date)
+      viewController.setSchedule(withPetsRepository: petsRepository, withPets: selectedPets, andDate: date)
     }
   }
   
@@ -301,79 +296,30 @@ class ScheduleViewController: UIViewController {
     if segue.identifier == filterSegueId {
       if let destinationVC = segue.destinationViewController as? FilterViewController {
         destinationVC.delegate = self
-        destinationVC.setManagedObjectContext(managedContext)
+        destinationVC.setPetsRepository(petsRepository)
       }
     }
   }
   
 }
 
-// обращения с CoreData
-extension ScheduleViewController: ManagedObjectContextSettableAndLoadable {
+extension ScheduleViewController: PetsRepositorySettable {
   
-  // устанавливаем ManagedObjectContext
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-    // если view загружено, подгружаем в него данные
-    if viewIsReadyToBeLoaded(withManagedContext: self.managedContext) {
+  func setPetsRepository(petsRepository: PetsRepository) {
+    self.petsRepository = petsRepository
+    if viewIsReadyToBeLoadedWithPetsRepository() {
       fullyReloadSchedule()
     }
   }
   
   // проверяем, можно ли обновить view данными из managedContext
-  func viewIsReadyToBeLoaded(withManagedContext managedContext: NSManagedObjectContext?) -> Bool {
-    if self.isViewLoaded() && managedContext != nil && !self.viewWasLoadedWithManagedContext {
-      self.viewWasLoadedWithManagedContext = true
+  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
+    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
+      viewWasLoadedWithPetsRepository = true
       return true
     } else {
       return false
     }
-  }
-  
-  // считаем общее число питомцев
-  func countAllPets(fromManagedContext managedContext: NSManagedObjectContext) -> Int {
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    fetchRequest.resultType = .CountResultType
-    
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [NSNumber] {
-        if let count = results.first?.integerValue {
-          return count
-        } else {
-          return 0
-        }
-      } else {
-        return 0
-      }
-    } catch {
-      print("Fetching error!")
-      return 0
-    }
-  }
-  
-  // выбираем всех отмеченных питомцев
-  func fetchSelectedPets(fromManagedContext managedContext: NSManagedObjectContext) -> [Pet] {
-    
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    let predicate = NSPredicate(format: "%K == YES", "selected")
-    fetchRequest.predicate = predicate
-    
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results
-        //return results.sort(sortedByIdDESC)
-      } else {
-        return []
-      }
-    } catch {
-      print("Fetching error!")
-      return []
-    }
-  }
-  
-  // сортируем питомцев по id
-  func sortedByIdDESC(lh: Pet, rh: Pet) -> Bool {
-    return lh.id > rh.id
   }
   
 }

@@ -888,7 +888,7 @@ extension EditShowTaskViewController: StgComplexPickerCellDelegate {
 }
 
 // обращения с CoreData
-extension EditShowTaskViewController: ManagedObjectContextSettable {
+extension EditShowTaskViewController {
   // устанавливаем ManagedObjectContext
   func setManagedObjectContext(managedContext: NSManagedObjectContext) {
     self.managedContext = managedContext

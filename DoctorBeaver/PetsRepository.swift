@@ -9,8 +9,13 @@
 import Foundation
 import CoreData
 
+protocol PetsRepositorySettable: class {
+  // устанавливаем ManagedObjectContext
+  var petsRepository: PetsRepository! { get set }
+  func setPetsRepository(petsRepository: PetsRepository)
+}
+
 class PetsRepository {
-  
   let modelName: String
   
   private lazy var appDocDirectory: NSURL = {
@@ -46,13 +51,17 @@ class PetsRepository {
     self.modelName = modelName
   }
   
+  func rollback() {
+    context.rollback()
+  }
+  
   func saveOrRollback() -> Bool {
     if context.hasChanges {
       do {
         try context.save()
         return true
       } catch {
-        print("Error! Context cannot be saver!")
+        print("Error! Context cannot be saved!")
         context.rollback()
         return false
       }
@@ -78,9 +87,25 @@ class PetsRepository {
     }
   }
   
+  func insertRealization() -> Realization? {
+    if let realization = Realization(insertIntoManagedObjectContext: context) {
+      return realization
+    } else {
+      return nil
+    }
+  }
+  
   func insertTask() -> Task? {
     if let task = Task(insertIntoManagedObjectContext: context) {
       return task
+    } else {
+      return nil
+    }
+  }
+  
+  func insertPet() -> Pet? {
+    if let pet = Pet(insertIntoManagedObjectContext: context) {
+      return pet
     } else {
       return nil
     }
@@ -98,78 +123,94 @@ class PetsRepository {
         }
       }
     } catch {
-      print("Fetching error!")
+      print("Counting error!")
     }
     return 0
   }
   
   // fetching
-  func fetchAllObjects(forEntityName entityName: String) -> [NSManagedObject]? {
+  func fetchAllObjects(forEntityName entityName: String) -> [NSManagedObject] {
     let fetchRequest = NSFetchRequest(entityName: entityName)
     
     do {
       if let fetchResults = try context.executeFetchRequest(fetchRequest) as? [NSManagedObject] {
         return fetchResults
-      } else {
-        return nil
-      }
-    } catch {
-      return nil
-    }
-    
-  }
-  
-  func fetchAllTaskTypeItemBasicValues() -> [TaskTypeItemBasicValues] {
-    if let managedObjects = fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName) {
-      var allBasicValues = [TaskTypeItemBasicValues]()
-      
-      for managedObject in managedObjects {
-        if let basicValues = managedObject as? TaskTypeItemBasicValues {
-          allBasicValues.append(basicValues)
-        }
-      }
-      return allBasicValues
-    } else {
-      return []
-    }
-  }
-  
-  func fetchTaskTypeItem(withId id: Int) -> TaskTypeItem {
-    
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    let predicate = NSPredicate(format: "%K == %i", "selected")
-    fetchRequest.predicate = predicate
-    
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results
-        //return results.sort(sortedByIdDESC)
-      } else {
-        return []
       }
     } catch {
       print("Fetching error!")
-      return []
+    }
+    return []
+  }
+  
+  func fetchAllPets() -> [Pet] {
+    let managedObjects = fetchAllObjects(forEntityName: Pet.entityName)
+    
+    var pets = [Pet]()
+    for managedObject in managedObjects {
+      if let pet = managedObject as? Pet {
+        pets.append(pet)
+      }
     }
     
+    return pets
+  }
+  
+//////
+//  func fetchAllTaskTypeItemBasicValues() -> [TaskTypeItemBasicValues] {
+////    if let managedObjects = fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName) {
+////      var allBasicValues = [TaskTypeItemBasicValues]()
+////      
+////      for managedObject in managedObjects {
+////        if let basicValues = managedObject as? TaskTypeItemBasicValues {
+////          allBasicValues.append(basicValues)
+////        }
+////      }
+////      return allBasicValues
+////    } else {
+////      return []
+////    }
+//  }
+//////
+  
+  func fetchAllSelectedPets() -> [Pet] {
+    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
+    let predicate = NSPredicate(format: "%K == YES", Pet.Keys.selected.rawValue)
+    fetchRequest.predicate = predicate
     
+    do {
+      if let results = try context.executeFetchRequest(fetchRequest) as? [Pet] {
+        return results
+      }
+    } catch {
+      print("Fetching error!")
+    }
     
+    return []
+  }
+  
+  
+  func fetchTaskTypeItem(withId id: Int) -> TaskTypeItem? {
+    let fetchRequest = NSFetchRequest(entityName: TaskTypeItem.entityName)
+    fetchRequest.fetchLimit = 1
+    let predicate = NSPredicate(format: "%K == %i", TaskTypeItem.Keys.id.rawValue, id)
+    fetchRequest.predicate = predicate
     
-//    if let managedObjects = fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName) {
-//      var allBasicValues = [TaskTypeItemBasicValues]()
-//      
-//      for managedObject in managedObjects {
-//        if let basicValues = managedObject as? TaskTypeItemBasicValues {
-//          allBasicValues.append(basicValues)
-//        }
-//      }
-//      return allBasicValues
-//    } else {
-//      return []
-//    }
+    do {
+      if let results = try context.executeFetchRequest(fetchRequest) as? [TaskTypeItem] {
+        return results.first
+      }
+    } catch {
+      print("Fetching error!")
+    }
+    return nil
   }
   
   // deletion
+  
+  func deleteObject(object: NSManagedObject) {
+    context.deleteObject(object)
+  }
+  
   func deleteAllObjects(forEntityName entityName: String) {
     let fetchRequest = NSFetchRequest(entityName: entityName)
     
@@ -187,4 +228,17 @@ class PetsRepository {
   
   
   
+}
+
+extension NSManagedObjectContext {
+  public func saveOrRollback() {
+    if hasChanges {
+      do {
+        try save()
+      } catch {
+        print("Context cannot be saved - roll back!")
+        rollback()
+      }
+    }
+  }
 }

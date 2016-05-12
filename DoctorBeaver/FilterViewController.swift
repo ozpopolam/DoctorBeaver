@@ -14,10 +14,6 @@ protocol FilterDelegate: class {
   func filterDidCancel(flt: FilterViewController)
 }
 
-protocol FilterDelegateSettable: class {
-  weak var delegate: FilterDelegate? { get set }
-}
-
 class FilterViewController: UIViewController {
   
   @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
@@ -26,16 +22,11 @@ class FilterViewController: UIViewController {
   
   weak var delegate: FilterDelegate?
   
-  var managedContext: NSManagedObjectContext!
-  var viewWasLoadedWithManagedContext = false
-  
-  let barIconSize = CGSize(width: 25, height: 25)
+  var petsRepository: PetsRepository!
+  var viewWasLoadedWithPetsRepository = false
   
   var pets = [Pet]()
   var selectedPetsID = Set<Double>()
-  
-  let today = NSDate()
-  let calendar = NSCalendar.currentCalendar()
   
   var checkAllPressed = false
   var unCheckAllPressed = false
@@ -77,15 +68,15 @@ class FilterViewController: UIViewController {
     tableView.tableFooterView = UIView(frame: .zero)
     
     // если view загружено, подгружаем в него данные
-    if viewIsReadyToBeLoaded(withManagedContext: self.managedContext) {
+    if viewIsReadyToBeLoadedWithPetsRepository() {
       reloadFilterTable()
     }
   }
   
   func barButton(imageName: String) -> UIButton {
     let bb = UIButton(type: .Custom)
-    bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.iconButtonSize)
-    bb.setImage(withName: imageName, ofSize: barIconSize, withTintColor: UIColor.fogColor())
+    bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.buttonIconSize)
+    bb.setImage(withName: imageName, ofSize: VisualConfiguration.barIconSize, withTintColor: UIColor.fogColor())
     return bb
   }
   
@@ -95,6 +86,16 @@ class FilterViewController: UIViewController {
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
+  }
+  
+  // проверяем, можно ли обновить view данными из managedContext
+  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
+    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
+      viewWasLoadedWithPetsRepository = true
+      return true
+    } else {
+      return false
+    }
   }
   
   // нажали "Выбрать все" на tool bar
@@ -129,7 +130,6 @@ class FilterViewController: UIViewController {
         rows.append(ind)
       }
     }
-    
     return rows
   }
   
@@ -145,7 +145,7 @@ class FilterViewController: UIViewController {
   
   // перегружаем всю таблицу с питомцами
   func reloadFilterTable() {
-    pets = fetchAllPets(fromManagedContext: managedContext)
+    pets = petsRepository.fetchAllPets()
     
     // запоминаем id питомцев, выбранных изначально
     for pet in pets {
@@ -173,7 +173,7 @@ extension FilterViewController: UITableViewDataSource {
       cell.petNameLabel.text = pet.name
       
       // считаем, сколько неоконченных заданий у питомца
-      let activeTasks = countActiveTasks(ofPet: pet)
+      let activeTasks = pet.countActiveTasks(forDate: NSDate())
       cell.remainTasksLabel.text = activeTasksToString(activeTasks)
       configureCellDoneState(cell, forRowAtIndexPath: indexPath)
       
@@ -215,50 +215,39 @@ extension FilterViewController: UITableViewDataSource {
     return actTsStr
   }
   
-  
-  // число раз в читабельном формате
-  func timeStringByIndex(index: Int) -> String {
-    var divided = index
-    if index > 100 {
-      divided = divided % 100
-    }
-    
-    if 11 <= divided && divided <= 19 {
-      return "раз"
-    }
-    
-    let remainder = index % 10
-    switch remainder {
-    case 2, 3, 4:
-      return "раза"
-    case 0, 1, 5, 6, 7, 8, 9:
-      return "раз"
-    default:
-      return ""
-    }
-  }
-  
-  // считаем, сколько неоконченных заданий у питомца
-  func countActiveTasks(ofPet pet: Pet) -> Int {
-    var actt = 0
-    
-    for task in pet.tasks {
-      if let task = task as? Task {
-        if calendar.compareDate(task.startDate, toDate: today, toUnitGranularity: .Minute) != .OrderedDescending &&
-          calendar.compareDate(today, toDate: task.endDate, toUnitGranularity: .Minute) != .OrderedDescending
-        {
-          actt += 1
-        }
-      }
-    }
-    return actt
-  }
-  
   // в зависиомсти о того, выбран ли питомец, конфигурируем вид ячейки
   func configureCellDoneState(cell: FilterCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let row = indexPath.row
     cell.checkmarkImageView.hidden = !pets[row].selected
     cell.selectView.hidden = pets[row].selected
+  }
+  
+  // пользователь хочет применить фильтр
+  func done(sender: UIButton) {
+    // проверяем, были ли изменения в выбранности
+    var newSelectedPetsID = Set<Double>()
+    var selectedPets: [Pet] = []
+    for pet in pets {
+      if pet.selected {
+        newSelectedPetsID.insert(pet.id)
+        selectedPets.append(pet)
+      }
+    }
+    
+    // если в выбранности ничего не изменилось
+    if newSelectedPetsID == selectedPetsID {
+      cancel()
+    } else {
+      petsRepository.saveOrRollback()
+      delegate?.filter(self, didPickPets: selectedPets)
+    }
+  }
+  
+  // пользователь не хочет применять фильтр
+  func cancel(sender: UIButton? = nil) {
+    // возвращаем изначальное состояние выбранности
+    petsRepository.rollback()
+    delegate?.filterDidCancel(self)
   }
   
 }
@@ -279,72 +268,11 @@ extension FilterViewController: UITableViewDelegate {
   
 }
 
-// обращения с CoreData
-extension FilterViewController: ManagedObjectContextSettableAndLoadable {
-  // устанавливаем ManagedObjectContext
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-    
-    // если view загружено, подгружаем в него данные
-    if viewIsReadyToBeLoaded(withManagedContext: self.managedContext) {
+extension FilterViewController: PetsRepositorySettable {
+  func setPetsRepository(petsRepository: PetsRepository) {
+    self.petsRepository = petsRepository
+    if viewIsReadyToBeLoadedWithPetsRepository() {
       reloadFilterTable()
     }
   }
-  
-  // проверяем, можно ли обновить view данными из managedContext
-  func viewIsReadyToBeLoaded(withManagedContext managedContext: NSManagedObjectContext?) -> Bool {
-    if self.isViewLoaded() && managedContext != nil && !self.viewWasLoadedWithManagedContext {
-      self.viewWasLoadedWithManagedContext = true
-      return true
-    } else {
-      return false
-    }
-  }
-  
-  // выбираем всех питомцев
-  func fetchAllPets(fromManagedContext managedContext: NSManagedObjectContext) -> [Pet] {
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results.sort{$0.name.localizedStandardCompare($1.name) == .OrderedAscending}
-      } else {
-        return []
-      }
-    } catch {
-      print("Fetching error!")
-      return []
-    }
-  }
-  
-  
-  
-  // пользователь хочет применить фильтр
-  func done(sender: UIButton) {
-    // проверяем, были ли изменения в выбранности
-    var newSelectedPetsID = Set<Double>()
-    var selectedPets: [Pet] = []
-    for pet in pets {
-      if pet.selected {
-        newSelectedPetsID.insert(pet.id)
-        selectedPets.append(pet)
-      }
-    }
-    
-    // если в выбранности ничего не изменилось
-    if newSelectedPetsID == selectedPetsID {
-      cancel()
-    } else {
-      managedContext.saveOrRollback()
-      delegate?.filter(self, didPickPets: selectedPets)
-    }
-  }
-  
-  // пользователь не хочет применять фильтр
-  func cancel(sender: UIButton? = nil) {
-    // возвращаем изначальное состояние выбранности
-    managedContext.rollback()
-    delegate?.filterDidCancel(self)
-  }
-  
 }

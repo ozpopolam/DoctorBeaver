@@ -168,22 +168,7 @@ class JsonTaskPrimaryValuesParser {
 
 class JsonPetsParser: JsonParser {
   
-  func populateManagedObjectContextWithJsonPetData(managedContext: NSManagedObjectContext) {
-    
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    do {
-      let fetchResults = try managedContext.executeFetchRequest(fetchRequest)
-      if !fetchResults.isEmpty {
-        managedContext.deleteAllObjects(forEntityName: Pet.entityName)
-      }
-      populateManagedObjectContext(managedContext)
-    } catch {
-      print("populateManagedObjectContextWithTestData() has failed")
-      
-    }
-  }
-  
-  func populateManagedObjectContext(managedContext: NSManagedObjectContext) {
+  func populateManagedObjectContextWithJsonPetData() {
     
     if let filePath = NSBundle.mainBundle().pathForResource(fileName, ofType: fileType) {
       if let data = NSData(contentsOfFile: filePath) {
@@ -192,7 +177,7 @@ class JsonPetsParser: JsonParser {
             
             if let jsonPets = jsonDict["pets"] as? [[String: AnyObject]] {
               for jsonPet in jsonPets {
-                populatePetInManagedObjectContext(managedContext, fromJSONDictionary: jsonPet)
+                populatePetInManagedObjectContext(fromJSONDictionary: jsonPet)
               }
             }
             
@@ -203,11 +188,12 @@ class JsonPetsParser: JsonParser {
       }
     }
     
-    managedContext.saveOrRollback()
+    
     
   }
+
   
-  func populatePetInManagedObjectContext(managedContext: NSManagedObjectContext, fromJSONDictionary dict: [String: AnyObject]) {
+  func populatePetInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) {
     guard let name = dict["name"] as? String,
       let image = dict["image"] as? String,
       let selected = dict["selected"] as? Bool,
@@ -217,22 +203,24 @@ class JsonPetsParser: JsonParser {
     let tasks: NSMutableSet = []
     
     for jsonTask in jsonTasks {
-      if let task = populateTaskInManagedObjectContext(managedContext, fromJSONDictionary: jsonTask) {
+      if let task = populateTaskInManagedObjectContext(fromJSONDictionary: jsonTask) {
         tasks.addObject(task)
       }
     }
     
-    if let pet = Pet(insertIntoManagedObjectContext: managedContext) {
+    if let pet = petsRepository.insertPet() {
       pet.name = name
       pet.image = image
       pet.selected = selected
       pet.tasks = tasks
+      
+      petsRepository.saveOrRollback()
     } else {
       return
     }
   }
   
-  func populateTaskInManagedObjectContext(managedContext: NSManagedObjectContext, fromJSONDictionary dict: [String: AnyObject]) -> Task? {
+  func populateTaskInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) -> Task? {
     
     guard let typeId = dict["typeId"] as? Int,
       let name = dict["name"] as? String,
@@ -276,13 +264,19 @@ class JsonPetsParser: JsonParser {
     
     let realizations: NSMutableOrderedSet = []
     for jr in jsonRealizations {
-      if let realization = populateRealizationInManagedObjectContext(managedContext, fromJSONDictionary: jr) {
+      if let realization = populateRealizationInManagedObjectContext(fromJSONDictionary: jr) {
         realizations.addObject(realization)
       }
     }
     
-    if let task = Task(insertIntoManagedObjectContext: managedContext) {
+    if let task = petsRepository.insertTask() {
       task.typeId = typeId
+      
+      if let taskTypeItem = petsRepository.fetchTaskTypeItem(withId: task.typeId) {
+        task.typeItem = taskTypeItem
+      } else {
+        return nil
+      }
       
       task.name = name
       
@@ -305,8 +299,6 @@ class JsonPetsParser: JsonParser {
       task.comment = comment
       task.realizations = realizations
       
-      //task.typeItem =
-      
       return task
       
     } else {
@@ -314,7 +306,7 @@ class JsonPetsParser: JsonParser {
     }
   }
   
-  func populateRealizationInManagedObjectContext(managedContext: NSManagedObjectContext, fromJSONDictionary dict: [String: AnyObject]) -> Realization? {
+  func populateRealizationInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) -> Realization? {
     guard let dateString = dict["date"] as? String,
       let done = dict["done"] as? [Int]
       else { return nil }
@@ -326,7 +318,7 @@ class JsonPetsParser: JsonParser {
       return nil
     }
     
-    if let realization = Realization(insertIntoManagedObjectContext: managedContext) {
+    if let realization = petsRepository.insertRealization() {
       realization.date = date
       realization.done = done
       
