@@ -32,7 +32,7 @@ extension Task {
     
     var s: String = ""
     for mft in minutesForTimes {
-      s += String(whitespace)
+      s += String(" ")
       
       let h = mft / 60
       if h < 10 {

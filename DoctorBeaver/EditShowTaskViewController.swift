@@ -11,8 +11,8 @@ import CoreData
 
 protocol EditShowTaskVCDelegate: class {
   func editShowTaskVC(viewController: EditShowTaskViewController, didDeleteTask task: Task)
-  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditTask task: Task)
-  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditTask task: Task)
+  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditScheduleOfTask task: Task)
+  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditScheduleOfTask task: Task)
 }
 
 class EditShowTaskViewController: UIViewController {
@@ -22,15 +22,15 @@ class EditShowTaskViewController: UIViewController {
   
   weak var delegate: EditShowTaskVCDelegate?
   
-  var managedContext: NSManagedObjectContext!
+  var petsRepository: PetsRepository!
   
-  // задание
-  var task: Task!
-  var taskWithInitialSettings: Task?
+  var task: Task! // task to show or edit
+  var taskWithInitialSettings: Task? // need to store initial values
   var minutesDoseInitialSettings: (minutes: [Int], dose: [String]) = ([], [])
   
   var tbCnfg = EditShowTaskTableConfiguration()
   
+  // types of cells in table
   let headerCellId = "headerCell"
   let stgTextFieldCellId = "stgTextFieldCell"
   let stgTitleValueCellId = "stgTitleValueCell"
@@ -39,8 +39,7 @@ class EditShowTaskViewController: UIViewController {
   let stgDatePickerCellId = "stgDatePickerCell"
   let stgComplexPickerCellId = "stgComplexPickerCell"
   
-  let editShowMinutesDoseSegueId = "editShowMinutesDoseSegue"
-  
+  // heights of cells
   let headerHeight: CGFloat = 22.0
   let regularCellHeight: CGFloat = 44.0
   let pickerCellHeight: CGFloat = 216.0
@@ -48,12 +47,16 @@ class EditShowTaskViewController: UIViewController {
   
   var keyboardHeight: CGFloat!
   
-  let animationDuration: NSTimeInterval = 0.5
+  let editShowMinutesDoseSegueId = "editShowMinutesDoseSegue"
   
-  // добавляем или редактируем задание
-  var editState = false
-  // было ли отредактировано
-  var edited = false
+  let animationDuration: NSTimeInterval = 0.5 // to animate change of button's icon
+  
+  var editState = false // adding or editing a task
+  var edited = false // task was edited
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -61,47 +64,44 @@ class EditShowTaskViewController: UIViewController {
     fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
     fakeNavigationBar.titleLabel.text = task.type.toString().uppercaseString
     
-    // кнопка "Удалить"
+    // button "Delete" (will be hiden or shown depending on editState)
     fakeNavigationBar.setButtonImage("trash", forButton: .CenterRight, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
     fakeNavigationBar.centerRightButton.addTarget(self, action: "trash:", forControlEvents: .TouchUpInside)
     
     configureForEditState()
     
-    tableView.tableFooterView = UIView(frame: .zero)
+    tableView.tableFooterView = UIView(frame: .zero) // hide footer
 
     reloadEditShowTaskTable()
   }
   
+  // configuring user's possibility of interaction, selection style of cells, showing or hiding necessary buttons
   func configureForEditState(withAnimationDuration animationDuration: NSTimeInterval = 0) {
-    
     if editState {
-      // редактирование задания
+      // adding or editing task
       
-      // кнопка "Отменить"
+      // button "Cancel"
       fakeNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       fakeNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
       fakeNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
       
-      // эта кнопка не нужна, мы ее прячем
-      fakeNavigationBar.hideButton(.CenterRight)
+      fakeNavigationBar.hideButton(.CenterRight) // hide Delete-button
       
-      // кнопка "Готово"
+      // button "Done"
       fakeNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       fakeNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
       fakeNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
-      
     } else {
-      // просмотр задания и возможность его удалить
+      // browsing settings of task or deleting it
       
-      // кнопка "Назад"
+      // button "Back"
       fakeNavigationBar.setButtonImage("back", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       fakeNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
       fakeNavigationBar.leftButton.addTarget(self, action: "back:", forControlEvents: .TouchUpInside)
       
-      // показываем спрятанную кнопку "Удалить"
-      fakeNavigationBar.showButton(.CenterRight, withAnimationDuration: animationDuration)
+      fakeNavigationBar.showButton(.CenterRight, withAnimationDuration: animationDuration) // show Delete-button
       
-      // кнопка "Редактировать"
+      // button "Edit"
       fakeNavigationBar.setButtonImage("edit", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       fakeNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
       fakeNavigationBar.rightButton.addTarget(self, action: "edit:", forControlEvents: .TouchUpInside)
@@ -109,46 +109,81 @@ class EditShowTaskViewController: UIViewController {
     
     configureUserInteractionForEditState()
     configureCellsSelectionStyle()
+  }
+  
+  // fully reload table with data of task
+  func reloadEditShowTaskTable() {
+    tbCnfg.configure(withTask: task)
+    tableView.reloadData()
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    navigationController?.navigationBarHidden = true
+    
+    // start observing notifications from keyboard to update height of table
+    let notificationCenter = NSNotificationCenter.defaultCenter()
+    notificationCenter.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+    notificationCenter.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
     
   }
   
-  func configureCellsSelectionStyle() {
-    for s in 0..<tbCnfg.cellTagTypeState.count {
-      for r in 0..<tbCnfg.cellTagTypeState[s].count {
-        
-        let cell = tbCnfg.cellTagTypeState[s][r]
-        
-        if cell.state != .Hidden {
-          
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) {
-            configureCellSelectionStyle(cell)
-          }
+  func keyboardWillShow(notification: NSNotification) {
+    if keyboardHeight == nil {
+      // update height of keyboard
+      if let userInfo = notification.userInfo {
+        if let keyboardSizeNSValue = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue {
+          keyboardHeight = keyboardSizeNSValue.CGRectValue().height
         }
       }
     }
+    
+    // move lower edge of table to show keyboard
+    let contentInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardHeight, 0.0)
+    tableView.contentInset = contentInsets
+    tableView.scrollIndicatorInsets = contentInsets
   }
   
+  func keyboardWillHide(notification: NSNotification) {
+    // move lower edge of table back
+    tableView.contentInset = UIEdgeInsetsZero
+    tableView.scrollIndicatorInsets = UIEdgeInsetsZero
+  }
   
-  // была нажата кнопка "Назад"
+  override func viewWillDisappear(animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    // stop observing notifications from keyboard
+    let notificationCenter = NSNotificationCenter.defaultCenter()
+    notificationCenter.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+    notificationCenter.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+  }
+  
+ // MARK: Actions for buttons
+  
+  // Back-button
   func back(sender: UIButton) {
     
+    // if task for storing initial setting was created, need to delete it
     if let taskWithInitialSettings = taskWithInitialSettings {
-      managedContext.deleteObject(taskWithInitialSettings)
+      petsRepository.deleteObject(taskWithInitialSettings)
     }
     
     if edited {
-      if tbCnfg.timeFrameWasChanged {
+      // task was edited
+      if tbCnfg.scheduleWasChanged {
+        // time frame of task changed
         task.countEndDate()
-        delegate?.editShowTaskVC(self, didFullyEditTask: task)
+        delegate?.editShowTaskVC(self, didFullyEditScheduleOfTask: task)
       } else {
-        delegate?.editShowTaskVC(self, didSlightlyEditTask: task)
+        delegate?.editShowTaskVC(self, didSlightlyEditScheduleOfTask: task)
       }
     }
     
     navigationController?.popViewControllerAnimated(true)
   }
   
-  // была нажата кнопка "Удалить"
+  // Delete-button
   func trash(sender: UIButton) {
     let deleteController = UIAlertController(title: "Удалить задание?", message: nil, preferredStyle: .ActionSheet)
     
@@ -167,31 +202,42 @@ class EditShowTaskViewController: UIViewController {
     presentViewController(deleteController, animated: true, completion: nil)
   }
   
-  // была нажата кнопка "Редактировать"
+  // Edit-button
   func edit(sender: UIButton) {
     editState = true
     saveInitialSettings()
     configureForEditState(withAnimationDuration: animationDuration)
   }
   
-  // была нажата кнопка "Отменить"
+  // save initial setting of task
+  func saveInitialSettings() {
+    if taskWithInitialSettings == nil {
+      taskWithInitialSettings = petsRepository.insertTask()
+      if let taskWithInitialSettings = taskWithInitialSettings {
+        taskWithInitialSettings.copySettings(fromTask: task, withPet: true)
+      }
+    }
+  }
+  
+  // Cancel-button
   func cancel(sender: UIButton) {
-    editState = false
-    
-    deactivateAllActiveTextFields()
+    editState = false // stop editing task
+    deactivateAllActiveTextFields() // close all text fields
     
     if taskDidChange() {
+      // settings were changed - need to restore them
       loadInitailSettings()
       reloadEditShowTaskTable()
     } else {
-      closePickerCellsForShowState()
+      closePickerCellsForShowState() // close all open picker cells
     }
     
     configureForEditState(withAnimationDuration: animationDuration)
   }
   
-  // настройки задания изменились
+  // check whether some settings of task did change
   func taskDidChange() -> Bool {
+    // compare new settings to stored ones
     if let taskWithInitialSettings = taskWithInitialSettings {
       return !task.settingsAreEqual(toTask: taskWithInitialSettings)
     } else {
@@ -199,26 +245,26 @@ class EditShowTaskViewController: UIViewController {
     }
   }
   
-  // загружаем сохраненные настройки, если произошли изменения
+  // restore initial settings of task
   func loadInitailSettings() {
     if let taskWithInitialSettings = taskWithInitialSettings {
       task.copySettings(fromTask: taskWithInitialSettings)
     }
   }
   
-  // была нажата кнопка "Готово"
+  // Done-button
   func done(sender: UIButton) {
-    editState = false
+    editState = false // stop editing task
     closePickerCellsForShowState()
     deactivateAllActiveTextFields()
-    
-    if taskDidChange() {
-      if !edited {
-        edited = true
-      }
-    }
     configureForEditState(withAnimationDuration: animationDuration)
+    
+    edited = taskDidChange()
   }
+  
+}
+
+extension EditShowTaskViewController: UITableViewDataSource {
   
   // закрываем все picker после завершения редактирования
   func closePickerCellsForShowState() {
@@ -227,74 +273,6 @@ class EditShowTaskViewController: UIViewController {
     tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
     tableView.endUpdates()
   }
-  
-  // активируем или деактивируем нажатие элементов на ячейках
-  func configureUserInteractionForEditState() {
-    
-    for s in 0..<tbCnfg.cellTagTypeState.count {
-      for r in 0..<tbCnfg.cellTagTypeState[s].count {
-        
-        let cellTTS = tbCnfg.cellTagTypeState[s][r]
-        if cellTTS.type == .TitleSegmentCell && cellTTS.state != .Hidden {
-          
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSegmentCell {
-            cell.hideShowSgCtrl.userInteractionEnabled = editState
-          }
-        }
-      }
-    }
-  }
-  
-  func reloadEditShowTaskTable() {
-    tbCnfg.configure(withTask: task)
-    tableView.reloadData()
-  }
-
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-  }
-  
-  override func viewWillAppear(animated: Bool) {
-    super.viewWillAppear(animated)
-    // прячем navigation bar
-    navigationController?.navigationBarHidden = true
-    
-    
-    let notificationCenter = NSNotificationCenter.defaultCenter()
-    notificationCenter.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-    notificationCenter.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
-    
-  }
-  
-  func keyboardWillShow(notification: NSNotification) {
-    if keyboardHeight == nil {
-      if let userInfo = notification.userInfo {
-        if let keyboardSizeNSValue = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue {
-          keyboardHeight = keyboardSizeNSValue.CGRectValue().height
-        }
-      }
-    }
-    
-    let contentInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardHeight, 0.0)
-    tableView.contentInset = contentInsets
-    tableView.scrollIndicatorInsets = contentInsets
-  }
-  
-  func keyboardWillHide(notification: NSNotification) {
-    tableView.contentInset = UIEdgeInsetsZero
-    tableView.scrollIndicatorInsets = UIEdgeInsetsZero
-  }
-  
-  override func viewWillDisappear(animated: Bool) {
-    super.viewWillDisappear(animated)
-    
-    let notificationCenter = NSNotificationCenter.defaultCenter()
-    notificationCenter.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
-    notificationCenter.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
-  }
-}
-
-extension EditShowTaskViewController: UITableViewDataSource {
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return tbCnfg.sectionTitles.count
@@ -355,6 +333,41 @@ extension EditShowTaskViewController: UITableViewDataSource {
     return generalCell
   }
   
+  // user's possibility to select cells
+  func configureUserInteractionForEditState() {
+    
+    for s in 0..<tbCnfg.cellTagTypeState.count {
+      for r in 0..<tbCnfg.cellTagTypeState[s].count {
+        
+        let cellTTS = tbCnfg.cellTagTypeState[s][r]
+        if cellTTS.type == .TitleSegmentCell && cellTTS.state != .Hidden {
+          
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSegmentCell {
+            cell.hideShowSgCtrl.userInteractionEnabled = editState
+          }
+        }
+      }
+    }
+  }
+  
+  // selection style for all cells
+  func configureCellsSelectionStyle() {
+    for s in 0..<tbCnfg.cellTagTypeState.count {
+      for r in 0..<tbCnfg.cellTagTypeState[s].count {
+        
+        let cell = tbCnfg.cellTagTypeState[s][r]
+        
+        if cell.state != .Hidden {
+          
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) {
+            configureCellSelectionStyle(cell)
+          }
+        }
+      }
+    }
+  }
+  
+  // selection style of a cell depending on editState
   func configureCellSelectionStyle(cell: UITableViewCell) {
     if editState {
       if let cell = cell as? StgComplexPickerCell {
@@ -436,7 +449,7 @@ extension EditShowTaskViewController: UITableViewDataSource {
     var frequencySegmentTitles = tbCnfg.frequencySegmentTitles()
     
     let segmentTitle = tbCnfg.frequencySegmentTitle()
-    if segmentTitle == "" {
+    if segmentTitle.isVoid {
       cell.configure(withValues: frequencySegmentTitles, andSelectedSegment: 0)
     } else {
       frequencySegmentTitles[1] = segmentTitle
@@ -522,7 +535,7 @@ extension EditShowTaskViewController: UITableViewDelegate {
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     // если секции не нужен заголовок
-    if tbCnfg.sectionTitles[section] == "" {
+    if tbCnfg.sectionTitles[section].isVoid {
       return nil
     } else {
       // остальным секциям нужно свое view с заголовком
@@ -540,7 +553,7 @@ extension EditShowTaskViewController: UITableViewDelegate {
   // высота заголовка
   func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     // если секции не нужен заголовок
-    if tbCnfg.sectionTitles[section] == "" {
+    if tbCnfg.sectionTitles[section].isVoid {
       return CGFloat.min
     } else {
       return headerHeight
@@ -887,32 +900,13 @@ extension EditShowTaskViewController: StgComplexPickerCellDelegate {
   }
 }
 
-// обращения с CoreData
-extension EditShowTaskViewController {
-  // устанавливаем ManagedObjectContext
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-  }
-  
-  // сохраняем изначальные настройки
-  func saveInitialSettings() {
-    if let taskWithInitialSettings = taskWithInitialSettings {
-      taskWithInitialSettings.copySettings(fromTask: task, withPet: true)
-    } else {
-      taskWithInitialSettings = Task(insertIntoManagedObjectContext: managedContext)
-      if let taskWithInitialSettings = taskWithInitialSettings {
-        taskWithInitialSettings.copySettings(fromTask: task, withPet: true)
-      }
-    }
-  }
-  
-}
+
 extension EditShowTaskViewController: EditShowMinutesDoseTaskVCDelegate {
   func editShowMinutesDoseTaskVC(viewController: EditShowMinutesDoseTaskViewController, didEditMinutesDoseOfTask task: Task, withTblType tblType: ESMinutesDoseTaskTblCnfgType) {
     
     if tblType == .Minutes {
       tbCnfg.updatePreviousMinutes()
-      tbCnfg.timeFrameWasChanged = true
+      tbCnfg.scheduleWasChanged = true
     } else if tblType == .Dose {
       tbCnfg.updatePreviousDose()
     }

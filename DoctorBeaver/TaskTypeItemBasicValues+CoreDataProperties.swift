@@ -16,9 +16,12 @@ extension TaskTypeItemBasicValues {
   @NSManaged var typeItem: NSSet
   
   @NSManaged var taskNamePlaceholder: String
+  @NSManaged var separator: String
   
   @NSManaged var startDateTitle: String
   @NSManaged var daysOptions: String
   @NSManaged var endDaysOrTimesTitle: String
+  @NSManaged var endDaysOrTimesSegmentTitles: String
+  @NSManaged var endDaysOrTimesOptionsPreposition: String
   @NSManaged var timesOptions: String
 }

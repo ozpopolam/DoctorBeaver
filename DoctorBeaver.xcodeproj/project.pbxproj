@@ -25,6 +25,7 @@
 		623B4FF71C76619C0016EC92 /* StgTitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */; };
 		623BCD691CAC701C00784705 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623BCD681CAC701C00784705 /* DateHelper.swift */; };
 		623DBD731C766B3D00E705AB /* StgDataPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623DBD721C766B3D00E705AB /* StgDataPickerCell.swift */; };
+		624678461CE5163D000F2D05 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624678451CE5163D000F2D05 /* String.swift */; };
 		6271ADCD1CBEF86A00CD0F5F /* StgDatePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271ADCC1CBEF86A00CD0F5F /* StgDatePickerCell.swift */; };
 		6271ADCF1CC0292700CD0F5F /* StgDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271ADCE1CC0292700CD0F5F /* StgDatePicker.swift */; };
 		627F2C9E1C8842DF00B9ADFF /* DataPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 627F2C9D1C8842DF00B9ADFF /* DataPickerView.xib */; };
@@ -109,6 +110,7 @@
 		623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTitleValueCell.swift; sourceTree = "<group>"; };
 		623BCD681CAC701C00784705 /* DateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		623DBD721C766B3D00E705AB /* StgDataPickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgDataPickerCell.swift; sourceTree = "<group>"; };
+		624678451CE5163D000F2D05 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		6271ADCC1CBEF86A00CD0F5F /* StgDatePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgDatePickerCell.swift; sourceTree = "<group>"; };
 		6271ADCE1CC0292700CD0F5F /* StgDatePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgDatePicker.swift; sourceTree = "<group>"; };
 		627F2C9D1C8842DF00B9ADFF /* DataPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DataPickerView.xib; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 		620372D61C6A61DD00352617 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
 				62C64DAA1CE292E3006B4CEF /* RuTaskPrimaryValues.json */,
 				628E3CC31C963A55000C122A /* RuPets.json */,
 				6219B4731CA06605006E4E14 /* JsonParser.swift */,
@@ -303,6 +306,7 @@
 		62C64D551CCD43F0006B4CEF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				624678451CE5163D000F2D05 /* String.swift */,
 				620373181C6BE98E00352617 /* UIColor.swift */,
 				62A83B8E1C6D287E00A8DE8D /* UIImage.swift */,
 				62C64D531CCD437A006B4CEF /* UIButton.swift */,
@@ -327,7 +331,6 @@
 		62DCB0C91C7796B900ABF206 /* Schedule */ = {
 			isa = PBXGroup;
 			children = (
-				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
 				620372881C66CE8A00352617 /* ScheduleViewController.swift */,
 				62C64D511CCD33DB006B4CEF /* CalendarPopoverController.swift */,
 				62A83B341C6D052A00A8DE8D /* FilterViewController.swift */,
@@ -551,6 +554,7 @@
 				628425191C85BA5C0016E32F /* HideShowSegmentedControl.swift in Sources */,
 				62941C451CAEBBDA001D3182 /* TaskConfigurationByType.swift in Sources */,
 				62F0FEB71CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift in Sources */,
+				624678461CE5163D000F2D05 /* String.swift in Sources */,
 				6232B06C1C870B38007D7D23 /* StgComplexPickerCell.swift in Sources */,
 				620372901C69023900352617 /* TabBarController.swift in Sources */,
 				62A785C51C7F77E9009BE27E /* EditShowTaskTableConfiguration.swift in Sources */,

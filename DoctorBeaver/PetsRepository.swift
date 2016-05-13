@@ -12,7 +12,7 @@ import CoreData
 protocol PetsRepositorySettable: class {
   // устанавливаем ManagedObjectContext
   var petsRepository: PetsRepository! { get set }
-  func setPetsRepository(petsRepository: PetsRepository)
+  //func setPetsRepository(petsRepository: PetsRepository)
 }
 
 class PetsRepository {
@@ -154,23 +154,6 @@ class PetsRepository {
     
     return pets
   }
-  
-//////
-//  func fetchAllTaskTypeItemBasicValues() -> [TaskTypeItemBasicValues] {
-////    if let managedObjects = fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName) {
-////      var allBasicValues = [TaskTypeItemBasicValues]()
-////      
-////      for managedObject in managedObjects {
-////        if let basicValues = managedObject as? TaskTypeItemBasicValues {
-////          allBasicValues.append(basicValues)
-////        }
-////      }
-////      return allBasicValues
-////    } else {
-////      return []
-////    }
-//  }
-//////
   
   func fetchAllSelectedPets() -> [Pet] {
     let fetchRequest = NSFetchRequest(entityName: Pet.entityName)

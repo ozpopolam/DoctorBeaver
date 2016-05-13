@@ -146,7 +146,7 @@ extension DataPickerView: UIPickerViewDelegate {
       selectedString += s
     }
     
-    if selectedString == "" {
+    if selectedString.isVoid {
       return true
     } else {
       return false

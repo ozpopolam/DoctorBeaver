@@ -18,17 +18,17 @@
     
     configureView()
     
-    _helperDeleteAllData()
-    
-    let firstLaunch = true
-    if firstLaunch {
-      preparePetsRepositoryForUse()
+    if false {
+      _helperDeleteAllData()
+      let firstLaunch = true
+      if firstLaunch {
+        preparePetsRepositoryForUse()
+      }
+      populateManagedObjectContextWithJsonPetData()
     }
-    
-    populateManagedObjectContextWithJsonPetData()
  
     // начинаем со вкладки расписания
-    self.selectedIndex = 1
+    self.selectedIndex = 0
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
@@ -118,12 +118,12 @@
     // ScheduleViewController is inside UINavigationController
     if let viewController = viewController as? UINavigationController {
       
-      if let destinationVC = viewController.viewControllers.first as? PetsRepositorySettable {
+      if let destinationVC = viewController.viewControllers.first as? ScheduleViewController {
         destinationVC.setPetsRepository(petsRepository)
       }
     } else {
       if let viewController = viewController as? PetsRepositorySettable {
-        viewController.setPetsRepository(petsRepository)
+        viewController.petsRepository = petsRepository
       }
     }
     

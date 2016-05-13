@@ -100,11 +100,12 @@ class ScheduleTableViewController: UIViewController {
   }
   
   func prepareDataSourceAndReloadTable() {
-    calculateHeadersAndIndexes(ofTimeRealizations: timeRealizations)
     
     if timeRealizations.count == 0 {
       showWarningMessage()
     } else {
+      
+      calculateHeadersAndIndexes(ofTimeRealizations: timeRealizations)
       
       if self.isViewLoaded() {
         if tableView.hidden == true {
@@ -297,14 +298,14 @@ class ScheduleTableViewController: UIViewController {
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == editShowTaskSegueId {
       
-//      if let destinationVC = segue.destinationViewController as? EditShowTaskViewController {
-//        destinationVC.setManagedObjectContext(managedContext)
-//        if let accessoryButtonTask = accessoryButtonTask {
-//          destinationVC.delegate = self
-//          destinationVC.task = accessoryButtonTask
-//          destinationVC.hidesBottomBarWhenPushed = true
-//        }
-//      }
+      if let destinationVC = segue.destinationViewController as? EditShowTaskViewController {
+        destinationVC.petsRepository = petsRepository
+        if let accessoryButtonTask = accessoryButtonTask {
+          destinationVC.delegate = self
+          destinationVC.task = accessoryButtonTask
+          destinationVC.hidesBottomBarWhenPushed = true
+        }
+      }
     }
     
   }
@@ -479,12 +480,8 @@ extension ScheduleTableViewController: UITableViewDelegate {
   
   
   func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-    
-    let tr = timeRealizationForRowAtIndexPath(indexPath)
-    accessoryButtonTask = tr.realization.task
-    
-    
-    
+    let timeRealization = timeRealizationForRowAtIndexPath(indexPath)
+    accessoryButtonTask = timeRealization.realization.task
     performSegueWithIdentifier(editShowTaskSegueId, sender: self)
   }
   
@@ -494,47 +491,29 @@ extension ScheduleTableViewController: EditShowTaskVCDelegate {
   func editShowTaskVC(viewController: EditShowTaskViewController, didDeleteTask task: Task) {
     navigationController?.popViewControllerAnimated(true)
     
-    // удаляем конкретные реализации удаленного задания
-    removeAllTimeRealizations(forTask: task)
+    timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
     
-    // удаляем задание из базы данных
+    // delete task and save it
     petsRepository.deleteObject(task)
     petsRepository.saveOrRollback()
     
-    // проверяем, осталось ли что-нибудь для отображения
-    if timeRealizations.count == 0 {
-      showWarningMessage()
-    } else {
-      prepareDataSourceAndReloadTable()
-    }
+    // try to reload table
+    prepareDataSourceAndReloadTable()
   }
   
-  func removeAllTimeRealizations(forTask task: Task) {
-    
-    // удаляем конкретные реализации удаленного задания
-    var ind = 0
-    while ind < timeRealizations.count {
-      if task == timeRealizations[ind].realization.task {
-        timeRealizations.removeAtIndex(ind)
-      } else {
-        ind += 1
-      }
-    }
-    
+  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditScheduleOfTask task: Task) {
+    petsRepository.saveOrRollback() // save changes in task
+    tableView.reloadData() // reload table
   }
   
-  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditTask task: Task) {
-    // сохраняем изменения
-    petsRepository.saveOrRollback()
+  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditScheduleOfTask task: Task) {
     
-    // перегружаем таблицу
-    tableView.reloadData()
-  }
-  
-  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditTask task: Task) {
-    removeAllTimeRealizations(forTask: task)
+    timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete outdated timeRealizations
     
-    // удаляем устаревшие реализации
+    
+    task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
+    
+    
     for realization in task.realizations {
       if let realization = realization as? Realization {
         petsRepository.deleteObject(realization)

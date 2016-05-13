@@ -19,48 +19,61 @@ class TaskTypeItem: NSManagedObject {
   }
   
   enum Keys: String {
-    case id = "id_"
+    case id = "id"
   }
+  
+  let separator: Character = "|"
   
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
     if let entity = NSEntityDescription.entityForName(TaskTypeItem.entityName, inManagedObjectContext: managedContext) {
       self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
       
-      id_ = -1
-      name_ = ""
-      iconName_ = ""
-      doseUnit_ = ""
+      id = -1
+      name = ""
+      iconName = ""
+      doseUnit = ""
       
-      sectionTitles_ = ""
+      sectionTitles = ""
       
-      timesPerDayTitle_ = ""
-      timesPerDayOptions_ = ""
-      timesPerDayForInitialization_ = 0
+      timesPerDayTitle = ""
+      timesPerDayOptions = ""
+      timesPerDayForInitialization = 0
 
-      minutesForTimesTitle_ = ""
-      minutesForTimesOrderTitles_ = ""
-      minutesForTimesForInitialization_ = 0
+      minutesForTimesTitle = ""
+      minutesForTimesOrderTitles = ""
+      minutesForTimesForInitialization = 0
 
-      doseForTimesTitle_ = ""
-      doseForTimesEqualTitle_ = ""
-      doseForTimesOrderTitles_ = ""
-      doseForTimesOptions_ = ""
-      doseForTimesForInitialization_ = ""
+      doseForTimesTitle = ""
+      doseForTimesEqualTitle = ""
+      doseForTimesOrderTitles = ""
+      doseForTimesOptions = ""
+      doseForTimesForInitialization = ""
 
-      specialFeatureTitle_ = ""
-      specialFeatureOptions_ = ""
-      specialFeatureForInitialization_ = ""
+      specialFeatureTitle = ""
+      specialFeatureOptions = ""
+      specialFeatureForInitialization = ""
 
-      frequencyPreposition_ = ""
-      frequencySegmentTitles_ = ""
-      frequencyTitle_ = ""
+      frequencyPreposition = ""
+      frequencySegmentTitles = ""
+      frequencyTitle = ""
       
       tasks = []
-      
-//      @NSManaged var basicValues: TaskTypeItemBasicValues
     } else {
       return nil
     }
   }
+  
+  
+  
+//    func sectionTitles() -> [String] {
+//      switch task.type {
+//      case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
+//        return ["", "Способ применения", "Длительность приема", "Особые указания"]
+//      case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming:
+//        return ["", "", "Длительность приема", "Особые указания"]
+//      case .Error:
+//        return []
+//      }
+//    }
   
 }

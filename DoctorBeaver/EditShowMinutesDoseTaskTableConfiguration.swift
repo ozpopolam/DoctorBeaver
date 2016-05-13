@@ -56,7 +56,7 @@ class EditShowMinutesDoseTaskTableConfiguration {
     // наполняем picker view значениями настраиваемых элементов
     if tblType == ESMinutesDoseTaskTblCnfgType.Dose {
       pickerOptions = [
-        doseStartTag: tskCnfg.doseForTimesOptions(),
+        doseStartTag: task.doseForTimesOptions,
       ]
     }
   }
@@ -124,11 +124,11 @@ class EditShowMinutesDoseTaskTableConfiguration {
   }
   
   func minutesForTimesTitle() -> String {
-    return tskCnfg.minutesForTimesTitle()
+    return task.minutesForTimesTitle
   }
   
   func doseForTimesTitle() -> String {
-    return tskCnfg.doseForTimesTitle()
+    return task.doseForTimesTitle
   }
   
   // заголовки настроек
@@ -137,11 +137,11 @@ class EditShowMinutesDoseTaskTableConfiguration {
     var tag = 0
     
     if tblType == ESMinutesDoseTaskTblCnfgType.Minutes {
-      titles = tskCnfg.minutesForTimesTitles()
+      titles = task.minutesForTimesOrderTitles
       tag = minutesStartTag
       
     } else if tblType == ESMinutesDoseTaskTblCnfgType.Dose {
-      titles = tskCnfg.doseForTimesTitles()
+      titles = task.doseForTimesOrderTitles
       tag = doseStartTag
     }
     

@@ -73,17 +73,23 @@ class JsonTaskPrimaryValuesParser {
   
   func populateRepositoryWithTaskTypeItemBasicValues(fromJSONDictionary dict: [String: AnyObject]) -> TaskTypeItemBasicValues? {
     guard let taskNamePlaceholder = dict["taskNamePlaceholder"] as? String,
+      let separator = dict["separator"] as? String,
       let startDateTitle = dict["startDateTitle"] as? String,
       let daysOptions = dict["daysOptions"] as? String,
       let endDaysOrTimesTitle = dict["endDaysOrTimesTitle"] as? String,
+      let endDaysOrTimesSegmentTitles = dict["endDaysOrTimesSegmentTitles"] as? String,
+      let endDaysOrTimesOptionsPreposition = dict["endDaysOrTimesSegmentTitles"] as? String,
       let timesOptions = dict["timesOptions"] as? String
       else { return nil}
     
     if let taskTypeItemBasicValues = petsRepository.insertTaskTypeItemBasicValues() {
       taskTypeItemBasicValues.taskNamePlaceholder = taskNamePlaceholder
+      taskTypeItemBasicValues.separator = separator
       taskTypeItemBasicValues.startDateTitle = startDateTitle
       taskTypeItemBasicValues.daysOptions = daysOptions
       taskTypeItemBasicValues.endDaysOrTimesTitle = endDaysOrTimesTitle
+      taskTypeItemBasicValues.endDaysOrTimesSegmentTitles = endDaysOrTimesSegmentTitles
+      taskTypeItemBasicValues.endDaysOrTimesOptionsPreposition = endDaysOrTimesOptionsPreposition
       taskTypeItemBasicValues.timesOptions = timesOptions
       
       if petsRepository.saveOrRollback() {
@@ -126,34 +132,34 @@ class JsonTaskPrimaryValuesParser {
     
     
     if let taskTypeItem = petsRepository.insertTaskTypeItem() {
-      taskTypeItem.id_ = id
-      taskTypeItem.name_ = name
-      taskTypeItem.iconName_ = iconName
-      taskTypeItem.doseUnit_ = doseUnit
+      taskTypeItem.id = id
+      taskTypeItem.name = name
+      taskTypeItem.iconName = iconName
+      taskTypeItem.doseUnit = doseUnit
       
-      taskTypeItem.sectionTitles_ = sectionTitles
+      taskTypeItem.sectionTitles = sectionTitles
       
-      taskTypeItem.timesPerDayTitle_ = timesPerDayTitle
-      taskTypeItem.timesPerDayOptions_ = timesPerDayOptions
-      taskTypeItem.timesPerDayForInitialization_ = timesPerDayForInitialization
+      taskTypeItem.timesPerDayTitle = timesPerDayTitle
+      taskTypeItem.timesPerDayOptions = timesPerDayOptions
+      taskTypeItem.timesPerDayForInitialization = timesPerDayForInitialization
       
-      taskTypeItem.minutesForTimesTitle_ = minutesForTimesTitle
-      taskTypeItem.minutesForTimesOrderTitles_ = minutesForTimesOrderTitles
-      taskTypeItem.minutesForTimesForInitialization_ = minutesForTimesForInitialization
+      taskTypeItem.minutesForTimesTitle = minutesForTimesTitle
+      taskTypeItem.minutesForTimesOrderTitles = minutesForTimesOrderTitles
+      taskTypeItem.minutesForTimesForInitialization = minutesForTimesForInitialization
       
-      taskTypeItem.doseForTimesTitle_ = doseForTimesTitle
-      taskTypeItem.doseForTimesEqualTitle_ = doseForTimesEqualTitle
-      taskTypeItem.doseForTimesOrderTitles_ = doseForTimesOrderTitles
-      taskTypeItem.doseForTimesOptions_ = doseForTimesOptions
-      taskTypeItem.doseForTimesForInitialization_ = doseForTimesForInitialization
+      taskTypeItem.doseForTimesTitle = doseForTimesTitle
+      taskTypeItem.doseForTimesEqualTitle = doseForTimesEqualTitle
+      taskTypeItem.doseForTimesOrderTitles = doseForTimesOrderTitles
+      taskTypeItem.doseForTimesOptions = doseForTimesOptions
+      taskTypeItem.doseForTimesForInitialization = doseForTimesForInitialization
       
-      taskTypeItem.specialFeatureTitle_ = specialFeatureTitle
-      taskTypeItem.specialFeatureOptions_ = specialFeatureOptions
-      taskTypeItem.specialFeatureForInitialization_ = specialFeatureForInitialization
+      taskTypeItem.specialFeatureTitle = specialFeatureTitle
+      taskTypeItem.specialFeatureOptions = specialFeatureOptions
+      taskTypeItem.specialFeatureForInitialization = specialFeatureForInitialization
       
-      taskTypeItem.frequencyPreposition_ = frequencyOptionsPreposition
-      taskTypeItem.frequencySegmentTitles_ = frequencySegmentTitles
-      taskTypeItem.frequencyTitle_ = frequencyTitle
+      taskTypeItem.frequencyPreposition = frequencyOptionsPreposition
+      taskTypeItem.frequencySegmentTitles = frequencySegmentTitles
+      taskTypeItem.frequencyTitle = frequencyTitle
       
       taskTypeItem.basicValues = basicValues
       

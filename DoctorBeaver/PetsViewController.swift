@@ -9,13 +9,13 @@
 import UIKit
 import CoreData
 
-class PetsViewController: UIViewController {
+class PetsViewController: UIViewController, PetsRepositorySettable {
   
   @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
   @IBOutlet weak var collectionView: UICollectionView!
   @IBOutlet weak var warningLabel: UILabel!
   
-  // id ячеек
+  // settings for layout of UICollectionView
   let petCellId = "petCell"
   var cellWidth: CGFloat = 0.0
   var cellSize = CGSize(width: 0.0, height: 0.0)
@@ -23,19 +23,21 @@ class PetsViewController: UIViewController {
   var sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
   var minimumSpacing: CGFloat = 0.0
   
-  var managedContext: NSManagedObjectContext!
-  var viewWasLoadedWithManagedContext = false
+  var petsRepository: PetsRepository! {
+    didSet {
+      if viewIsReadyToBeLoadedWithPetsRepository() {
+        fullyReloadPetCollection()
+      }
+    }
+  }
+  var viewWasLoadedWithPetsRepository = false
   
-  // питомцы, которые будут отражены
   var pets = [Pet]()
-  // id питомца - обрезанное изображение
-  var croppedPetImages: [Double: UIImage] = [ : ]
+  var croppedPetImages: [Double: UIImage] = [ : ] // pet's id + cropped version of its icon
+
+  let animationDuration = VisualConfiguration.animationDuration // to animate change of button's icon
   
-  // длительность перерисовки иконок кнопок
-  let animationDuration = VisualConfiguration.animationDuration
-  
-  // тип сортировки
-  var sortedAZ = true
+  var sortedAZ = true // current sorting of pets
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -43,67 +45,48 @@ class PetsViewController: UIViewController {
     fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
     fakeNavigationBar.titleLabel.text = "Питомцы".uppercaseString
     
-    // кнопка сортировки
+    // button "Sorting"
     fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
     fakeNavigationBar.leftButton.addTarget(self, action: "sort:", forControlEvents: .TouchUpInside)
     
-    // кнопка добавления нового питомца
+    // button "Add pet"
     fakeNavigationBar.setButtonImage("add", forButton: .Right, withTintColor: UIColor.fogColor())
     fakeNavigationBar.rightButton.addTarget(self, action: "add:", forControlEvents: .TouchUpInside)
     
-    // число ячеек в линии
     let numberOfCellsInALine: CGFloat = 2
-    // считаем размеры ячеек и отступы
-    countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine)
+    countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine) // count size and insets of cells
     
-    // проверяем, загружен ли контекст
-    if viewIsReadyToBeLoaded(withManagedContext: managedContext) {
-      // настраиваем view
+    if viewIsReadyToBeLoadedWithPetsRepository() {
       fullyReloadPetCollection()
     }
   }
   
-  // размеры ячеек и отступов по числу ячеек в ряде
-  func countFlowLayoutValues(forNumberOfCellsInALine numberOfCellsInALine: CGFloat) {
-    let maxWidth = view.frame.size.width
-    
-    let inset = floor(maxWidth * 3.0 / 100.0)
-    sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-    
-    let tempMinimumSpacing = maxWidth * 4.0 / 100.0
-    
-    let cellWidth = ceil( (maxWidth - (inset * 2 + tempMinimumSpacing * (numberOfCellsInALine - 1) ) ) / numberOfCellsInALine )
-    
-    minimumSpacing = floor( (maxWidth - (inset * 2 + cellWidth * numberOfCellsInALine) ) / (numberOfCellsInALine - 1) )
-    
-    let tempLabel = UILabel()
-    tempLabel.font = VisualConfiguration.smallPetNameFont
-    tempLabel.text = "X"
-    tempLabel.sizeToFit()
-    
-    let cellHeight = ceil(cellWidth + tempLabel.frame.size.height)
-    cellSize = CGSize(width: cellWidth, height: cellHeight)
-    
-    cellCornerRadius = cellWidth / CGFloat(VisualConfiguration.cornerProportion)
+  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
+    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
+      viewWasLoadedWithPetsRepository = true
+      return true
+    } else {
+      return false
+    }
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    // прячем navigation bar
-    navigationController?.navigationBarHidden = true
+    navigationController?.navigationBarHidden = true // hide navigation bar
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
   
-  // была нажата кнопка "Сортировать"
+  //Sorting-button
   func sort(sender: UIButton) {
     
+    // configure button's icon and action
     fakeNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending :.OrderedAscending))
-    sortedAZ = !sortedAZ
+    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending : .OrderedAscending))
     
+    sortedAZ = !sortedAZ // new type of current sorting
     
 //    if sortedAZ {
 //      fakeNavigationBar.setButtonImage("sortingAZ", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
@@ -115,6 +98,7 @@ class PetsViewController: UIViewController {
 //      sortedAZ = true
 //    }
     
+    // reload all cells
     collectionView.performBatchUpdates({
       self.collectionView.reloadSections(NSIndexSet(index: 0))
       }, completion: nil)
@@ -134,9 +118,8 @@ class PetsViewController: UIViewController {
       return lh.name.localizedStandardCompare(rh.name) == direction
     }
   }
-
   
-  // была нажата кнопка "Добавить"
+  // Add-button
   func add(sender: UIButton) {
     ////
   }
@@ -144,35 +127,44 @@ class PetsViewController: UIViewController {
   // заполняем коллекцию с нуля
   // настраиваем внешний вид по инфо питомца и инициируем отображение расписания
   func fullyReloadPetCollection() {
-    // настраиваем расположение кнопок и по необходимости выводим предупреждающие надписи
-    if countAllPets(fromManagedContext: managedContext) == 0 {
-      // не зарегестрировано ни одного питомца
-      // показываем предупреждение
+    
+    if petsRepository.countAll(Pet.entityName) == 0 {
+
       showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
       
     } else {
-      reloadPetCollection()
-    }
-    
-  }
-  
-  // загружаем всех питомцев в collection view
-  func reloadPetCollection(withNoFetchRequest noFetchRequest: Bool = false) {
-    // прячем view с ошибкой
-    hideWarningMessage()
-    
-    if !noFetchRequest {
-      // загружаем питомцев
-      pets = fetchAllPets(fromManagedContext: managedContext)
+      
+      hideWarningMessage()
+     
+      pets = petsRepository.fetchAllPets()
       for pet in pets {
         if let petImage = UIImage(named: pet.image) {
           croppedPetImages[pet.id] = cropCentralSquare(fromImage: petImage)
         }
       }
+      
+      collectionView.reloadData()
     }
     
-    collectionView.reloadData()
   }
+  
+//  // загружаем всех питомцев в collection view
+//  func reloadPetCollection(withNoFetchRequest noFetchRequest: Bool = false) {
+//    // прячем view с ошибкой
+//    hideWarningMessage()
+//    
+//    if !noFetchRequest {
+//      // загружаем питомцев
+//      pets = fetchAllPets(fromManagedContext: managedContext)
+//      for pet in pets {
+//        if let petImage = UIImage(named: pet.image) {
+//          croppedPetImages[pet.id] = cropCentralSquare(fromImage: petImage)
+//        }
+//      }
+//    }
+//    
+//    collectionView.reloadData()
+//  }
   
   // вырезаем центральный квадрат картинки
   func cropCentralSquare(fromImage image: UIImage) -> UIImage {
@@ -252,6 +244,30 @@ extension PetsViewController: UICollectionViewDelegate {
 
 extension PetsViewController: UICollectionViewDelegateFlowLayout {
   
+  // размеры ячеек и отступов по числу ячеек в ряде
+  func countFlowLayoutValues(forNumberOfCellsInALine numberOfCellsInALine: CGFloat) {
+    let maxWidth = view.frame.size.width
+    
+    let inset = floor(maxWidth * 3.0 / 100.0)
+    sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+    
+    let tempMinimumSpacing = maxWidth * 4.0 / 100.0
+    
+    let cellWidth = ceil( (maxWidth - (inset * 2 + tempMinimumSpacing * (numberOfCellsInALine - 1) ) ) / numberOfCellsInALine )
+    
+    minimumSpacing = floor( (maxWidth - (inset * 2 + cellWidth * numberOfCellsInALine) ) / (numberOfCellsInALine - 1) )
+    
+    let tempLabel = UILabel()
+    tempLabel.font = VisualConfiguration.smallPetNameFont
+    tempLabel.text = "X"
+    tempLabel.sizeToFit()
+    
+    let cellHeight = ceil(cellWidth + tempLabel.frame.size.height)
+    cellSize = CGSize(width: cellWidth, height: cellHeight)
+    
+    cellCornerRadius = cellWidth / CGFloat(VisualConfiguration.cornerProportion)
+  }
+  
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     return cellSize
   }
@@ -269,65 +285,3 @@ extension PetsViewController: UICollectionViewDelegateFlowLayout {
   }
   
 }
-
-// обращения с CoreData
-extension PetsViewController {
-  
-  // устанавливаем ManagedObjectContext
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-    // если view загружено, подгружаем в него данные
-    if viewIsReadyToBeLoaded(withManagedContext: self.managedContext) {
-      fullyReloadPetCollection()
-    }
-  }
-  
-  // проверяем, можно ли обновить view данными из managedContext
-  func viewIsReadyToBeLoaded(withManagedContext managedContext: NSManagedObjectContext?) -> Bool {
-    if self.isViewLoaded() && managedContext != nil && !self.viewWasLoadedWithManagedContext {
-      self.viewWasLoadedWithManagedContext = true
-      return true
-    } else {
-      return false
-    }
-  }
-  
-  // считаем общее число питомцев
-  func countAllPets(fromManagedContext managedContext: NSManagedObjectContext) -> Int {
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    fetchRequest.resultType = .CountResultType
-    
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [NSNumber] {
-        if let count = results.first?.integerValue {
-          return count
-        } else {
-          return 0
-        }
-      } else {
-        return 0
-      }
-    } catch {
-      print("Fetching error!")
-      return 0
-    }
-  }
-  
-  // выбираем всех питомцев
-  func fetchAllPets(fromManagedContext managedContext: NSManagedObjectContext) -> [Pet] {
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results.sort(sortedByName(.OrderedAscending))
-      } else {
-        return []
-      }
-    } catch {
-      print("Fetching error!")
-      return []
-    }
-  }
-}
-
-

@@ -24,9 +24,12 @@ class TaskTypeItemBasicValues: NSManagedObject {
       
       typeItem = []
       taskNamePlaceholder = ""
+      separator = ""
       startDateTitle = ""
       daysOptions = ""
       endDaysOrTimesTitle = ""
+      endDaysOrTimesSegmentTitles = ""
+      endDaysOrTimesOptionsPreposition = ""
       timesOptions = ""
       
     } else {

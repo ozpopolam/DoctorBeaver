@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 class Task: NSManagedObject {
   
   static var entityName: String {
@@ -17,13 +16,6 @@ class Task: NSManagedObject {
       return "Task"
     }
   }
-  
-  // разделитель для дозировки
-  let separator: Character = "|"
-  let whitespace = " "
-  
-  
-  let doseSeparator: Character = "|"
   
   // тип задания
   var type: TaskType {
@@ -54,6 +46,127 @@ class Task: NSManagedObject {
           return .EndTimes
         }
       }
+    }
+  }
+  
+  
+  var namePlaceholder: String {
+    get {
+      return typeItem.basicValues.taskNamePlaceholder
+    }
+  }
+  
+  var separator: Character {
+    get {
+      return typeItem.basicValues.separator.characters.first ?? " "
+    }
+  }
+  
+  var sectionTitles: [String] {
+    get {
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: typeItem.separator)
+    }
+  }
+  
+  var timesPerDayTitle: String {
+    get {
+      return typeItem.timesPerDayTitle
+    }
+  }
+  var timesPerDayOptions: [String] {
+    get {
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: typeItem.separator)
+    }
+  }
+  
+  var minutesForTimesTitle: String {
+    get {
+      return typeItem.minutesForTimesTitle
+    }
+  }
+  var minutesForTimesOrderTitles: [String] {
+    get {
+      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: typeItem.separator)
+      return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
+    }
+  }
+  
+  var doseForTimesTitle: String {
+    get {
+      return typeItem.doseForTimesTitle
+    }
+  }
+  var doseForTimesOrderTitles: [String] {
+    get {
+      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: typeItem.separator)
+      return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
+    }
+  }
+  var doseForTimesOptions: [[String]] {
+    get {
+      return getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: typeItem.separator)
+    }
+  }
+  
+  var specialFeatureTitle: String {
+    get {
+      return typeItem.specialFeatureTitle
+    }
+  }
+  var specialFeatureOptions: [String] {
+    get {
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: typeItem.separator)
+    }
+  }
+  
+  var startDateTitle: String {
+    get {
+      return typeItem.basicValues.startDateTitle
+    }
+  }
+  
+  var frequencyTitle: String {
+    get {
+      return typeItem.frequencyTitle
+    }
+  }
+  var frequencySegmentTitles: [String] {
+    get {
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: typeItem.separator)
+    }
+  }
+  var frequencyOptions: [[String]] {
+    get {
+      
+      guard !frequencyTitle.isEmpty else { return [] }
+      
+      let daysOptions = getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.daysOptions, withSeparator: separator)
+      let daysOptionsWithPrepos = daysOptions.map { typeItem.frequencyPreposition + " " + $0 }
+      return [daysOptions, daysOptionsWithPrepos]
+    }
+  }
+  
+  var endDaysOrTimesTitle: String {
+    get {
+      return typeItem.basicValues.endDaysOrTimesTitle
+    }
+  }
+  var endDaysOrTimesSegmentTitles: [String] {
+    get {
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: typeItem.separator)
+    }
+  }
+  var endDaysOrTimesOptions: [String] {
+    get {
+      var stringOptions = ""
+      if endType == .EndDays {
+        stringOptions = typeItem.basicValues.daysOptions
+      } else if endType == .EndTimes {
+        stringOptions = typeItem.basicValues.daysOptions
+      }
+      
+      let options = getOneDimArrayOfStrings(fromUnseparatedString: stringOptions, withSeparator: separator).map { typeItem.basicValues.endDaysOrTimesOptionsPreposition + $0 }
+      return options
     }
   }
   
@@ -331,8 +444,9 @@ class Task: NSManagedObject {
   
   // копируем настройки
   func copySettings(fromTask task: Task, withPet wPet: Bool = false) {
-    typeId = task.typeId
     name = task.name
+    typeId = task.typeId
+    typeItem = task.typeItem
     
     timesPerDay = task.timesPerDay
     minutesForTimes = task.minutesForTimes
@@ -353,8 +467,8 @@ class Task: NSManagedObject {
   
   // эквавалентны ли настройки двух заданий
   func settingsAreEqual(toTask task: Task) -> Bool {
-    guard typeId == task.typeId else { return false }
     guard name == task.name else { return false }
+    guard typeId == task.typeId else { return false }
     
     guard timesPerDay == task.timesPerDay else { return false }
     guard minutesForTimes == task.minutesForTimes else { return false }
@@ -562,7 +676,8 @@ class Task: NSManagedObject {
     for twoDimStringElement in twoDimStringElements {
       twoDimArray.append(getOneDimArrayOfStrings(fromUnseparatedString: twoDimStringElement, withSeparator: separator))
     }
-    return twoDimArray
+    //return twoDimArray
+    return (twoDimArray.filter{ !$0.isEmpty }).isEmpty ? [] : twoDimArray
   }
   
   
@@ -570,6 +685,7 @@ class Task: NSManagedObject {
   func dosePrintable(forTime time: Int) -> String {
     guard time < doseForTimes.count else { return "" }
     
+    let whitespace = " "
     let stringDoses = getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator).filter{$0 != whitespace}
     let numberDoses = stringDoses.map{ Double($0) }.flatMap{ $0 }
     
@@ -579,5 +695,11 @@ class Task: NSManagedObject {
       return stringDoses.reduce("", combine: { $0 == "" ? $1 : $0 + whitespace + $1 })
     }
   }
+  
+/////////////
+  
+  
+  
+
   
 }

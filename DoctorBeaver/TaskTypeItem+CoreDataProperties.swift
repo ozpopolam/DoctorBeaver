@@ -13,34 +13,34 @@ import Foundation
 import CoreData
 
 extension TaskTypeItem {
-  @NSManaged var id_: Int
-  @NSManaged var name_: String
-  @NSManaged var iconName_: String
-  @NSManaged var doseUnit_: String
+  @NSManaged var id: Int
+  @NSManaged var name: String
+  @NSManaged var iconName: String
+  @NSManaged var doseUnit: String
   
-  @NSManaged var sectionTitles_: String
+  @NSManaged var sectionTitles: String
   
-  @NSManaged var timesPerDayTitle_: String
-  @NSManaged var timesPerDayOptions_: String
-  @NSManaged var timesPerDayForInitialization_: Int
+  @NSManaged var timesPerDayTitle: String
+  @NSManaged var timesPerDayOptions: String
+  @NSManaged var timesPerDayForInitialization: Int
   
-  @NSManaged var minutesForTimesTitle_: String
-  @NSManaged var minutesForTimesOrderTitles_: String
-  @NSManaged var minutesForTimesForInitialization_: Int
+  @NSManaged var minutesForTimesTitle: String
+  @NSManaged var minutesForTimesOrderTitles: String
+  @NSManaged var minutesForTimesForInitialization: Int
   
-  @NSManaged var doseForTimesTitle_: String
-  @NSManaged var doseForTimesEqualTitle_: String
-  @NSManaged var doseForTimesOrderTitles_: String
-  @NSManaged var doseForTimesOptions_: String
-  @NSManaged var doseForTimesForInitialization_: String
+  @NSManaged var doseForTimesTitle: String
+  @NSManaged var doseForTimesEqualTitle: String
+  @NSManaged var doseForTimesOrderTitles: String
+  @NSManaged var doseForTimesOptions: String
+  @NSManaged var doseForTimesForInitialization: String
   
-  @NSManaged var specialFeatureTitle_: String
-  @NSManaged var specialFeatureOptions_: String
-  @NSManaged var specialFeatureForInitialization_: String
+  @NSManaged var specialFeatureTitle: String
+  @NSManaged var specialFeatureOptions: String
+  @NSManaged var specialFeatureForInitialization: String
   
-  @NSManaged var frequencyPreposition_: String
-  @NSManaged var frequencySegmentTitles_: String
-  @NSManaged var frequencyTitle_: String
+  @NSManaged var frequencyPreposition: String
+  @NSManaged var frequencySegmentTitles: String
+  @NSManaged var frequencyTitle: String
   
   @NSManaged var tasks: NSSet
   
