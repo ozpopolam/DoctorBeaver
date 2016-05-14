@@ -11,12 +11,33 @@
  
  class TabBarController: UITabBarController {
   
-  var managedContext: NSManagedObjectContext!
+  var petsRepository: PetsRepository!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // настраиваем внешний вид Tab Bar
+    configureView()
+    
+    if false {
+      _helperDeleteAllData()
+      let firstLaunch = true
+      if firstLaunch {
+        preparePetsRepositoryForUse()
+      }
+      populateManagedObjectContextWithJsonPetData()
+    }
+ 
+    // начинаем со вкладки расписания
+    self.selectedIndex = 0
+    delegate = self
+    tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+  }
+  
+  func configureView() {
     UITabBar.appearance().barTintColor = UIColor.lightOrangeColor()
     
     let tabBarAppearance = UITabBarItem.appearance()
@@ -58,97 +79,67 @@
         tabBarItems[i].selectedImage = tabBarSelectedImages[i]
       }
     }
-
-    //populateManagedObjectContextWithJsonPetData()
-    
-//    // начинаем со вкладки расписания
-//    self.selectedIndex = 1
-//    delegate = self
-//    tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
-    
-    // начинаем со вкладки с питомцами
-    self.selectedIndex = 0
-    delegate = self
-    tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
   
-  func pmt(task: Task) {
-    
-    var s: String = ""
-    for mft in task.minutesForTimes {
-      s += " "
-      
-      let h = mft / 60
-      if h < 10 {
-        s += "0"
-      }
-      s += "\(h):"
-      
-      let m = mft % 60
-      if m < 10 {
-        s += "0"
-      }
-      s += "\(m)"
-    }
-    print("   timesPerDay: \(task.timesPerDay)")
-    print("   minutesForTimes: [" + s + " ]")
-    print("")
-    
+  func preparePetsRepositoryForUse() -> Bool {
+    let jsonBasicValuesParser = JsonTaskPrimaryValuesParser(forPetsRepository: petsRepository)
+    return jsonBasicValuesParser.populateRepositoryWithTaskPrimaryValues(withFileName: "RuTaskPrimaryValues", andType: "json")
   }
   
-  func pdt(task: Task) {
-    
-    var s: String = ""
-    for dose in task.doseForTimes {
-      s += " "
-      
-      s += "\(dose)"
-    }
-    print("   timesPerDay: \(task.timesPerDay)")
-    print("   doseForTimes: [" + s + " ]")
-    print("")
-    
+  func _helperDeleteAllData() {
+    petsRepository.deleteAllObjects(forEntityName: Pet.entityName)
+    petsRepository.deleteAllObjects(forEntityName: TaskTypeItem.entityName)
+    petsRepository.deleteAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)
+//    print(petsRepository.fetchAllObjects(forEntityName: Pet.entityName)?.count)
+//    print(petsRepository.fetchAllObjects(forEntityName: TaskTypeItem.entityName)?.count)
+//    print(petsRepository.fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)?.count)
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  func populateManagedObjectContextWithJsonPetData(doItNow: Bool = true) {
-    if doItNow {
-      let jsonPetParser = JsonPetParser(withFileName: "Pets", andType: "json")
-      jsonPetParser.populateManagedObjectContextWithJsonPetData(managedContext)
-    }
+  func populateManagedObjectContextWithJsonPetData() {
+    let jsonPetParser = JsonPetsParser(forPetsRepository: petsRepository, withFileName: "RuPets", andType: "json")
+      jsonPetParser.populateManagedObjectContextWithJsonPetData()
   }
   
  }
  
  extension TabBarController: UITabBarControllerDelegate {
+  
+  func tabBarController(tabBarController: UITabBarController, shouldSelectViewController viewController: UIViewController) -> Bool {
+    if let viewControllers = tabBarController.viewControllers {
+      if viewController == viewControllers[2] {
+        return false
+      }
+    }
+    return true
+  }
+  
   func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
     
-    // "Расписание" внутри UINavigationController
+    
+    if let viewController = viewController as? UINavigationController {
+      if let destinationVC = viewController.viewControllers.first as? PetsRepositorySettable {
+        destinationVC.petsRepository = petsRepository
+      }
+    }
+    
+    
+    
+    // ScheduleViewController is inside UINavigationController
     if let viewController = viewController as? UINavigationController {
       
-      if let destinationVC = viewController.viewControllers.first as? ManagedObjectContextSettableAndLoadable {
-        destinationVC.setManagedObjectContext(managedContext)
-      }
-    } else {
-      if let viewController = viewController as? ManagedObjectContextSettable {
-        viewController.setManagedObjectContext(managedContext)
+      if let destinationVC = viewController.viewControllers.first as? ScheduleViewController {
+        destinationVC.setPetsRepository(petsRepository)
       }
     }
     
   }
  }
  
- // обращения с CoreData
- extension TabBarController: ManagedObjectContextSettable {
-  // устанавливаем ManagedObjectContext
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
+extension TabBarController: PetsRepositorySettable {
+  func setPetsRepository(petsRepository: PetsRepository) {
+    self.petsRepository = petsRepository
   }
- }
+}
  
  
  

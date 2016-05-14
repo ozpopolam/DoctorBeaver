@@ -22,4 +22,21 @@ extension UIImage {
       return scaledImage
     }
   }
+  
+  func cropCentralOneThirdSquare() -> UIImage {
+    let x = floor(self.size.width / 3)
+    let y = floor(self.size.height / 3)
+    let width = x
+    let height = y
+    
+    let cropSquare = CGRectMake(x, y, width, height)
+    let imageRef = CGImageCreateWithImageInRect(self.CGImage, cropSquare)
+    
+    if let imageRef = imageRef {
+      let croppedImage = UIImage(CGImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+      return croppedImage
+    } else {
+      return self
+    }
+  }
 }

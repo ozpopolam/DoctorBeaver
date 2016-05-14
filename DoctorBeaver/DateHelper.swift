@@ -12,6 +12,7 @@ import UIKit
 enum DateFormatterFormat: String {
   case DateTime = "d.MM.y HH:mm"
   case Date = "d.MM.y"
+  case DateVerbal = "d MMMM y, EEEE"
 }
 
 struct DateHelper {
@@ -40,22 +41,12 @@ struct DateHelper {
   static let maxMinutes = 24 * 60
   
   // минуты в виде строки hh:mm
-  static func minutesToString(minutes: Int) -> String {
-    var str: String = ""
+  static func minutesToString(totalMinutes: Int) -> String {
     
-    let h = minutes / 60
-    if h < 10 {
-      str += "0"
-    }
-    str += "\(h):"
+    let hours = totalMinutes / 60
+    let minutes = totalMinutes % 60
     
-    let m = minutes % 60
-    if m < 10 {
-      str += "0"
-    }
-    str += "\(m)"
-    
-    return str
+    return String(format: "%02d:%02d", hours, minutes)
   }
   
   // получить минуты (компонента-часы * 60 + компонента-минуты) из даты

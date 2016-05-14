@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol StgComplexPickerCellDelegate: class {
-  func getPickerTitlesAndInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> (titles: [[String]], initialValues: [String], delegate: DataPickerViewDelegate)
+  func getPickerOptionsAndInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> (options: [[String]], initialValues: [String], delegate: DataPickerViewDelegate)
   func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> (iDate: NSDate, mDate: NSDate, delegate: DatePickerDelegate)
 }
 
@@ -86,13 +86,13 @@ class StgComplexPickerCell: UITableViewCell {
   {
     let index = tripleOptionSgCtrl.selectedSegmentIndex
     if index == 0 || index == 1 {
-      dataPickerViews[index].configure(withTitles: titles, andInitialValues: initialValues, andDelegate: delegate)
+      dataPickerViews[index].configure(withOptions: titles, andInitialValues: initialValues, andDelegate: delegate)
     }
   }
   
-  func configure(withMinimumDateAndTime mDate: NSDate, andInitialDateAndTime iDate: NSDate, andDelegate delegate: DatePickerDelegate) {
+  func configure(withDelegate delegate: DatePickerDelegate, selectedDate sDate: NSDate, andMinimumDate mDate: NSDate) {
     if tripleOptionSgCtrl.selectedSegmentIndex == 2 {
-      datePicker.configure(withDelegate: delegate, selectedDate: iDate, andMinimumDate: mDate)
+      datePicker.configure(withDelegate: delegate, selectedDate: sDate, andMinimumDate: mDate)
     }
   }
   
@@ -123,9 +123,9 @@ class StgComplexPickerCell: UITableViewCell {
           var initialValues: [String]
           var pickerDelegate: DataPickerViewDelegate
           
-          (titles, initialValues, pickerDelegate) = delegate.getPickerTitlesAndInitialValues(bySelectedSegment: index, andByTag: dataPickerViews[index].tag)
+          (titles, initialValues, pickerDelegate) = delegate.getPickerOptionsAndInitialValues(bySelectedSegment: index, andByTag: dataPickerViews[index].tag)
           
-          dataPickerViews[index].configure(withTitles: titles, andInitialValues: initialValues, andDelegate: pickerDelegate)
+          dataPickerViews[index].configure(withOptions: titles, andInitialValues: initialValues, andDelegate: pickerDelegate)
         }
         
       } else {

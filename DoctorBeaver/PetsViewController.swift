@@ -9,25 +9,38 @@
 import UIKit
 import CoreData
 
-class PetsViewController: UIViewController {
+class PetsViewController: UIViewController, PetsRepositorySettable {
   
   @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var collectionView: UICollectionView!
   @IBOutlet weak var warningLabel: UILabel!
-  @IBOutlet weak var tableView: UITableView!
   
-  var managedContext: NSManagedObjectContext!
-  var viewWasLoadedWithManagedContext = false
+  let addPetSegueId = "addPetSegue"
+  let editShowPetSegueId = "editShowPetSegue"
   
-  // питомцы, которые будут отражены
-  var pets = [Pet]()
+  // settings for layout of UICollectionView
+  let petCellId = "petCell"
+  var cellWidth: CGFloat = 0.0
+  var cellSize = CGSize(width: 0.0, height: 0.0)
+  var cellCornerRadius: CGFloat = 0.0
+  var sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+  var minimumSpacing: CGFloat = 0.0
   
-  // тип сортировки
-  enum SortingType {
-    case Id
-    case AZ
-    case ZA
+  var petsRepository: PetsRepository! {
+    didSet {
+      if viewIsReadyToBeLoadedWithPetsRepository() {
+        fullyReloadPetCollection()
+      }
+    }
   }
-  var lastSortingType: SortingType = .Id
+  var viewWasLoadedWithPetsRepository = false
+  
+  var pets = [Pet]()
+  var croppedPetImages: [Double: UIImage] = [ : ] // pet's id + cropped version of its icon
+
+  let animationDuration = VisualConfiguration.animationDuration // to animate change of button's icon
+  
+  var sortedAZ = true // current sorting of pets
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -35,195 +48,184 @@ class PetsViewController: UIViewController {
     fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
     fakeNavigationBar.titleLabel.text = "Питомцы".uppercaseString
     
-    // кнопка сортировки
-    fakeNavigationBar.setButtonImage("sorting", forButton: .Left, withTintColor: UIColor.fogColor())
+    // button "Sorting"
+    fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
     fakeNavigationBar.leftButton.addTarget(self, action: "sort:", forControlEvents: .TouchUpInside)
     
-    // кнопка добавления нового питомца
+    // button "Add pet"
     fakeNavigationBar.setButtonImage("add", forButton: .Right, withTintColor: UIColor.fogColor())
     fakeNavigationBar.rightButton.addTarget(self, action: "add:", forControlEvents: .TouchUpInside)
     
+    let numberOfCellsInALine: CGFloat = 2
+    countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine) // count size and insets of cells
     
-    // проверяем, загружен ли контекст
-    if viewIsReadyToBeLoaded(withManagedContext: managedContext) {
-      // настраиваем view
-      fullyReloadPetTable()
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      fullyReloadPetCollection()
     }
   }
   
-  override func viewWillAppear(animated: Bool) {
-    super.viewWillAppear(animated)
-    // прячем navigation bar
-    navigationController?.navigationBarHidden = true
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-  }
-  
-  // была нажата кнопка "Сортировать"
-  func sort(sender: UIButton) {
-    
-    switch lastSortingType {
-    case .Id:
-      pets.sortInPlace{return $0.name.localizedStandardCompare($1.name) == .OrderedAscending}
-      lastSortingType = .AZ
-    case .AZ:
-      pets.sortInPlace{return $0.name.localizedStandardCompare($1.name) == .OrderedDescending}
-      lastSortingType = .ZA
-    case .ZA:
-      pets.sortInPlace(sortedByIdDESC)
-      lastSortingType = .Id
-    }
-    
-    tableView.reloadData()
-  }
-  
-  // сортируем питомцев по id
-  func sortedByIdDESC(lh: Pet, rh: Pet) -> Bool {
-    return lh.id > rh.id
-  }
-  
-  
-  // была нажата кнопка "Добавить"
-  func add(sender: UIButton) {
-    print("add")
-  }
-  
-  // заполняем таблицу с нуля
-  // настраиваем внешний вид по инфо питомца и инициируем отображение расписания
-  func fullyReloadPetTable() {
-    // настраиваем расположение кнопок и по необходимости выводим предупреждающие надписи
-    if countAllPets(fromManagedContext: managedContext) == 0 {
-      // не зарегестрировано ни одного питомца
-      // прячем все кнопки с nav bar
-      
-      //fakeNavigationBar.hideAllButtons()
-      
-      
-      // показываем предупреждение
-      showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
-      
-    } else {
-      reloadSchedule()
-    }
-    
-  }
-  
-  // загружаем только выбранных питомцев
-  func reloadSchedule(withNoFetchRequest noFetchRequest: Bool = false) {
-    // прячем view с ошибкой
-    hideWarningMessage()
-    
-    if !noFetchRequest {
-      // загружаем питомцев, которых отметил пользователь
-      pets = fetchAllPets(fromManagedContext: managedContext)
-    }
-    
-    tableView.reloadData()
-  }
-  
-  // показываем view с предупреждением
-  func showWarningMessage(message: String) {
-    warningLabel.text = message
-  }
-  
-  // прячем view с предупреждением
-  func hideWarningMessage() {
-    if tableView.hidden {
-      tableView.hidden = false
-    }
-    warningLabel.text = ""
-  }
-  
-  
-}
-
-extension PetsViewController: UITableViewDataSource {
-  
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return pets.count
-  }
-  
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    if let cell = tableView.dequeueReusableCellWithIdentifier("petCellBasic", forIndexPath: indexPath) as? UITableViewCell {
-      
-      let pet = pets[indexPath.row]
-      
-      cell.textLabel?.text = pet.name
-      cell.detailTextLabel?.text = "\(pet.tasks.count)"
-      cell.imageView?.image = UIImage(named: pet.image)
-      
-      return cell
-    } else {
-      return UITableViewCell()
-    }
-  }
-  
-}
-
-extension PetsViewController: UITableViewDelegate {
-  
-}
-
-// обращения с CoreData
-extension PetsViewController: ManagedObjectContextSettableAndLoadable {
-  
-  // устанавливаем ManagedObjectContext
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-    // если view загружено, подгружаем в него данные
-    if viewIsReadyToBeLoaded(withManagedContext: self.managedContext) {
-      fullyReloadPetTable()
-    }
-  }
-  
-  // проверяем, можно ли обновить view данными из managedContext
-  func viewIsReadyToBeLoaded(withManagedContext managedContext: NSManagedObjectContext?) -> Bool {
-    if self.isViewLoaded() && managedContext != nil && !self.viewWasLoadedWithManagedContext {
-      self.viewWasLoadedWithManagedContext = true
+  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
+    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
+      viewWasLoadedWithPetsRepository = true
       return true
     } else {
       return false
     }
   }
   
-  // считаем общее число питомцев
-  func countAllPets(fromManagedContext managedContext: NSManagedObjectContext) -> Int {
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
-    fetchRequest.resultType = .CountResultType
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    navigationController?.navigationBarHidden = true // hide navigation bar
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+  }
+  
+  //Sorting-button
+  func sort(sender: UIButton) {
     
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [NSNumber] {
-        if let count = results.first?.integerValue {
-          return count
-        } else {
-          return 0
-        }
-      } else {
-        return 0
-      }
-    } catch {
-      print("Fetching error!")
-      return 0
+    // configure button's icon and action
+    fakeNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending : .OrderedAscending))
+    
+    sortedAZ = !sortedAZ // new type of current sorting
+    
+    // reload all cells
+    collectionView.performBatchUpdates({
+      self.collectionView.reloadSections(NSIndexSet(index: 0))
+      }, completion: nil)
+  }
+  
+  func sortedByName(direction: NSComparisonResult) -> ((lh: Pet, rh: Pet) -> Bool) {
+    return {
+      (lh, rh) -> Bool in
+      return lh.name.localizedStandardCompare(rh.name) == direction
     }
   }
   
-  // выбираем всех питомцев
-  func fetchAllPets(fromManagedContext managedContext: NSManagedObjectContext) -> [Pet] {
-    let fetchRequest = NSFetchRequest(entityName: Pet.entityName)
+  // Add-button
+  func add(sender: UIButton) {
+    performSegueWithIdentifier(addPetSegueId, sender: self)
+  }
+  
+  // fetch data, show warning or reload collection view
+  func fullyReloadPetCollection() {
     
-    do {
-      if let results = try managedContext.executeFetchRequest(fetchRequest) as? [Pet] {
-        return results.sort(sortedByIdDESC)
-      } else {
-        return []
+    if petsRepository.countAll(Pet.entityName) == 0 {
+      showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
+    } else {
+      hideWarningMessage()
+      pets = petsRepository.fetchAllPets()
+      
+      // get cropped version of all pets' icons
+      croppedPetImages = [ : ]
+      for pet in pets {
+        if let petImage = UIImage(named: pet.image) {
+          croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+        }
       }
-    } catch {
-      print("Fetching error!")
-      return []
+      
+      collectionView.reloadData()
     }
+    
+  }
+  
+  func showWarningMessage(message: String) {
+    collectionView.hidden = true
+    warningLabel.text = message
+  }
+  
+  func hideWarningMessage() {
+    collectionView.hidden = false
+    warningLabel.text = ""
+  }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+  }
+  
+}
+
+extension PetsViewController: UICollectionViewDataSource {
+  
+  func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return pets.count
+  }
+  
+  func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(petCellId, forIndexPath: indexPath) as? PetCVCell {
+      
+      let pet = pets[indexPath.row]
+      cell.layer.cornerRadius = cellCornerRadius
+      
+      cell.petImageView.image = UIImage(named: pet.image)
+      cell.borderImageView.image = croppedPetImages[pet.id]
+      
+      cell.petName.font = VisualConfiguration.smallPetNameFont
+      cell.petName.numberOfLines = 1
+      
+      cell.petName.adjustsFontSizeToFitWidth = true
+      cell.petName.minimumScaleFactor = 0.75
+      
+      cell.petName.text = pets[indexPath.row].name
+      cell.petName.textColor = VisualConfiguration.textBlackColor
+      
+      return cell
+    } else {
+      return UICollectionViewCell()
+    }
+  }
+  
+}
+
+extension PetsViewController: UICollectionViewDelegate {
+  
+  func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    performSegueWithIdentifier(editShowPetSegueId, sender: self)
   }
 }
 
-
+extension PetsViewController: UICollectionViewDelegateFlowLayout {
+  
+  // counting sizes and insets of cells, based on its number
+  func countFlowLayoutValues(forNumberOfCellsInALine numberOfCellsInALine: CGFloat) {
+    let maxWidth = view.frame.size.width
+    
+    let inset = floor(maxWidth * 3.0 / 100.0)
+    sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+    
+    let tempMinimumSpacing = maxWidth * 4.0 / 100.0 // temporary value to be specified
+    
+    let cellWidth = ceil( (maxWidth - (inset * 2 + tempMinimumSpacing * (numberOfCellsInALine - 1) ) ) / numberOfCellsInALine )
+    
+    minimumSpacing = floor( (maxWidth - (inset * 2 + cellWidth * numberOfCellsInALine) ) / (numberOfCellsInALine - 1) )
+    
+    let tempLabel = UILabel()
+    tempLabel.font = VisualConfiguration.smallPetNameFont
+    tempLabel.text = "X"
+    tempLabel.sizeToFit()
+    
+    let cellHeight = ceil(cellWidth + tempLabel.frame.size.height)
+    cellSize = CGSize(width: cellWidth, height: cellHeight)
+    
+    cellCornerRadius = cellWidth / CGFloat(VisualConfiguration.cornerProportion)
+  }
+  
+  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    return cellSize
+  }
+  
+  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    return sectionInset
+  }
+  
+  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    return minimumSpacing
+  }
+  
+  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+    return minimumSpacing
+  }
+  
+}

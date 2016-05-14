@@ -12,7 +12,11 @@ import Foundation
 // оформление приложения
 struct VisualConfiguration {
   
-  static let iconButtonSize = CGSize(width: 44.0, height: 44.0)
+  static let buttonIconSize = CGSize(width: 44.0, height: 44.0)
+  
+  static let barIconSize = CGSize(width: 25, height: 25)
+  
+  static let animationDuration: NSTimeInterval = 0.5
   
   static let systemFontSize: CGFloat = 17.0
   
@@ -36,6 +40,11 @@ struct VisualConfiguration {
     else { return UIFont.systemFontOfSize(systemFontSize) }
   }()
   
+  static let smallPetNameFont: UIFont = {
+    if let font = UIFont(name: "Noteworthy-Light", size: 20.0) { return font }
+    else { return UIFont.systemFontOfSize(systemFontSize) }
+  }()
+  
   static let textSemiBoldFont: UIFont = {
     if let font = UIFont(name: "GillSans-SemiBold", size: 15.0) { return font }
     else { return UIFont.systemFontOfSize(systemFontSize) }
@@ -45,6 +54,12 @@ struct VisualConfiguration {
     if let font = UIFont(name: "GillSans-Light", size: 15.0) { return font }
     else { return UIFont.systemFontOfSize(systemFontSize) }
   }()
+  
+  static let cornerProportion: CGFloat = 6.4
+  
+  static let textBlackColor = UIColor.blackColor()
+  static let textGrayColor = UIColor.lightGrayColor()
+  static let textOrangeColor = UIColor.lightOrangeColor()
   
   static let accentOnWhiteColor = UIColor.lightOrangeColor()
 

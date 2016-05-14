@@ -17,8 +17,7 @@ class Pet: NSManagedObject {
   }
   
   enum Keys: String {
-    case name
-    case selected
+    case selected = "selected"
   }
   
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
@@ -34,6 +33,22 @@ class Pet: NSManagedObject {
     } else {
       return nil
     }
+  }
+  
+  // считаем, сколько неоконченных заданий у питомца
+  func countActiveTasks(forDate date: NSDate) -> Int {
+    var actTsks = 0
+    
+    for task in tasks {
+      if let task = task as? Task {
+        if DateHelper.calendar.compareDate(task.startDate, toDate: date, toUnitGranularity: .Minute) != .OrderedDescending &&
+          DateHelper.calendar.compareDate(date, toDate: task.endDate, toUnitGranularity: .Minute) != .OrderedDescending
+        {
+          actTsks += 1
+        }
+      }
+    }
+    return actTsks
   }
   
 }
