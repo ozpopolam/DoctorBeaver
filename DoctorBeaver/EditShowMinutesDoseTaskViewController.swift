@@ -370,7 +370,7 @@ extension EditShowMinutesDoseTaskViewController: UITableViewDataSource {
         cell.dataPickerView.textColor = VisualConfiguration.pickerTextColor
         
         let initialValues = tbCnfg.initialDPickerStrings(withTag: tag)
-        cell.dataPickerView.configure(withTitles: titles, andInitialValues: initialValues, andDelegate: self)
+        cell.dataPickerView.configure(withOptions: titles, andInitialValues: initialValues, andDelegate: self)
       }
     }
   }

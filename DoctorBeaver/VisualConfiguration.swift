@@ -58,6 +58,8 @@ struct VisualConfiguration {
   static let cornerProportion: CGFloat = 6.4
   
   static let textBlackColor = UIColor.blackColor()
+  static let textGrayColor = UIColor.lightGrayColor()
+  static let textOrangeColor = UIColor.lightOrangeColor()
   
   static let accentOnWhiteColor = UIColor.lightOrangeColor()
 
