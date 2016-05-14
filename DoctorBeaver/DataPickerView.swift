@@ -26,11 +26,11 @@ class DataPickerView: UIView {
   var textColor = UIColor.blackColor()
   
   var rowsInComponent: [Int] = []
-  var titles: [[String]] = [] {
+  var options: [[String]] = [] {
     didSet {
       rowsInComponent = []
-      for component in 0..<titles.count {
-        rowsInComponent.append(circularNumberOfRowsFor(numberOfSourceRows: titles[component].count))
+      for component in 0..<options.count {
+        rowsInComponent.append(circularNumberOfRowsFor(numberOfSourceRows: options[component].count))
       }
     }
   }
@@ -65,8 +65,8 @@ class DataPickerView: UIView {
     return view
   }
   
-  func configure(withTitles titles: [[String]], andInitialValues initialValues: [String], andDelegate delegate: DataPickerViewDelegate) {
-    self.titles = titles
+  func configure(withOptions options: [[String]], andInitialValues initialValues: [String], andDelegate delegate: DataPickerViewDelegate) {
+    self.options = options
     self.initialValues = initialValues
     self.delegate = delegate
     pickerView.reloadAllComponents()
@@ -75,8 +75,8 @@ class DataPickerView: UIView {
   
   func setPickerToValues(initialValues: [String]) {
     for component in 0..<initialValues.count {
-      if let rowInd = titles[component].indexOf(initialValues[component]) {
-        let row = ( rowsInComponent[component] / titles[component].count / 2 ) * titles[component].count + rowInd
+      if let rowInd = options[component].indexOf(initialValues[component]) {
+        let row = ( rowsInComponent[component] / options[component].count / 2 ) * options[component].count + rowInd
         pickerView.selectRow(row, inComponent: component, animated: true)
       }
     }
@@ -84,7 +84,7 @@ class DataPickerView: UIView {
   
   func cleanAllData() {
     rowsInComponent = []
-    titles = []
+    options = []
     initialValues = []
     selectedValues = []
   }
@@ -134,8 +134,8 @@ extension DataPickerView: UIPickerViewDelegate {
     title.font = font
     title.textColor = textColor
     
-    let sourceRow = row % titles[component].count
-    title.text = titles[component][sourceRow]
+    let sourceRow = row % options[component].count
+    title.text = options[component][sourceRow]
     return title
   }
   
@@ -146,7 +146,7 @@ extension DataPickerView: UIPickerViewDelegate {
       selectedString += s
     }
     
-    if selectedString == "" {
+    if selectedString.isVoid {
       return true
     } else {
       return false
@@ -158,10 +158,10 @@ extension DataPickerView: UIPickerViewDelegate {
     var value: String
     var selectedRow: Int
     
-    for ind in 0..<titles.count {
+    for ind in 0..<options.count {
       selectedRow = pickerView.selectedRowInComponent(ind)
-      let sourceRow = selectedRow % titles[ind].count
-      value = titles[ind][sourceRow]
+      let sourceRow = selectedRow % options[ind].count
+      value = options[ind][sourceRow]
       selectedValues.append(value)
     }
     
@@ -169,8 +169,8 @@ extension DataPickerView: UIPickerViewDelegate {
     // невозможна комбинация со всеми пустыми рядами
     if impossibleCombination(selectedValues) {
       selectedRow += 1
-      let sourceRow = (selectedRow) % titles[component].count
-      selectedValues[component] = titles[component][sourceRow]
+      let sourceRow = (selectedRow) % options[component].count
+      selectedValues[component] = options[component][sourceRow]
       pickerView.selectRow(selectedRow, inComponent: component, animated: true)
     }
     

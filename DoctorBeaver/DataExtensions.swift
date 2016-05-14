@@ -32,7 +32,7 @@ extension Task {
     
     var s: String = ""
     for mft in minutesForTimes {
-      s += String(whitespace)
+      s += String(" ")
       
       let h = mft / 60
       if h < 10 {
@@ -107,5 +107,18 @@ extension Realization {
     }
     print("      done: [" + s + " ]")
     print("")
+  }
+}
+
+extension TaskTypeItemBasicValues {
+  func printInBlock() {
+    print("TaskTypeItemBasicValues")
+    
+    print("      \(taskNamePlaceholder)")
+    print("      \(startDateTitle)")
+    
+    print("      \(daysOptions)")
+    print("      \(endDaysOrTimesTitle)")
+    print("      \(timesOptions)")
   }
 }

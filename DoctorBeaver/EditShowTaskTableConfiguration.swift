@@ -26,7 +26,6 @@ enum CellState {
   case Hidden
 }
 
-
 enum ESMinutesDoseTaskTblCnfgType {
   case Minutes
   case Dose
@@ -62,7 +61,7 @@ class EditShowTaskTableConfiguration {
   var previousDaysTimesDate: (days: Int, times: Int, date: NSDate)
   
   // расписание приема изменилось, необходимо пересчитать последний день приема
-  var timeFrameWasChanged = false
+  var scheduleWasChanged = false
   
   var needToReloadEndDate = false
   
@@ -93,14 +92,14 @@ class EditShowTaskTableConfiguration {
     
     // заголовки настроек
     titleValueTitles = [
-      10: "Раз в день",
-      12: tskCnfg.minutesForTimesTitle(),
-      14: "Дозировка",
-      16: tskCnfg.specialFeatureTitle(),
+      10: task.timesPerDayTitle,
+      12: task.minutesForTimesTitle,
+      14: task.doseForTimesTitle,
+      16: task.specialFeatureTitle,
       
-      20: "Начать",
-      22: "Повторять",
-      24: "Закончить"
+      20: task.startDateTitle,
+      22: task.frequencyTitle,
+      24: task.endDaysOrTimesTitle
     ]
     
     // значения настроек
@@ -116,15 +115,15 @@ class EditShowTaskTableConfiguration {
     
     // наполняем picker view значениями настраиваемых элементов
     pickerOptions = [
-      11: [tskCnfg.timesPerDayOptions()],
-      15: tskCnfg.doseForTimesOptions(),
-      17: [tskCnfg.specialFeatureOptions()],
-      23: tskCnfg.frequencyOptions()
+      11: [task.timesPerDayOptions],
+      15: task.doseForTimesOptions,
+      17: [task.specialFeatureOptions],
+      23: task.frequencyOptions
     ]
     
     //наполняем placeholder для text field
     textFieldPlaceholders = [
-      00: "Название"
+      00: task.namePlaceholder
     ]
     
     updatePreviousMinutes()
@@ -265,7 +264,7 @@ class EditShowTaskTableConfiguration {
   
   // заголовки секций
   func configureSectionTitles() {
-    sectionTitles = tskCnfg.sectionTitles()
+    sectionTitles = task.sectionTitles
   }
   
   // по tag обновляем значения полей по данным задания
@@ -279,7 +278,7 @@ class EditShowTaskTableConfiguration {
       
       // раз в день
     case 10:
-      strValue = tskCnfg.timesPerDayOptions()[task.timesPerDay - 1]
+      strValue = task.timesPerDayOptions[task.timesPerDay - 1]
       
       // время приема и дозировка
     case 12, 14:
@@ -360,7 +359,7 @@ class EditShowTaskTableConfiguration {
       // раз в день
     case 11:
       if task.timesPerDay - 1 >= 0 {
-        return [tskCnfg.timesPerDayOptions()[task.timesPerDay - 1]]
+        return [task.timesPerDayOptions[task.timesPerDay - 1]]
       }
       
       // дозировка
@@ -377,7 +376,7 @@ class EditShowTaskTableConfiguration {
       
       // частота
     case 23:
-      let frequencyOptions = tskCnfg.frequencyOptions()
+      let frequencyOptions = task.frequencyOptions
       let activeDays = frequencyOptions[0]
       let passiveDays = frequencyOptions[1]
       
@@ -470,7 +469,7 @@ class EditShowTaskTableConfiguration {
       // раз в день
     case 11:
       let strValue = strings[0]
-      if let ind = tskCnfg.timesPerDayOptions().indexOf(strValue) {
+      if let ind = task.timesPerDayOptions.indexOf(strValue) {
         task.timesPerDay = ind + 1
         
         if let pm = previousMinutes[task.timesPerDay] {
@@ -487,7 +486,7 @@ class EditShowTaskTableConfiguration {
           updatePreviousDose()
         }
         
-        timeFrameWasChanged = true
+        scheduleWasChanged = true
       }
       // обновляем время приема и дозировку
       tagsToUpdate.append(12)
@@ -505,7 +504,7 @@ class EditShowTaskTableConfiguration {
       
       // частота
     case 23:
-      let frequencyOptions = tskCnfg.frequencyOptions()
+      let frequencyOptions = task.frequencyOptions
       let activeDaysInd = 0
       let passiveDaysInd = 1
       
@@ -517,7 +516,7 @@ class EditShowTaskTableConfiguration {
       }
       updatePreviousFrequency()
       
-      timeFrameWasChanged = true
+      scheduleWasChanged = true
       
       // закончить через число дней или раз
     case 25, 26:
@@ -542,7 +541,7 @@ class EditShowTaskTableConfiguration {
         
         updatePreviousDaysTimesDate()
         
-        timeFrameWasChanged = true
+        scheduleWasChanged = true
       }
       
     default:
@@ -558,7 +557,7 @@ class EditShowTaskTableConfiguration {
     if tag == 13 {
       task.minutesForTimes = [minutes]
       
-      timeFrameWasChanged = true
+      scheduleWasChanged = true
     }
     return tagsToUpdate
   }
@@ -586,7 +585,7 @@ class EditShowTaskTableConfiguration {
         }
       }
       
-      timeFrameWasChanged = true
+      scheduleWasChanged = true
       
     } else {
       // закончить в конкретную дату
@@ -596,7 +595,7 @@ class EditShowTaskTableConfiguration {
         task.endDate = value
         updatePreviousDaysTimesDate()
         
-        timeFrameWasChanged = true
+        scheduleWasChanged = true
       }
     }
     return tagsToUpdate
@@ -614,7 +613,7 @@ class EditShowTaskTableConfiguration {
           tagsToUpdate = [tag]
         }
         
-        timeFrameWasChanged = true
+        scheduleWasChanged = true
         
       } else {
         // выбрали "периодически"
@@ -624,7 +623,7 @@ class EditShowTaskTableConfiguration {
             tagsToUpdate = [tag]
           }
           
-          timeFrameWasChanged = true
+          scheduleWasChanged = true
           
         }
       }
@@ -633,7 +632,7 @@ class EditShowTaskTableConfiguration {
   }
   
   func frequencySegmentTitles() -> [String] {
-    return tskCnfg.frequencySegmentTitles()
+    return task.frequencySegmentTitles
   }
   func frequencySegmentTitle() -> String {
     if let str = titleValueValues[22] {
@@ -647,7 +646,7 @@ class EditShowTaskTableConfiguration {
   }
   
   func endSegmentTitles() -> [String] {
-    return tskCnfg.endSegmentTitles()
+    return task.endDaysOrTimesSegmentTitles
   }
   
   func endOptions(byNewEndType endType: Task.EndType? = nil) -> [String] {

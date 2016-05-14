@@ -13,8 +13,6 @@ protocol CalendarPopoverControllerDelegate: class {
   func calendarDidCancel(cpc: CalendarPopoverController)
 }
 
-
-
 class CalendarPopoverController: UIViewController {
   
   //@IBOutlet weak var titleLabel: UILabel!

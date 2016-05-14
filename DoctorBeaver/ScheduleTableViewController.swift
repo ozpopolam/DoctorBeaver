@@ -9,16 +9,6 @@
 import UIKit
 import CoreData
 
-// загружаем Schedule
-protocol ScheduleSettableAndLoadable: ManagedObjectContextSettable {
-  // устанавливаем Schedule
-  func setSchedule(withManagedContext managedContext: NSManagedObjectContext, withPets pets: [Pet], andDate date: NSDate)
-  // проверяем, можно ли обновить view переданными данными
-  var scheduleWasSet: Bool { get set }
-  var viewWasLoadedWithSchedule: Bool { get set }
-  func viewIsReadyToBeLoadedWithSchedule() -> Bool
-}
-
 class ScheduleTableViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
@@ -39,7 +29,7 @@ class ScheduleTableViewController: UIViewController {
   // иконка со значком i
   var infoIcon: UIImage?
   
-  var managedContext: NSManagedObjectContext!
+  var petsRepository: PetsRepository!
   var scheduleWasSet = false
   var viewWasLoadedWithSchedule = false
   
@@ -50,7 +40,6 @@ class ScheduleTableViewController: UIViewController {
   let calendar = NSCalendar.currentCalendar()
   
   var accessoryButtonTask: Task?
-  
   
   typealias TimeRealization = (timeInDay: Int, realization: Realization)
   var timeRealizations: [TimeRealization] = []
@@ -110,11 +99,12 @@ class ScheduleTableViewController: UIViewController {
   }
   
   func prepareDataSourceAndReloadTable() {
-    calculateHeadersAndIndexes(ofTimeRealizations: timeRealizations)
     
     if timeRealizations.count == 0 {
       showWarningMessage()
     } else {
+      
+      calculateHeadersAndIndexes(ofTimeRealizations: timeRealizations)
       
       if self.isViewLoaded() {
         if tableView.hidden == true {
@@ -199,13 +189,14 @@ class ScheduleTableViewController: UIViewController {
       } else {
         // списка нет - вычисляем новый список, добавляем его в базу
         let done = task.getDone(forDate: date)
-        if let realization = Realization(insertIntoManagedObjectContext: managedContext) {
+        
+        if let realization = petsRepository.insertRealization() {
           realization.task = task
           realization.date = date
           realization.done = done
           
           realizations.append(realization)
-          managedContext.saveOrRollback()
+          petsRepository.saveOrRollback()
         }
       }
     }
@@ -307,7 +298,7 @@ class ScheduleTableViewController: UIViewController {
     if segue.identifier == editShowTaskSegueId {
       
       if let destinationVC = segue.destinationViewController as? EditShowTaskViewController {
-        destinationVC.setManagedObjectContext(managedContext)
+        destinationVC.petsRepository = petsRepository
         if let accessoryButtonTask = accessoryButtonTask {
           destinationVC.delegate = self
           destinationVC.task = accessoryButtonTask
@@ -316,6 +307,31 @@ class ScheduleTableViewController: UIViewController {
       }
     }
     
+  }
+  
+  func setSchedule(withPetsRepository petsRepository: PetsRepository, withPets pets: [Pet], andDate date: NSDate) {
+    self.petsRepository = petsRepository
+    self.pets = pets
+    self.date = date
+    
+    if !self.scheduleWasSet {
+      self.scheduleWasSet = true
+    }
+    
+    // если view загружено, подгружаем в него данные расписания
+    if viewIsReadyToBeLoadedWithSchedule() {
+      reloadScheduleTable()
+    }
+  }
+  
+  // проверяем, можно ли обновить view переданными данными
+  func viewIsReadyToBeLoadedWithSchedule() -> Bool {
+    if isViewLoaded() && scheduleWasSet {
+      self.viewWasLoadedWithSchedule = true
+      return true
+    } else {
+      return false
+    }
   }
   
 }
@@ -453,7 +469,7 @@ extension ScheduleTableViewController: UITableViewDelegate {
       }
     }
     
-    managedContext.saveOrRollback()
+    petsRepository.saveOrRollback()
     
     if let cell = tableView.cellForRowAtIndexPath(indexPath) as? BasicPetCell {
       configureCellDoneState(cell, forRowAtIndexPath: indexPath)
@@ -463,105 +479,49 @@ extension ScheduleTableViewController: UITableViewDelegate {
   
   
   func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-    
-    let tr = timeRealizationForRowAtIndexPath(indexPath)
-    accessoryButtonTask = tr.realization.task
-    
-    
-    
+    let timeRealization = timeRealizationForRowAtIndexPath(indexPath)
+    accessoryButtonTask = timeRealization.realization.task
     performSegueWithIdentifier(editShowTaskSegueId, sender: self)
   }
   
-}
-
-// обращаемя с загруженным Schedule
-extension ScheduleTableViewController: ScheduleSettableAndLoadable {
-  // устанавливаем ManagedObjectContext
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-  }
-  
-  func setSchedule(withManagedContext managedContext: NSManagedObjectContext, withPets pets: [Pet], andDate date: NSDate) {
-    setManagedObjectContext(managedContext)
-    self.pets = pets
-    self.date = date
-    
-    if !self.scheduleWasSet {
-      self.scheduleWasSet = true
-    }
-    
-    // если view загружено, подгружаем в него данные расписания
-    if viewIsReadyToBeLoadedWithSchedule() {
-      reloadScheduleTable()
-    }
-  }
-  
-  // проверяем, можно ли обновить view переданными данными
-  func viewIsReadyToBeLoadedWithSchedule() -> Bool {
-    if self.isViewLoaded() && self.scheduleWasSet {
-    //if self.isViewLoaded() && self.scheduleWasSet && !self.viewWasLoadedWithSchedule {
-      self.viewWasLoadedWithSchedule = true
-      return true
-    } else {
-      return false
-    }
-  }
 }
 
 extension ScheduleTableViewController: EditShowTaskVCDelegate {
   func editShowTaskVC(viewController: EditShowTaskViewController, didDeleteTask task: Task) {
     navigationController?.popViewControllerAnimated(true)
     
-    // удаляем конкретные реализации удаленного задания
-    removeAllTimeRealizations(forTask: task)
+    timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
     
-    // удаляем задание из базы данных
-    managedContext.deleteObject(task)
-    managedContext.saveOrRollback()
+    // delete task and save it
+    petsRepository.deleteObject(task)
+    petsRepository.saveOrRollback()
     
-    // проверяем, осталось ли что-нибудь для отображения
-    if timeRealizations.count == 0 {
-      showWarningMessage()
-    } else {
-      prepareDataSourceAndReloadTable()
-    }
+    // try to reload table
+    prepareDataSourceAndReloadTable()
   }
   
-  func removeAllTimeRealizations(forTask task: Task) {
-    
-    // удаляем конкретные реализации удаленного задания
-    var ind = 0
-    while ind < timeRealizations.count {
-      if task == timeRealizations[ind].realization.task {
-        timeRealizations.removeAtIndex(ind)
-      } else {
-        ind += 1
-      }
-    }
-    
+  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditScheduleOfTask task: Task) {
+    petsRepository.saveOrRollback() // save changes in task
+    tableView.reloadData() // reload table
   }
   
-  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditTask task: Task) {
-    // сохраняем изменения
-    managedContext.saveOrRollback()
+  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditScheduleOfTask task: Task) {
     
-    // перегружаем таблицу
-    tableView.reloadData()
-  }
-  
-  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditTask task: Task) {
-    removeAllTimeRealizations(forTask: task)
+    timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete outdated timeRealizations
     
-    // удаляем устаревшие реализации
+    
+    task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
+    
+    
     for realization in task.realizations {
       if let realization = realization as? Realization {
-        managedContext.deleteObject(realization)
+        petsRepository.deleteObject(realization)
       }
     }
     task.realizations = []
     
     // сохраняем изменения
-    managedContext.saveOrRollback()
+    petsRepository.saveOrRollback()
     
     updateScheduleTable(withTask: task)
   }

@@ -16,104 +16,106 @@ class TaskConfigurationByType {
   }
   
   // заголовки меню
-  func sectionTitles() -> [String] {
-    switch task.type {
-    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
-      return ["", "Способ применения", "Длительность приема", "Особые указания"]
-    case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming:
-      return ["", "", "Длительность приема", "Особые указания"]
-    case .Error:
-      return []
-    }
-  }
+//  func sectionTitles() -> [String] {
+//    switch task.type {
+//    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
+//      return ["", "Способ применения", "Длительность приема", "Особые указания"]
+//    case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming:
+//      return ["", "", "Длительность приема", "Особые указания"]
+//    case .Error:
+//      return []
+//    }
+//  }
+  
+  
   
   // значения: раз в день
-  func timesPerDayOptions() -> [String] {
-    switch task.type {
-    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
-      return ["1 раз", "2 раза", "3 раза", "4 раза", "5 раз", "6 раз"]
-    case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
-      return []
-    }
-  }
+//  func timesPerDayOptions() -> [String] {
+//    switch task.type {
+//    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
+//      return ["1 раз", "2 раза", "3 раза", "4 раза", "5 раз", "6 раз"]
+//    case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
+//      return []
+//    }
+//  }
   
   // время приема
   // заголовки
-  func minutesForTimesTitle() -> String {
-    switch task.type {
-    case .Pill:
-      return "Время приема"
-    case .Injection:
-      return "Время укола"
-    case .Drops, .Ointment, .Mixture:
-      return "Время лечения"
-    case .Procedure:
-      return "Время процедуры"
-    case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
-      return ""
-    }
-  }
+//  func minutesForTimesTitle() -> String {
+//    switch task.type {
+//    case .Pill:
+//      return "Время приема"
+//    case .Injection:
+//      return "Время укола"
+//    case .Drops, .Ointment, .Mixture:
+//      return "Время лечения"
+//    case .Procedure:
+//      return "Время процедуры"
+//    case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
+//      return ""
+//    }
+//  }
   // значения
-  func minutesForTimesTitles() -> [String] {
-    let minutesTitle = minutesForTimesTitle()
-    if minutesTitle != "" {
-      if task.timesPerDay == 1 {
-        return ["Единственное"]
-      } else {
-        let adjectives = ["Первое", "Второе", "Третье", "Четвертое", "Пятое", "Шестое"]
-        var titles: [String] = []
-        for ind in 0..<task.timesPerDay {
-          titles.append(adjectives[ind])
-        }
-        return titles
-      }
-    } else {
-      return []
-    }
-  }
+//  func minutesForTimesTitles() -> [String] {
+//    let minutesTitle = minutesForTimesTitle()
+//    if minutesTitle != "" {
+//      if task.timesPerDay == 1 {
+//        return ["Единственное"]
+//      } else {
+//        let adjectives = ["Первое", "Второе", "Третье", "Четвертое", "Пятое", "Шестое"]
+//        var titles: [String] = []
+//        for ind in 0..<task.timesPerDay {
+//          titles.append(adjectives[ind])
+//        }
+//        return titles
+//      }
+//    } else {
+//      return []
+//    }
+//  }
   
   // дозировка
   // заголовки
-  func doseForTimesTitle() -> String {
-    switch task.type {
-    case .Pill, .Injection, .Drops, .Mixture:
-      return "Дозировка"
-    case .Ointment, .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
-      return ""
-    }
-  }
+//  func doseForTimesTitle() -> String {
+//    switch task.type {
+//    case .Pill, .Injection, .Drops, .Mixture:
+//      return "Дозировка"
+//    case .Ointment, .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
+//      return ""
+//    }
+//  }
   // заголовки при нескольких вариантах дозировки
-  func doseForTimesTitles() -> [String] {
-    if task.timesPerDay == 1 {
-      return ["Единственная"]
-    } else {
-      let adjectives = ["Первая", "Вторая", "Третья", "Четвертая", "Пятая", "Шестая"]
-      var titles: [String] = []
-      for ind in 0..<task.timesPerDay {
-        titles.append(adjectives[ind])
-      }
-      return titles
-    }
-  }
+//  func doseForTimesTitles() -> [String] {
+//    if task.timesPerDay == 1 {
+//      return ["Единственная"]
+//    } else {
+//      let adjectives = ["Первая", "Вторая", "Третья", "Четвертая", "Пятая", "Шестая"]
+//      var titles: [String] = []
+//      for ind in 0..<task.timesPerDay {
+//        titles.append(adjectives[ind])
+//      }
+//      return titles
+//    }
+//  }
   //значения
-  func doseForTimesOptions() -> [[String]] {
-    switch task.type {
-    case .Pill:
-      return [["", "1", "2", "3", "4", "5"],
-        ["", "1/4", "1/3", "1/2", "2/3", "3/4"]]
-    case .Injection:
-      return [["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-        ["", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"]]
-    case .Drops, .Mixture:
-      var doses: [String] = []
-      for i in 1...100 {
-        doses.append(String(i))
-      }
-      return [doses]
-    case .Ointment, .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
-      return []
-    }
-  }
+//  func doseForTimesOptions() -> [[String]] {
+//    switch task.type {
+//    case .Pill:
+//      return [["", "1", "2", "3", "4", "5"],
+//        ["", "1/4", "1/3", "1/2", "2/3", "3/4"]]
+//    case .Injection:
+//      return [["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+//        ["", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"]]
+//    case .Drops, .Mixture:
+//      var doses: [String] = []
+//      for i in 1...100 {
+//        doses.append(String(i))
+//      }
+//      return [doses]
+//    case .Ointment, .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
+//      return []
+//    }
+//  }
   // для инициализации
   func doseForConfiguration() -> [String] {
     switch task.type {
@@ -138,7 +140,7 @@ class TaskConfigurationByType {
       let doseForTimesCharacters = task.doseForTimes[ind].characters
       
       for d in doseForTimesCharacters {
-        if d == task.doseSeparator {
+        if d == task.separator {
           strs.append(str)
           str = ""
         } else {
@@ -163,7 +165,7 @@ class TaskConfigurationByType {
       for ind in 0..<strings.count {
         if !strings[ind].isEmpty {
           if ind > 0 && !strings[ind - 1].isEmpty {
-            ds.append(task.doseSeparator) // += String(task.doseSeparator)
+            ds.append(task.separator) // += String(task.doseSeparator)
           }
           ds += strings[ind]
         }
@@ -183,7 +185,7 @@ class TaskConfigurationByType {
     case .Pill, .Injection:
       var ds = ""
       for s in task.doseForTimes[ind].characters {
-        if s != task.doseSeparator {
+        if s != task.separator {
           ds += String(s)
         } else {
           ds += " "
@@ -201,35 +203,35 @@ class TaskConfigurationByType {
   
   // особенности приема
   // заголовки
-  func specialFeatureTitle() -> String {
-    switch task.type {
-    case .Pill, .Mixture:
-      return "Когда принимать"
-    case .Injection:
-      return "Куда колоть"
-    case .Drops:
-      return "Куда капать"
-    case .Ointment:
-      return "Куда наносить"
-    case .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
-      return ""
-    }
-  }
+//  func specialFeatureTitle() -> String {
+//    switch task.type {
+//    case .Pill, .Mixture:
+//      return "Когда принимать"
+//    case .Injection:
+//      return "Куда колоть"
+//    case .Drops:
+//      return "Куда капать"
+//    case .Ointment:
+//      return "Куда наносить"
+//    case .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
+//      return ""
+//    }
+//  }
   // значения
-  func specialFeatureOptions() -> [String] {
-    switch task.type {
-    case .Pill, .Mixture:
-      return ["до еды", "во время еды", "после еды", "независимо от еды"]
-    case .Injection:
-      return ["подкожно", "внутримышечно", "внутривенно"]
-    case .Drops:
-      return ["в уши", "в глаза", "в нос"]
-    case .Ointment:
-      return ["на кожу", "на раны", "на слизистые оболочки"]
-    case .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
-      return []
-    }
-  }
+//  func specialFeatureOptions() -> [String] {
+//    switch task.type {
+//    case .Pill, .Mixture:
+//      return ["до еды", "во время еды", "после еды", "независимо от еды"]
+//    case .Injection:
+//      return ["подкожно", "внутримышечно", "внутривенно"]
+//    case .Drops:
+//      return ["в уши", "в глаза", "в нос"]
+//    case .Ointment:
+//      return ["на кожу", "на раны", "на слизистые оболочки"]
+//    case .Procedure, .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming, .Error:
+//      return []
+//    }
+//  }
   // для инициализации
   func specialFeatureForConfiguration() -> String {
     switch task.type {
@@ -248,27 +250,27 @@ class TaskConfigurationByType {
   
   // частота приема
   // заголовки
-  func frequencySegmentTitles() -> [String] {
-    return ["ежедневно", "периодически"]
-  }
+//  func frequencySegmentTitles() -> [String] {
+//    return ["ежедневно", "периодически"]
+//  }
   // значения
-  func frequencyOptions() -> [[String]] {
-    switch task.type {
-    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure, .Vaccination, .WormTreatment, .FleaTreatment, .Grooming:
-      var titles: [[String]] = [[], []]
-      var title = ""
-      
-      for ind in 1...365 {
-        title = String(ind) + " " + dayStringByIndex(ind)
-        titles[0].append(title)
-        titles[1].append("через " + title)
-      }
-      return titles
-      
-    case .Analysis, .Error:
-      return []
-    }
-  }
+//  func frequencyOptions() -> [[String]] {
+//    switch task.type {
+//    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure, .Vaccination, .WormTreatment, .FleaTreatment, .Grooming:
+//      var titles: [[String]] = [[], []]
+//      var title = ""
+//      
+//      for ind in 1...365 {
+//        title = String(ind) + " " + dayStringByIndex(ind)
+//        titles[0].append(title)
+//        titles[1].append("через " + title)
+//      }
+//      return titles
+//      
+//    case .Analysis, .Error:
+//      return []
+//    }
+//  }
   // число дней в читабельном формате
   func dayStringByIndex(index: Int) -> String {
     var divided = index
@@ -295,9 +297,9 @@ class TaskConfigurationByType {
   
   // закончить
   // заголовки
-  func endSegmentTitles() -> [String] {
-    return ["через ? дней", "через ? раз", " в день "]
-  }
+//  func endSegmentTitles() -> [String] {
+//    return ["через ? дней", "через ? раз", " в день "]
+//  }
   // значения
   func endOptions(byNewEndType endType: Task.EndType? = nil) -> [String] {
     switch task.type {

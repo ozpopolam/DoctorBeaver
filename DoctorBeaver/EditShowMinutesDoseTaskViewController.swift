@@ -370,7 +370,7 @@ extension EditShowMinutesDoseTaskViewController: UITableViewDataSource {
         cell.dataPickerView.textColor = VisualConfiguration.pickerTextColor
         
         let initialValues = tbCnfg.initialDPickerStrings(withTag: tag)
-        cell.dataPickerView.configure(withTitles: titles, andInitialValues: initialValues, andDelegate: self)
+        cell.dataPickerView.configure(withOptions: titles, andInitialValues: initialValues, andDelegate: self)
       }
     }
   }
@@ -607,11 +607,11 @@ extension EditShowMinutesDoseTaskViewController: EqualSwitchDelegate {
 }
 
 // обращения с CoreData
-extension EditShowMinutesDoseTaskViewController: ManagedObjectContextSettable {
-  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
-    self.managedContext = managedContext
-  }
-}
+//extension EditShowMinutesDoseTaskViewController: ManagedObjectContextSettable {
+//  func setManagedObjectContext(managedContext: NSManagedObjectContext) {
+//    self.managedContext = managedContext
+//  }
+//}
 
 extension EditShowMinutesDoseTaskViewController: DatePickerDelegate {
   func datePicker(picker: UIDatePicker, didPickDate date: NSDate) { }

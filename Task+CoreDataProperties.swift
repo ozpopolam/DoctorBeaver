@@ -2,7 +2,7 @@
 //  Task+CoreDataProperties.swift
 //  DoctorBeaver
 //
-//  Created by Anastasia Stepanova-Kolupakhina on 16.03.16.
+//  Created by Anastasia Stepanova-Kolupakhina on 11.05.16.
 //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -15,8 +15,9 @@ import CoreData
 extension Task {
   @NSManaged var pet: Pet
   
-  @NSManaged var typeId: Int
   @NSManaged var name: String
+  @NSManaged var typeId: Int
+  @NSManaged var typeItem: TaskTypeItem
   
   @NSManaged var timesPerDay: Int
   @NSManaged var minutesForTimes: [Int]
