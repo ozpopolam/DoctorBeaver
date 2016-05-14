@@ -115,15 +115,20 @@
   
   func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
     
+    
+    if let viewController = viewController as? UINavigationController {
+      if let destinationVC = viewController.viewControllers.first as? PetsRepositorySettable {
+        destinationVC.petsRepository = petsRepository
+      }
+    }
+    
+    
+    
     // ScheduleViewController is inside UINavigationController
     if let viewController = viewController as? UINavigationController {
       
       if let destinationVC = viewController.viewControllers.first as? ScheduleViewController {
         destinationVC.setPetsRepository(petsRepository)
-      }
-    } else {
-      if let viewController = viewController as? PetsRepositorySettable {
-        viewController.petsRepository = petsRepository
       }
     }
     

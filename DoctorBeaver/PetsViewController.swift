@@ -15,6 +15,9 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   @IBOutlet weak var collectionView: UICollectionView!
   @IBOutlet weak var warningLabel: UILabel!
   
+  let addPetSegueId = "addPetSegue"
+  let editShowPetSegueId = "editShowPetSegue"
+  
   // settings for layout of UICollectionView
   let petCellId = "petCell"
   var cellWidth: CGFloat = 0.0
@@ -88,58 +91,38 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
     
     sortedAZ = !sortedAZ // new type of current sorting
     
-//    if sortedAZ {
-//      fakeNavigationBar.setButtonImage("sortingAZ", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-//      pets.sortInPlace(sortedByName(.OrderedDescending))
-//      sortedAZ = false
-//    } else {
-//      fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-//      pets.sortInPlace(sortedByName(.OrderedAscending))
-//      sortedAZ = true
-//    }
-    
     // reload all cells
     collectionView.performBatchUpdates({
       self.collectionView.reloadSections(NSIndexSet(index: 0))
       }, completion: nil)
   }
   
-//  // сортируем питомцев по имени в восходящем порядке
-//  func sortedByNameASC(lh: Pet, rh: Pet) -> Bool {
-//    return lh.name.localizedStandardCompare(rh.name) == .OrderedAscending
-//  }
-//  // в нисходящем порядке
-//  func sortedByNameDESC(lh: Pet, rh: Pet) -> Bool {
-//    return lh.name.localizedStandardCompare(rh.name) == .OrderedDescending
-//  }
-  
-  func sortedByName(direction:NSComparisonResult)->((lh: Pet, rh: Pet) -> Bool) {
-    return {(lh, rh)-> Bool in
+  func sortedByName(direction: NSComparisonResult) -> ((lh: Pet, rh: Pet) -> Bool) {
+    return {
+      (lh, rh) -> Bool in
       return lh.name.localizedStandardCompare(rh.name) == direction
     }
   }
   
   // Add-button
   func add(sender: UIButton) {
-    ////
+    performSegueWithIdentifier(addPetSegueId, sender: self)
   }
   
-  // заполняем коллекцию с нуля
-  // настраиваем внешний вид по инфо питомца и инициируем отображение расписания
+  // fetch data, show warning or reload collection view
   func fullyReloadPetCollection() {
     
     if petsRepository.countAll(Pet.entityName) == 0 {
-
       showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
-      
     } else {
-      
       hideWarningMessage()
-     
       pets = petsRepository.fetchAllPets()
+      
+      // get cropped version of all pets' icons
+      croppedPetImages = [ : ]
       for pet in pets {
         if let petImage = UIImage(named: pet.image) {
-          croppedPetImages[pet.id] = cropCentralSquare(fromImage: petImage)
+          croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
         }
       }
       
@@ -148,60 +131,21 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
     
   }
   
-//  // загружаем всех питомцев в collection view
-//  func reloadPetCollection(withNoFetchRequest noFetchRequest: Bool = false) {
-//    // прячем view с ошибкой
-//    hideWarningMessage()
-//    
-//    if !noFetchRequest {
-//      // загружаем питомцев
-//      pets = fetchAllPets(fromManagedContext: managedContext)
-//      for pet in pets {
-//        if let petImage = UIImage(named: pet.image) {
-//          croppedPetImages[pet.id] = cropCentralSquare(fromImage: petImage)
-//        }
-//      }
-//    }
-//    
-//    collectionView.reloadData()
-//  }
-  
-  // вырезаем центральный квадрат картинки
-  func cropCentralSquare(fromImage image: UIImage) -> UIImage {
-    let x = floor(image.size.width / 3)
-    let y = floor(image.size.height / 3)
-    let width = x
-    let height = y
-    
-    let cropSquare = CGRectMake(x, y, width, height)
-    let imageRef = CGImageCreateWithImageInRect(image.CGImage, cropSquare)
-    
-    if let imageRef = imageRef {
-      let croppedImage = UIImage(CGImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
-      return croppedImage
-    } else {
-      return image
-    }
-  }
-  
-  // показываем view с предупреждением
   func showWarningMessage(message: String) {
-    if !collectionView.hidden {
-      collectionView.hidden = true
-    }
+    collectionView.hidden = true
     warningLabel.text = message
   }
   
-  // прячем view с предупреждением
   func hideWarningMessage() {
-    if collectionView.hidden {
-      collectionView.hidden = false
-    }
+    collectionView.hidden = false
     warningLabel.text = ""
   }
   
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+  }
+  
 }
-
 
 extension PetsViewController: UICollectionViewDataSource {
   
@@ -225,7 +169,7 @@ extension PetsViewController: UICollectionViewDataSource {
       cell.petName.minimumScaleFactor = 0.75
       
       cell.petName.text = pets[indexPath.row].name
-      cell.petName.textColor = UIColor.blackColor()
+      cell.petName.textColor = VisualConfiguration.textBlackColor
       
       return cell
     } else {
@@ -238,20 +182,20 @@ extension PetsViewController: UICollectionViewDataSource {
 extension PetsViewController: UICollectionViewDelegate {
   
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    ////
+    performSegueWithIdentifier(editShowPetSegueId, sender: self)
   }
 }
 
 extension PetsViewController: UICollectionViewDelegateFlowLayout {
   
-  // размеры ячеек и отступов по числу ячеек в ряде
+  // counting sizes and insets of cells, based on its number
   func countFlowLayoutValues(forNumberOfCellsInALine numberOfCellsInALine: CGFloat) {
     let maxWidth = view.frame.size.width
     
     let inset = floor(maxWidth * 3.0 / 100.0)
     sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
     
-    let tempMinimumSpacing = maxWidth * 4.0 / 100.0
+    let tempMinimumSpacing = maxWidth * 4.0 / 100.0 // temporary value to be specified
     
     let cellWidth = ceil( (maxWidth - (inset * 2 + tempMinimumSpacing * (numberOfCellsInALine - 1) ) ) / numberOfCellsInALine )
     

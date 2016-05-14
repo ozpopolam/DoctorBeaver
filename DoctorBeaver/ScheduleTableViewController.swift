@@ -41,7 +41,6 @@ class ScheduleTableViewController: UIViewController {
   
   var accessoryButtonTask: Task?
   
-  
   typealias TimeRealization = (timeInDay: Int, realization: Realization)
   var timeRealizations: [TimeRealization] = []
   
