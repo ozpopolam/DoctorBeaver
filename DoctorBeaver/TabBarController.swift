@@ -26,9 +26,20 @@
       }
       populateManagedObjectContextWithJsonPetData()
     }
+    
+//    var doses: [String] = []
+//          for i in 1...100 {
+//            doses.append(String(i))
+//          }
+//    
+//    print(doses)
+//    
+//    
+//    let x = doses.reduce("", combine: { $0 == "" ? $1 : $0 + "|" + $1 })
+//    print(x)
  
     // начинаем со вкладки расписания
-    self.selectedIndex = 0
+    self.selectedIndex = 1
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }

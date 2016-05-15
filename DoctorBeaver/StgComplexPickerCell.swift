@@ -11,7 +11,9 @@ import UIKit
 
 protocol StgComplexPickerCellDelegate: class {
   func getPickerOptionsAndInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> (options: [[String]], initialValues: [String], delegate: DataPickerViewDelegate)
+  func getPickerInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> [String]
   func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> (iDate: NSDate, mDate: NSDate, delegate: DatePickerDelegate)
+  func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> NSDate
 }
 
 class StgComplexPickerCell: UITableViewCell {
@@ -60,15 +62,13 @@ class StgComplexPickerCell: UITableViewCell {
     }
   }
   
-  func configure(withTag tag: Int, andDelegate delegate: StgComplexPickerCellDelegate) {
-    self.tag = tag
+  func configure(withTags tags: [Int], andDelegate delegate: StgComplexPickerCellDelegate) {
+    self.tag = tags[0]
     self.delegate = delegate
     
-    firstDataPickerView.tag = tag
-    secondDataPickerView.tag = tag + 1
-    datePicker.tag = tag + 2
-    
-    datePicker.needToReload = true
+    firstDataPickerView.tag = tags[1]
+    secondDataPickerView.tag = tags[2]
+    datePicker.tag = tags[3]
   }
   
   func configure(withSegmentValues segmentValues: [String], andSelectedSegment index: Int) {
@@ -117,29 +117,40 @@ class StgComplexPickerCell: UITableViewCell {
     
     if let delegate = delegate {
       if index != 2 {
-        if dataPickerViews[index].rowsInComponent.isEmpty {
+        if dataPickerViews[index].isEmpty {
           
+          // dataPicker is empty - need to reset all its data
           var titles: [[String]]
           var initialValues: [String]
           var pickerDelegate: DataPickerViewDelegate
           
           (titles, initialValues, pickerDelegate) = delegate.getPickerOptionsAndInitialValues(bySelectedSegment: index, andByTag: dataPickerViews[index].tag)
-          
           dataPickerViews[index].configure(withOptions: titles, andInitialValues: initialValues, andDelegate: pickerDelegate)
+          
+        } else if dataPickerViews[index].needToResetInitialValues {
+          
+          // need to reset only its initialValues
+          let initialValues = delegate.getPickerInitialValues(bySelectedSegment: index, andByTag: dataPickerViews[index].tag)
+          dataPickerViews[index].configure(withInitialValues: initialValues)
         }
         
       } else {
-        if datePicker.needToReload == true {
+        if datePicker.isEmpty {
           
-          datePicker.needToReload = false
-          
+          // datePicker is empty - need to reset all its data
           var iDate: NSDate
           var mDate: NSDate
           var pickerDelegate: DatePickerDelegate
           (iDate, mDate, pickerDelegate) = delegate.getPickerInitialDate(bySelectedSegment: 2, andByTag: datePicker.tag)
           
           datePicker.configure(withDelegate: pickerDelegate, selectedDate: iDate, andMinimumDate: mDate)
+        } else if datePicker.needToResetInitialValues {
+          
+          // need to reset only its initialValues
+          let iDate: NSDate = delegate.getPickerInitialDate(bySelectedSegment: 2, andByTag: datePicker.tag)
+          datePicker.configure(withSelectedDate: iDate)
         }
+        
       }
     }
     

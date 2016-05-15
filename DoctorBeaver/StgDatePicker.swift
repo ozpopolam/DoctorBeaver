@@ -22,8 +22,8 @@ class StgDatePicker: UIDatePicker {
   var maDate: NSDate?
   var selectedDate: NSDate?
   
-  // picker не заполнен значениями
-  var needToReload = true
+  var isEmpty = true // data sourse is empty
+  var needToResetInitialValues = false // need to be reloaded, when user selected some value, but later it wasn't used
   
   // дата и время
   func configure(withDelegate delegate: DatePickerDelegate, selectedDate sDate: NSDate, andMinimumDate mDate: NSDate) {
@@ -38,7 +38,12 @@ class StgDatePicker: UIDatePicker {
     } else {
       maximumDate = sDate
     }
+    setDate(sDate, animated: true)
     
+    isEmpty = false
+  }
+  
+  func configure(withSelectedDate sDate: NSDate) {
     setDate(sDate, animated: true)
   }
   
@@ -59,6 +64,8 @@ class StgDatePicker: UIDatePicker {
     } else {
       setDate(NSDate(), animated: true)
     }
+    
+    isEmpty = false
   }
   
   // время с ограничениями
@@ -94,6 +101,8 @@ class StgDatePicker: UIDatePicker {
     } else {
       setDate(NSDate(), animated: true)
     }
+    
+    isEmpty = false
   }
   
   func didPick() {
@@ -101,7 +110,10 @@ class StgDatePicker: UIDatePicker {
     if datePickerMode == .DateAndTime {
       if let delegate = delegate {
         if delegate.dateStillNeeded(fromPicker: self) {
+          needToResetInitialValues = false
           delegate.datePicker(self, didPickDate: self.date)
+        } else {
+          needToResetInitialValues = true
         }
       }
       //время
@@ -111,7 +123,10 @@ class StgDatePicker: UIDatePicker {
       
       if let delegate = delegate {
         if delegate.dateStillNeeded(fromPicker: self) {
+          needToResetInitialValues = false
           delegate.datePicker(self, didPickMinutes: minutes)
+        } else {
+          needToResetInitialValues = true
         }
       }
     }

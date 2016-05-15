@@ -5,7 +5,15 @@
         <attribute name="image" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="selected" attributeType="Boolean" syncable="YES"/>
+        <relationship name="basicValues" maxCount="1" deletionRule="Nullify" destinationEntity="PetBasicValues" inverseName="pets" inverseEntity="PetBasicValues" syncable="YES"/>
         <relationship name="tasks" toMany="YES" deletionRule="Cascade" destinationEntity="Task" inverseName="pet" inverseEntity="Task" syncable="YES"/>
+    </entity>
+    <entity name="PetBasicValues" representedClassName=".PetBasicValues" syncable="YES">
+        <attribute name="namePlaceholder" attributeType="String" syncable="YES"/>
+        <attribute name="sectionTitles" attributeType="String" syncable="YES"/>
+        <attribute name="selectedForInitialization" attributeType="Boolean" syncable="YES"/>
+        <attribute name="selectedTitle" attributeType="String" syncable="YES"/>
+        <relationship name="pets" toMany="YES" deletionRule="Nullify" destinationEntity="Pet" inverseName="basicValues" inverseEntity="Pet" syncable="YES"/>
     </entity>
     <entity name="Realization" representedClassName=".Realization" syncable="YES">
         <attribute name="date" attributeType="Date" indexed="YES" syncable="YES"/>
@@ -55,6 +63,7 @@
         <relationship name="tasks" toMany="YES" deletionRule="Nullify" destinationEntity="Task" inverseName="typeItem" inverseEntity="Task" syncable="YES"/>
     </entity>
     <entity name="TaskTypeItemBasicValues" representedClassName=".TaskTypeItemBasicValues" syncable="YES">
+        <attribute name="commentPlaceholder" attributeType="String" syncable="YES"/>
         <attribute name="daysOptions" attributeType="String" syncable="YES"/>
         <attribute name="endDaysOrTimesOptionsPreposition" attributeType="String" syncable="YES"/>
         <attribute name="endDaysOrTimesSegmentTitles" attributeType="String" syncable="YES"/>
@@ -66,10 +75,11 @@
         <relationship name="typeItem" toMany="YES" deletionRule="Nullify" destinationEntity="TaskTypeItem" inverseName="basicValues" inverseEntity="TaskTypeItem" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Pet" positionX="-297" positionY="-144" width="128" height="118"/>
+        <element name="Pet" positionX="-297" positionY="-144" width="128" height="135"/>
         <element name="Realization" positionX="106" positionY="-108" width="128" height="90"/>
         <element name="Task" positionX="-90" positionY="-243" width="128" height="253"/>
         <element name="TaskTypeItem" positionX="-99" positionY="108" width="128" height="405"/>
-        <element name="TaskTypeItemBasicValues" positionX="-54" positionY="-45" width="128" height="180"/>
+        <element name="TaskTypeItemBasicValues" positionX="-54" positionY="-45" width="128" height="195"/>
+        <element name="PetBasicValues" positionX="-99" positionY="-90" width="128" height="120"/>
     </elements>
 </model>

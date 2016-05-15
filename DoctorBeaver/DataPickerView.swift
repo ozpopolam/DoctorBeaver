@@ -25,6 +25,13 @@ class DataPickerView: UIView {
   var font = UIFont.systemFontOfSize(17.0)
   var textColor = UIColor.blackColor()
   
+  var isEmpty: Bool { // data sourse is empty
+    get {
+      return rowsInComponent.isEmpty
+    }
+  }
+  var needToResetInitialValues = false // need to be reloaded, when user selected some value, but later it wasn't used
+  
   var rowsInComponent: [Int] = []
   var options: [[String]] = [] {
     didSet {
@@ -70,6 +77,11 @@ class DataPickerView: UIView {
     self.initialValues = initialValues
     self.delegate = delegate
     pickerView.reloadAllComponents()
+    setPickerToValues(initialValues)
+  }
+  
+  func configure(withInitialValues initialValues: [String]) {
+    self.initialValues = initialValues
     setPickerToValues(initialValues)
   }
   
@@ -176,13 +188,12 @@ extension DataPickerView: UIPickerViewDelegate {
     
     if let delegate = delegate {
       if delegate.dataStillNeeded(fromPicker: self) {
+        needToResetInitialValues = false
         delegate.dataPicker(self, didPickValues: selectedValues)
+      } else {
+        needToResetInitialValues = true
       }
     }
-    
-//    if delegate?.dataStillNeeded() {
-//      delegate?.dataPicker(self, didPickValues: selectedValues)
-//    }
   }
   
 }

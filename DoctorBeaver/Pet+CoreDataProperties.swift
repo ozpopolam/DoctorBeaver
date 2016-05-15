@@ -14,10 +14,10 @@ import CoreData
 
 extension Pet {
   @NSManaged var id: Double
+  @NSManaged var basicValues: PetBasicValues
   
   @NSManaged var name: String
   @NSManaged var selected: Bool
-  
   @NSManaged var image: String
   
   @NSManaged var tasks: NSSet

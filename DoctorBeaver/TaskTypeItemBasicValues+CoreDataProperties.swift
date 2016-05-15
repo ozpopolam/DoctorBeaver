@@ -24,4 +24,6 @@ extension TaskTypeItemBasicValues {
   @NSManaged var endDaysOrTimesSegmentTitles: String
   @NSManaged var endDaysOrTimesOptionsPreposition: String
   @NSManaged var timesOptions: String
+  
+  @NSManaged var commentPlaceholder: String
 }

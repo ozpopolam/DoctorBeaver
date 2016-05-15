@@ -8,6 +8,7 @@
 
 import Foundation
 
+// type of cells
 enum SettingCellType {
   case TextFieldCell
   case TitleValueCell
@@ -19,6 +20,7 @@ enum SettingCellType {
   case ComplexPickerCell
 }
 
+// states of cells
 enum CellState {
   case Visible
   case Active
@@ -32,119 +34,112 @@ enum ESMinutesDoseTaskTblCnfgType {
 }
 
 class EditShowTaskTableConfiguration {
-  
-  var tskCnfg: TaskConfigurationByType!
   var task: Task!
   
-  // структура ячеек, составляющее меню для настройки
-  var cellTagTypeState: [[(tag: Int, type: SettingCellType, state: CellState)]]
-  // заголовки секций
-  var sectionTitles: [String]
-  // заголовки названий и значений пунктов меню
-  var titleValueTitles: [Int: String]
-  var titleValueValues: [Int: String]
-  // значения picker view
-  var pickerOptions: [Int: [[String]]]
-  // placeholder для text field
-  var textFieldPlaceholders: [Int : String]
+  // structure of menu, consisting of cell
+  // each cell is presented by its tag, type and state
+  var cellsTagTypeState: [[(tag: Int, type: SettingCellType, state: CellState)]] = []
   
+  var sectionTitles: [String] = []
   
-  // предыдущие расписания
-  var previousMinutes: [Int: [Int]]
-  // предыдущие минуты
-  var previousDose: [Int: [String]]
+  // titles and values for TitleValueCell
+  var titleValueTitles: [Int: String] = [:] // [tag: title]
+  var titleValueValues: [Int: String] = [:] // [tag: value]
   
+  var pickerOptions: [Int: [[String]]] = [:]
+  var textFieldPlaceholders: [Int : String] = [:]
   
-  // предыдущее значение частоты
-  var previousFrequency: [Int]
-  // предыдущие значения для поля "Закончить"
-  var previousDaysTimesDate: (days: Int, times: Int, date: NSDate)
+  // tags of cells and their pickers
+  let nameTag = 00
+  let timesPerDayTitleTag = 10
+  let timesPerDayPickerTag = 11
   
-  // расписание приема изменилось, необходимо пересчитать последний день приема
+  let minutesForTimesTitleTag = 12
+  let minutesForTimesPickerTag = 13
+  
+  let doseForTimesTitleTag = 14
+  let doseForTimesPickerTag = 15
+  
+  let specialFeatureTitleTag = 16
+  let specialFeaturePickerTag = 17
+  
+  let startDateTitleTag = 20
+  let startDatePickerTag = 21
+  
+  let frequencyTitleTag = 22
+  let frequencyPickerTag = 23
+  
+  let endDateTitleTag = 24
+  let endDateAllPickersTag = 25
+  
+  let endDaysPickerTag = 250
+  let endTimesPickerTag = 251
+  let endDatePickerTag = 252
+  
+  let commentTag = 30
+  
+  // storing previous values
+  var previousMinutes: [Int: [Int]] = [:]
+  var previousDose: [Int: [String]] = [:]
+  var previousFrequency: [Int] = []
+  var previousDaysTimesDate: (days: Int, times: Int, date: NSDate) = (days: 1, times: 1, date: NSDate())
+  
+  // some part of schedule (timesPerDay, minutesForTimes, startDate, frequency, endDaysOrTimes or endDate) was changed
   var scheduleWasChanged = false
   
-  var needToReloadEndDate = false
-  
-  init() {
-    cellTagTypeState = []
-    sectionTitles = []
-    titleValueTitles = [:]
-    titleValueValues = [:]
-    pickerOptions = [:]
-    textFieldPlaceholders = [:]
-    
-    previousMinutes = [:]
-    previousDose = [:]
-    previousFrequency = []
-    previousDaysTimesDate = (days: 1, times: 1, date: NSDate())
-  }
-  
-  // комплексная настройка для целого задания
+  // configuration of menu
   func configure(withTask task: Task) {
-    
-    tskCnfg = TaskConfigurationByType(task: task)
     self.task = task
     
-    // видимость-невидимость ячеек в зависимости от типа задания
-    configureCellTagTypeState(forType: task.type)
-    // названия сегментов
-    configureSectionTitles()
+    sectionTitles = task.sectionTitles
     
-    // заголовки настроек
+    // structure of cells, forming the menu
+    configureCellTagTypeState()
+    
     titleValueTitles = [
-      10: task.timesPerDayTitle,
-      12: task.minutesForTimesTitle,
-      14: task.doseForTimesTitle,
-      16: task.specialFeatureTitle,
+      timesPerDayTitleTag: task.timesPerDayTitle,
+      minutesForTimesTitleTag: task.minutesForTimesTitle,
+      doseForTimesTitleTag: task.doseForTimesTitle,
+      specialFeatureTitleTag: task.specialFeatureTitle,
       
-      20: task.startDateTitle,
-      22: task.frequencyTitle,
-      24: task.endDaysOrTimesTitle
+      startDateTitleTag: task.startDateTitle,
+      frequencyTitleTag: task.frequencyTitle,
+      endDateTitleTag: task.endDaysOrTimesTitle
     ]
     
-    // значения настроек
-    for cellTTSs in cellTagTypeState {
-      for cellTTS in cellTTSs {
-        if cellTTS.tag % 2 == 0 {
-          titleValueValues[cellTTS.tag] = ""
-          updateTitleValueValues(ofTag: cellTTS.tag, byTask: task)
+    for sectionCellsTagTypeState in cellsTagTypeState {
+      for cellTagTypeState in sectionCellsTagTypeState {
+        if cellTagTypeState.tag % 2 == 0 {
+          updateTitleValueValues(ofTag: cellTagTypeState.tag)
         }
-        
       }
     }
     
-    // наполняем picker view значениями настраиваемых элементов
     pickerOptions = [
-      11: [task.timesPerDayOptions],
-      15: task.doseForTimesOptions,
-      17: [task.specialFeatureOptions],
-      23: task.frequencyOptions
+      timesPerDayPickerTag: [task.timesPerDayOptions],
+      doseForTimesPickerTag: task.doseForTimesOptions,
+      specialFeaturePickerTag: [task.specialFeatureOptions],
+      frequencyPickerTag: task.frequencyOptions
     ]
     
-    //наполняем placeholder для text field
     textFieldPlaceholders = [
-      00: task.namePlaceholder
+      nameTag: task.namePlaceholder,
+      commentTag: task.commentPlaceholder
     ]
     
-    updatePreviousMinutes()
-    updatePreviousDose()
-    updatePreviousFrequency()
-    updatePreviousDaysTimesDate()
+    // save previous values in case user decides to go back to them
+    savePreviousMinutes()
+    savePreviousDose()
+    savePreviousFrequency()
+    savePreviousDaysTimesDate()
+  }
+
+  // forimg the structure of cells, forming the menu
+  func configureCellTagTypeState() {
     
-  }
-  
-  func updatePreviousMinutes() {
-    previousMinutes[task.timesPerDay] = task.minutesForTimes
-  }
-  
-  func updatePreviousDose() {
-    previousDose[task.timesPerDay] = task.doseForTimes
-  }
-  
-  // строим структуру меню на основании типа задания
-  func configureCellTagTypeState(forType type: TaskType) {
+    guard sectionTitles.count == 4 else { return }
     
-    //    // общая структура меню
+    //  basic structure of menu
     //    cellTagTypeState = [
     //      [(00, .TextFieldCell, .Visible)],
     //      [
@@ -156,105 +151,127 @@ class EditShowTaskTableConfiguration {
     //      [
     //        (20, .TitleValueCell, .Visible), (21, .DateTimePickerCell, .Hidden),
     //        (22, .TitleSegmentCell, .Visible), (23, .DataPickerCell, .Hidden),
-    //        //250, 251, 252 - picker Views
+    //
     //        (24, .TitleValueCell, .Visible), (25, .ComplexPickerCell, .Hidden),
+    //                                         //250, 251, 252 - picker views
     //      ],
     //      [(30, .TextFieldCell, .Visible)]
     //    ]
     
-    let type = task.type
+    cellsTagTypeState = [[(nameTag, .TextFieldCell, .Visible)]]
     
-    // название
-    cellTagTypeState = [[(00, .TextFieldCell, .Visible)]]
+    if sectionTitles[1].isFilledWithSomething {
+      cellsTagTypeState.append([])
+      
+      if task.timesPerDayTitle.isFilledWithSomething {
+        cellsTagTypeState[1].append((timesPerDayTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[1].append((timesPerDayPickerTag, .DataPickerCell, .Hidden))
+      }
+      
+      if task.minutesForTimesTitle.isFilledWithSomething {
+        cellsTagTypeState[1].append((minutesForTimesTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[1].append((minutesForTimesPickerTag, .TimePickerCell, .Hidden))
+      }
+      
+      if task.doseForTimesTitle.isFilledWithSomething {
+        cellsTagTypeState[1].append((doseForTimesTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[1].append((doseForTimesPickerTag, .DataPickerCell, .Hidden))
+      }
+      
+      if task.specialFeatureTitle.isFilledWithSomething {
+        cellsTagTypeState[1].append((specialFeatureTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[1].append((specialFeaturePickerTag, .DataPickerCell, .Hidden))
+      }
+      
+    }
     
-    cellTagTypeState.append([])
-    // раз в день
-    switch type {
-    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
-      cellTagTypeState[1].append((10, .TitleValueCell, .Visible))
-      cellTagTypeState[1].append((11, .DataPickerCell, .Hidden))
-    default:
-      break
+    if sectionTitles[2].isFilledWithSomething {
+      cellsTagTypeState.append([])
+      
+      if task.startDateTitle.isFilledWithSomething {
+        cellsTagTypeState[2].append((startDateTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[2].append((startDatePickerTag, .DateTimePickerCell, .Hidden))
+      }
+      
+      if task.frequencyTitle.isFilledWithSomething {
+        cellsTagTypeState[2].append((frequencyTitleTag, .TitleSegmentCell, .Visible))
+        cellsTagTypeState[2].append((frequencyPickerTag, .DataPickerCell, .Hidden))
+      }
+      
+      if task.endDaysOrTimesTitle.isFilledWithSomething {
+        cellsTagTypeState[2].append((endDateTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[2].append((endDateAllPickersTag, .ComplexPickerCell, .Hidden))
+      }
+      
     }
-    // время приема
-    switch type {
-    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
-      cellTagTypeState[1].append((12, .TitleValueCell, .Visible))
-      cellTagTypeState[1].append((13, .TimePickerCell, .Hidden))
-    default:
-      break
-    }
-    // дозировка
-    switch type {
-    case .Pill, .Injection, .Drops, .Mixture:
-      cellTagTypeState[1].append((14, .TitleValueCell, .Visible))
-      cellTagTypeState[1].append((15, .DataPickerCell, .Hidden))
-    default:
-      break
-    }
-    // особые указания
-    switch type {
-    case .Pill, .Mixture, .Injection, .Drops, .Ointment:
-      cellTagTypeState[1].append((16, .TitleValueCell, .Visible))
-      cellTagTypeState[1].append((17, .DataPickerCell, .Hidden))
-    default:
-      break
-    }
-   
-    cellTagTypeState.append([])
-    // начать
-    cellTagTypeState[2].append((20, .TitleValueCell, .Visible))
-    cellTagTypeState[2].append((21, .DateTimePickerCell, .Hidden))
-    // повторять
-    switch type {
-    case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure, .Vaccination, .WormTreatment, .FleaTreatment, .Grooming:
-      cellTagTypeState[2].append((22, .TitleSegmentCell, .Visible))
-      cellTagTypeState[2].append((23, .DataPickerCell, .Hidden))
-    default:
-      break
-    }
-    // закончить
-    cellTagTypeState[2].append((24, .TitleValueCell, .Visible))
-    cellTagTypeState[2].append((25, .ComplexPickerCell, .Hidden))
     
-    // комментарий
-    cellTagTypeState.append([(30, .TextFieldCell, .Visible)])
+    cellsTagTypeState.append([])
+    cellsTagTypeState[3].append((commentTag, .TextFieldCell, .Visible))
   }
   
+  func savePreviousMinutes() {
+    previousMinutes[task.timesPerDay] = task.minutesForTimes
+  }
+  
+  func savePreviousDose() {
+    previousDose[task.timesPerDay] = task.doseForTimes
+  }
+  
+  func savePreviousFrequency() {
+    if !task.frequency.isEmpty {
+      previousFrequency = task.frequency
+    } else {
+      previousFrequency = [1, 1]
+    }
+  }
+  
+  func savePreviousDaysTimesDate() {
+    let endType = task.endType
+    switch endType {
+    case .EndDate:
+      previousDaysTimesDate.date = task.endDate
+    case .EndDays:
+      previousDaysTimesDate.days = -task.endDaysOrTimes
+    case .EndTimes:
+      previousDaysTimesDate.times = task.endDaysOrTimes
+    }
+  }
+  
+  
+/////
   func getESMinutesDoseTaskTblCnfgType(ofTag tag: Int) -> ESMinutesDoseTaskTblCnfgType {
-    if tag == 12 {
+    if tag == minutesForTimesTitleTag {
       return .Minutes
     } else {
       return .Dose
     }
   }
+////
   
-  // tag для секции и ряда
   func tagForIndexPath(indexPath: NSIndexPath) -> Int {
-    return cellTagTypeState[indexPath.section][indexPath.row].tag
+    return cellsTagTypeState[indexPath.section][indexPath.row].tag
   }
   
-  // секция и ряд для tag
+  func tagForEndType(endType: Task.EndType) -> Int {
+    switch endType {
+    case .EndDays: return endDaysPickerTag
+    case .EndTimes: return endTimesPickerTag
+    case .EndDate: return endDatePickerTag
+    }
+  }
+  
   func indexPathForTag(tag: Int) -> NSIndexPath? {
+    var cellTag: Int
     
-    var cellTag = tag
-    
-    var cmplxTag = tag
-    if tag == 26 {
-      cmplxTag = 250
-    } else if tag == 27 {
-      cmplxTag = 251
-    } else if tag == 28 {
-      cmplxTag = 252
+    if tag == endDaysPickerTag || tag == endTimesPickerTag || tag == endDatePickerTag {
+      cellTag = endDateAllPickersTag
+    } else {
+      cellTag = tag
     }
     
-    if cmplxTag > 100 {
-      cellTag = cmplxTag / 10
-    }
-    
-    for s in 0..<cellTagTypeState.count {
-      for r in 0..<cellTagTypeState[s].count {
-        if cellTagTypeState[s][r].tag == cellTag {
+    for s in 0..<cellsTagTypeState.count {
+      for r in 0..<cellsTagTypeState[s].count {
+        if cellsTagTypeState[s][r].tag == cellTag {
           return NSIndexPath(forRow: r, inSection: s)
         }
       }
@@ -262,88 +279,72 @@ class EditShowTaskTableConfiguration {
     return nil
   }
   
-  // заголовки секций
-  func configureSectionTitles() {
-    sectionTitles = task.sectionTitles
-  }
   
-  // по tag обновляем значения полей по данным задания
-  func updateTitleValueValues(ofTag tag: Int, byTask task: Task) {
+  // update values-part of TitleValueCell by task
+  func updateTitleValueValues(ofTag tag: Int) {
     
     var strValue: String = ""
     switch tag {
-      // название
-    case 00:
+
+    case nameTag:
       strValue = task.name
       
-      // раз в день
-    case 10:
+    case timesPerDayTitleTag:
       strValue = task.timesPerDayOptions[task.timesPerDay - 1]
       
-      // время приема и дозировка
-    case 12, 14:
+    case minutesForTimesTitleTag, doseForTimesTitleTag:
       if task.timesPerDay > 1 {
         if let indexPath = indexPathForTag(tag) {
-          cellTagTypeState[indexPath.section][indexPath.row].state = .Accessory
+          cellsTagTypeState[indexPath.section][indexPath.row].state = .Accessory
         }
       } else {
         if let indexPath = indexPathForTag(tag) {
-          cellTagTypeState[indexPath.section][indexPath.row].state = .Visible
+          cellsTagTypeState[indexPath.section][indexPath.row].state = .Visible
         }
       }
       
-      if tag == 12 {
-        // время приема
+      if tag == minutesForTimesTitleTag {
         if task.timesPerDay == 1 {
           let minutes = task.minutesForTimes[0]
           strValue = DateHelper.minutesToString(minutes)
         }
         
       } else {
-        // дозировка
         if task.timesPerDay == 1 {
-          strValue = tskCnfg.doseString() + " " + task.type.doseUnit()
+          strValue = task.dosePrintable(forTime: 0) + " " + task.doseUnit
         }
       }
       
-      // особенности приема
-    case 16:
+    case specialFeatureTitleTag:
       strValue = task.specialFeature
       
-      // начать
-    case 20:
+    case startDateTitleTag:
       strValue = DateHelper.dateToString(task.startDate)
       
-      // повторять
-    case 22:
+    case frequencyTitleTag:
       if task.frequency.count == 2 {
         strValue = String(task.frequency[0]) + " / " + String(task.frequency[1])
       }
       
-      // закончить
-    case 24:
+    case endDateTitleTag:
       switch task.endType {
       case .EndDate:
         strValue = DateHelper.dateToString(task.endDate)
       case .EndDays, .EndTimes:
-        let endOptions = tskCnfg.endOptions()
+        let endOptions = task.endDaysOrTimesOptions()
         
         if task.endType == .EndDays {
           let endDays = -task.endDaysOrTimes
-          strValue = "через " + endOptions[endDays - 1]
+          strValue = endOptions[endDays - 1]
         } else {
           let endTimes = task.endDaysOrTimes
-          strValue = "через " + endOptions[endTimes - 1]
+          strValue = endOptions[endTimes - 1]
         }
+        
       }
       
-      // комментарий
-    case 30:
-      if task.comment.isEmpty {
-        strValue = "нет"
-      } else {
-        strValue = task.comment
-      }
+    case commentTag:
+      strValue = task.comment
       
     default:
       break
@@ -352,30 +353,26 @@ class EditShowTaskTableConfiguration {
     titleValueValues[tag] = strValue
   }
 
-  // начальные значения для picker view
-  // получаем начальное строковое значение для picker view с tag
-  func initialDPickerStrings(withTag tag: Int, andNewEndType endType: Task.EndType? = nil) -> [String] {
+ // MARK: get initial values for picker
+  func initialDataPickerValues(withTag tag: Int, andNewEndType endType: Task.EndType? = nil) -> [String] {
     switch tag {
-      // раз в день
-    case 11:
+
+    case timesPerDayPickerTag:
       if task.timesPerDay - 1 >= 0 {
         return [task.timesPerDayOptions[task.timesPerDay - 1]]
       }
       
-      // дозировка
-    case 15:
+    case doseForTimesPickerTag:
       if task.timesPerDay == 1 {
-        return tskCnfg.doseStringsFromDoseString()
+        return task.doseAsArrayOfStrings(forTime: 0)
       } else {
         return []
       }
-      
-      // особенности приема
-    case 17:
+
+    case specialFeaturePickerTag:
       return [task.specialFeature]
       
-      // частота
-    case 23:
+    case frequencyPickerTag:
       let frequencyOptions = task.frequencyOptions
       let activeDays = frequencyOptions[0]
       let passiveDays = frequencyOptions[1]
@@ -385,9 +382,8 @@ class EditShowTaskTableConfiguration {
       
       return [ activeDays[activeDay - 1], passiveDays[passiveDay - 1] ]
       
-      // закончить через дни или разы
-    case 25, 26:
-      let endOptions = tskCnfg.endOptions(byNewEndType: endType)
+    case endDaysPickerTag, endTimesPickerTag:
+      let endOptions = task.endDaysOrTimesOptions(byNewEndType: endType)
       
       var et: Task.EndType
       
@@ -412,20 +408,17 @@ class EditShowTaskTableConfiguration {
     return []
   }
   
-  // получаем начальное значение времени для picker view с tag
-  func initialDTPickerTime(withTag tag: Int) -> Int {
-    // время приема
-    if tag == 13 {
+  func initialDateTimePickerTime(withTag tag: Int) -> Int {
+    if tag == minutesForTimesPickerTag {
       return task.minutesForTimes[0]
     }
     return -1
   }
   
-  // получаем начальное значение времени и даты для picker view с tag
-  func initialDTPickerDate(withTag tag: Int) -> (initialDate: NSDate, minimumDate: NSDate) {
+  func initialDateTimePickerDate(withTag tag: Int) -> (initialDate: NSDate, minimumDate: NSDate) {
     switch tag {
-    // начать
-    case 21:
+      
+    case startDatePickerTag:
       let idDate = NSDate(timeIntervalSince1970: task.pet.id)
       if let miDate = DateHelper.calendar.dateByAddingUnit(.Month, value: -1, toDate: idDate, options: []) {
         return (initialDate: task.startDate, minimumDate: miDate)
@@ -433,24 +426,24 @@ class EditShowTaskTableConfiguration {
         return (initialDate: task.startDate, minimumDate: idDate)
       }
       
-    // закончить
-    case 27:
+    case endDatePickerTag:
       return (task.endDate, task.startDate)
     default:
       return (NSDate(), NSDate())
     }
   }
   
-  // обновляем задания данными, полученными из picker view
+ // MARK: update task by entered data from cells
+  // after updating task, some cells, which are supposed to show this data, must be reloaded - return their tags
   func updateTask(byTextFieldWithTag tag: Int, byString string: String) -> [Int] {
-    let tagsToUpdate = [tag]
     
+    let tagsToUpdate = [tag]
     switch tag {
-    // название
-    case 00:
+
+    case nameTag:
       task.name = string
-    // комментарий
-    case 30:
+
+    case commentTag:
       task.comment = string
     default:
       break
@@ -459,15 +452,13 @@ class EditShowTaskTableConfiguration {
     return tagsToUpdate
   }
   
-  
-  // обновляем задание строковым значением, выбранным в picker view, получаем список заголовков настроек, которые также надо обновить
   func updateTask(byPickerViewWithTag tag: Int, byStrings strings: [String]) -> [Int] {
-    // обновляем по крайней мере одну ячейку - расположенную над данным picker view
+    // TitleValueCell above picker, which show its value, must be reloaded
     var tagsToUpdate = [tag - 1]
     
     switch tag {
-      // раз в день
-    case 11:
+
+    case timesPerDayPickerTag:
       let strValue = strings[0]
       if let ind = task.timesPerDayOptions.indexOf(strValue) {
         task.timesPerDay = ind + 1
@@ -476,34 +467,31 @@ class EditShowTaskTableConfiguration {
           task.minutesForTimes = pm
         } else {
           task.correctMinutes()
-          updatePreviousMinutes()
+          savePreviousMinutes()
         }
         
         if let pd = previousDose[task.timesPerDay] {
           task.doseForTimes = pd
         } else {
           task.correctDose()
-          updatePreviousDose()
+          savePreviousDose()
         }
         
         scheduleWasChanged = true
       }
-      // обновляем время приема и дозировку
-      tagsToUpdate.append(12)
-      tagsToUpdate.append(14)
+
+      tagsToUpdate.append(minutesForTimesTitleTag)
+      tagsToUpdate.append(doseForTimesTitleTag)
       
-      // дозировка при единичном употреблении
-    case 15:
+    case doseForTimesPickerTag:
       task.doseForTimes = []
       task.doseForTimes.append("")
-      task.doseForTimes[0] = tskCnfg.doseSeparatedString(fromStrings: strings)
+      task.doseForTimes[0] = task.doseFromArrayOfStrings(strings)
       
-      // особенности приема
-    case 17:
+    case specialFeaturePickerTag:
       task.specialFeature = strings[0]
       
-      // частота
-    case 23:
+    case frequencyPickerTag:
       let frequencyOptions = task.frequencyOptions
       let activeDaysInd = 0
       let passiveDaysInd = 1
@@ -514,23 +502,21 @@ class EditShowTaskTableConfiguration {
       if let ind = frequencyOptions[passiveDaysInd].indexOf(strings[passiveDaysInd]) {
         task.frequency[passiveDaysInd] = ind + 1
       }
-      updatePreviousFrequency()
+      savePreviousFrequency()
       
       scheduleWasChanged = true
       
-      // закончить через число дней или раз
-    case 25, 26:
-      tagsToUpdate = [24]
+    case endDaysPickerTag, endTimesPickerTag:
+      tagsToUpdate = [endDateTitleTag]
       
       var endType: Task.EndType
-      if tag == 25 {
+      if tag == endDaysPickerTag {
         endType = .EndDays
       } else {
         endType = .EndTimes
       }
       
-      let endOptions = tskCnfg.endOptions(byNewEndType: endType)
-      
+      let endOptions = task.endDaysOrTimesOptions(byNewEndType: endType)
       if let ind = endOptions.indexOf(strings[0]) {
         
         if endType == .EndDays {
@@ -539,7 +525,7 @@ class EditShowTaskTableConfiguration {
           task.endDaysOrTimes = ind + 1
         }
         
-        updatePreviousDaysTimesDate()
+        savePreviousDaysTimesDate()
         
         scheduleWasChanged = true
       }
@@ -547,14 +533,12 @@ class EditShowTaskTableConfiguration {
     default:
       break
     }
-    
     return tagsToUpdate
   }
   
-  // обновляем задание временным значением
   func updateTask(byPickerViewWithTag tag: Int, byMinutes minutes: Int) -> [Int] {
     let tagsToUpdate = [tag - 1]
-    if tag == 13 {
+    if tag == minutesForTimesPickerTag {
       task.minutesForTimes = [minutes]
       
       scheduleWasChanged = true
@@ -562,38 +546,33 @@ class EditShowTaskTableConfiguration {
     return tagsToUpdate
   }
   
-  // обновляем задание датой и временем
-  func updateTask(task: Task, ByPickerViewWithTag tag: Int, byDateTimeValue value: NSDate) -> [Int] {
+  func updateTask(byPickerViewWithTag tag: Int, byDateTimeValue value: NSDate) -> [Int] {
     var tagsToUpdate: [Int] = []
     
-    // начать
-    if tag == 21 {
-      tagsToUpdate = [20]
+    if tag == startDatePickerTag {
+      tagsToUpdate = [startDateTitleTag]
       task.startDate = value
       
       let order = DateHelper.calendar.compareDate(task.startDate, toDate: task.endDate,
         toUnitGranularity: .Minute)
-      // если начинаем, позже, чем заканчиваем - обновить "закончить"
+
       if order == .OrderedDescending {
         task.endDate = task.startDate
-        
-        needToReloadEndDate = true
-        
-        // обновляем надпись с датой окончания
+
         if task.endType == .EndDate {
-          tagsToUpdate.append(24)
+          tagsToUpdate.append(endDateTitleTag)
         }
       }
       
       scheduleWasChanged = true
       
     } else {
-      // закончить в конкретную дату
-      if tag == 27 {
-        tagsToUpdate = [24]
+
+      if tag == endDatePickerTag {
+        tagsToUpdate = [endDateTitleTag]
         task.endDaysOrTimes = 0
         task.endDate = value
-        updatePreviousDaysTimesDate()
+        savePreviousDaysTimesDate()
         
         scheduleWasChanged = true
       }
@@ -601,13 +580,12 @@ class EditShowTaskTableConfiguration {
     return tagsToUpdate
   }
   
-  // обновляем задание segmented Control
   func updateTask(bySegmentedControlWithTag tag: Int, andSegment segment: Int) -> [Int] {
     var tagsToUpdate: [Int] = []
     
-    if tag == 22 {
-      // выбрали "ежедневно"
-      if segment == 0 {
+    if tag == frequencyTitleTag {
+      
+      if segment == 0 { // first option - everyday
         if task.frequency != [] {
           task.frequency = []
           tagsToUpdate = [tag]
@@ -616,8 +594,7 @@ class EditShowTaskTableConfiguration {
         scheduleWasChanged = true
         
       } else {
-        // выбрали "периодически"
-        if segment == 1 {
+        if segment == 1 { // second option - periodically
           if task.frequency == [] {
             task.frequency = previousFrequency
             tagsToUpdate = [tag]
@@ -635,7 +612,7 @@ class EditShowTaskTableConfiguration {
     return task.frequencySegmentTitles
   }
   func frequencySegmentTitle() -> String {
-    if let str = titleValueValues[22] {
+    if let str = titleValueValues[frequencyTitleTag] {
       return str
     } else {
       return ""
@@ -650,41 +627,19 @@ class EditShowTaskTableConfiguration {
   }
   
   func endOptions(byNewEndType endType: Task.EndType? = nil) -> [String] {
-    return tskCnfg.endOptions(byNewEndType: endType)
+    return task.endDaysOrTimesOptions(byNewEndType: endType)
   }
   
-  func updatePreviousDaysTimesDate() {
-    let endType = task.endType
-    switch endType {
-    case .EndDate:
-      previousDaysTimesDate.date = task.endDate
-    case .EndDays:
-      previousDaysTimesDate.days = -task.endDaysOrTimes
-    case .EndTimes:
-      previousDaysTimesDate.times = task.endDaysOrTimes
-    }
-  }
-  
-  
-  
-  func updatePreviousFrequency() {
-    if !task.frequency.isEmpty {
-      previousFrequency = task.frequency
-    } else {
-      previousFrequency = [1, 1]
-    }
-  }
-  
-  // переводи cell в новое состояние скрытости
+  // change state of cell from hidden to visible or vice versa
   func toggleCellTagTypeState(atIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
     
-    if cellTagTypeState[section][row].state == .Hidden {
-      cellTagTypeState[section][row].state = .Visible
+    if cellsTagTypeState[section][row].state == .Hidden {
+      cellsTagTypeState[section][row].state = .Visible
     } else {
-      if cellTagTypeState[section][row].state == .Visible {
-        cellTagTypeState[section][row].state = .Hidden
+      if cellsTagTypeState[section][row].state == .Visible {
+        cellsTagTypeState[section][row].state = .Hidden
       }
     }
   }

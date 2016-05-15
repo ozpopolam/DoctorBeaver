@@ -14,5 +14,10 @@ extension String {
       return self.isEmpty || self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).isEmpty
     }
   }
+  var isFilledWithSomething: Bool {
+    get {
+      return !isVoid
+    }
+  }
 }
 

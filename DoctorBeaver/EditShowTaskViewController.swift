@@ -62,7 +62,7 @@ class EditShowTaskViewController: UIViewController {
     super.viewDidLoad()
     
     fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
-    fakeNavigationBar.titleLabel.text = task.type.toString().uppercaseString
+    fakeNavigationBar.titleLabel.text = task.typeItem.name.uppercaseString
     
     // button "Delete" (will be hiden or shown depending on editState)
     fakeNavigationBar.setButtonImage("trash", forButton: .CenterRight, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
@@ -280,15 +280,16 @@ class EditShowTaskViewController: UIViewController {
   
 }
 
+ // MARK: UITableViewDataSource
 extension EditShowTaskViewController: UITableViewDataSource {
   
   // user's possibility to select segmented control in a cell
   func configureUserInteractionForEditState() {
     
-    for s in 0..<tbCnfg.cellTagTypeState.count {
-      for r in 0..<tbCnfg.cellTagTypeState[s].count {
+    for s in 0..<tbCnfg.cellsTagTypeState.count {
+      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
         
-        let cellTagTypeState = tbCnfg.cellTagTypeState[s][r]
+        let cellTagTypeState = tbCnfg.cellsTagTypeState[s][r]
         if cellTagTypeState.type == .TitleSegmentCell && cellTagTypeState.state != .Hidden {
           
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSegmentCell {
@@ -301,10 +302,10 @@ extension EditShowTaskViewController: UITableViewDataSource {
   
   // selection style for all cells
   func configureCellsSelectionStyle() {
-    for s in 0..<tbCnfg.cellTagTypeState.count {
-      for r in 0..<tbCnfg.cellTagTypeState[s].count {
+    for s in 0..<tbCnfg.cellsTagTypeState.count {
+      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
         
-        let cell = tbCnfg.cellTagTypeState[s][r]
+        let cell = tbCnfg.cellsTagTypeState[s][r]
         
         if cell.state != .Hidden {
           
@@ -328,19 +329,18 @@ extension EditShowTaskViewController: UITableViewDataSource {
       cell.selectionStyle = .None
     }
   }
-  
- // MARK: UITableViewDataSource
+
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return tbCnfg.sectionTitles.count
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return tbCnfg.cellTagTypeState[section].count
+    return tbCnfg.cellsTagTypeState[section].count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-    let cellType = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].type
+    let cellType = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].type
     var generalCell: UITableViewCell!
     
     switch cellType {
@@ -390,7 +390,7 @@ extension EditShowTaskViewController: UITableViewDataSource {
   
  // MARK: Configuration of cells of different types
   func configureTextFieldCell(cell: StgTextFieldCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    let tag = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].tag
+    let tag = tbCnfg.tagForIndexPath(indexPath)
     cell.textField.tag = tag
     cell.textField.delegate = self
     
@@ -408,11 +408,11 @@ extension EditShowTaskViewController: UITableViewDataSource {
   func configureTitleValueCell(cell: StgTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
-    cell.tag = tbCnfg.cellTagTypeState[section][row].tag
+    cell.tag = tbCnfg.tagForIndexPath(indexPath)
     
     cell.titleLabel.text = tbCnfg.titleValueTitles[cell.tag]
     
-    let state = tbCnfg.cellTagTypeState[section][row].state
+    let state = tbCnfg.cellsTagTypeState[section][row].state
     if state == .Accessory {
       cell.accessoryType = .DisclosureIndicator
       cell.valueLabel.text = ""
@@ -422,7 +422,7 @@ extension EditShowTaskViewController: UITableViewDataSource {
     }
     
     // text color of valueLabel depends on state of underlying cell, which is used to set text of valueLabel of this cell
-    if tbCnfg.cellTagTypeState[section][row + 1].state == CellState.Hidden {
+    if tbCnfg.cellsTagTypeState[section][row + 1].state == CellState.Hidden {
       cell.valueLabel.textColor = VisualConfiguration.textGrayColor
     } else {
       cell.valueLabel.textColor = VisualConfiguration.textOrangeColor
@@ -432,7 +432,7 @@ extension EditShowTaskViewController: UITableViewDataSource {
   
   func configureTitleSegmentCell(cell: StgTitleSegmentCell, forRowAtIndexPath indexPath: NSIndexPath) {
     // cell with segmented control with two options: 1 - no value, 2 - some values
-    let tag = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].tag
+    let tag = tbCnfg.tagForIndexPath(indexPath)
     
     cell.hideShowSgCtrl.tag = tag
     cell.delegate = self
@@ -458,16 +458,16 @@ extension EditShowTaskViewController: UITableViewDataSource {
     let row = indexPath.row
     
     // need to configure it only if it's visible
-    if tbCnfg.cellTagTypeState[section][row].state != .Hidden {
+    if tbCnfg.cellsTagTypeState[section][row].state != .Hidden {
       
-      let tag = tbCnfg.cellTagTypeState[section][row].tag
+      let tag = tbCnfg.tagForIndexPath(indexPath)
       cell.dataPickerView.tag = tag
       
       if let options = tbCnfg.pickerOptions[tag] { // all possible values for picker
         cell.dataPickerView.font = VisualConfiguration.pickerFont
         cell.dataPickerView.textColor = VisualConfiguration.textBlackColor
         
-        let initialValues = tbCnfg.initialDPickerStrings(withTag: tag) // initial values to select on picker
+        let initialValues = tbCnfg.initialDataPickerValues(withTag: tag) // initial values to select on picker
         cell.dataPickerView.configure(withOptions: options, andInitialValues: initialValues, andDelegate: self)
       }
     }
@@ -477,17 +477,17 @@ extension EditShowTaskViewController: UITableViewDataSource {
     let section = indexPath.section
     let row = indexPath.row
     
-    if tbCnfg.cellTagTypeState[section][row].state != .Hidden {
-      let tag = tbCnfg.cellTagTypeState[section][row].tag
+    if tbCnfg.cellsTagTypeState[section][row].state != .Hidden {
+      let tag = tbCnfg.tagForIndexPath(indexPath)
       cell.datePicker.tag = tag
       
       switch cellType {
       case .TimePickerCell:
-        let minutes = tbCnfg.initialDTPickerTime(withTag: tag)
+        let minutes = tbCnfg.initialDateTimePickerTime(withTag: tag)
         cell.datePicker.configure(withDelegate: self, selectedMinutes: minutes)
         
       case .DateTimePickerCell:
-        let dates = tbCnfg.initialDTPickerDate(withTag: tag) // initial and minimum possible dates
+        let dates = tbCnfg.initialDateTimePickerDate(withTag: tag) // initial and minimum possible dates
         cell.datePicker.configure(withDelegate: self, selectedDate: dates.initialDate, andMinimumDate: dates.minimumDate)
       default:
         break
@@ -501,22 +501,28 @@ extension EditShowTaskViewController: UITableViewDataSource {
     let section = indexPath.section
     let row = indexPath.row
     
-    if tbCnfg.cellTagTypeState[section][row].state != .Hidden {
+    if tbCnfg.cellsTagTypeState[section][row].state != .Hidden {
       
-      let tag = tbCnfg.cellTagTypeState[section][row].tag
-      cell.configure(withTag: tag, andDelegate: self)
+      var tags = [Int]() // tags for cell and three pickers
+      tags.append(tbCnfg.tagForIndexPath(indexPath)) // cell's tag
+      // tags for pickers
+      tags.append(tbCnfg.tagForEndType(Task.EndType.EndDays))
+      tags.append(tbCnfg.tagForEndType(Task.EndType.EndTimes))
+      tags.append(tbCnfg.tagForEndType(Task.EndType.EndDate))
+      
+      cell.configure(withTags: tags, andDelegate: self)
       
       let endSegmentTitles = tbCnfg.endSegmentTitles()
       cell.configure(withSegmentValues: endSegmentTitles, andSelectedSegment: task.endType.rawValue)
       
-      let pickerTag = tag + task.endType.rawValue
+      let pickerTag = tbCnfg.tagForEndType(task.endType)
       
       if task.endType == .EndDate { // configure date-picker
-        let dates = tbCnfg.initialDTPickerDate(withTag: pickerTag)
+        let dates = tbCnfg.initialDateTimePickerDate(withTag: pickerTag)
         cell.configure(withDelegate: self, selectedDate: dates.initialDate, andMinimumDate: dates.minimumDate)
       } else { // configure data-picker
         let endOptions = tbCnfg.endOptions()
-        let initialValues = tbCnfg.initialDPickerStrings(withTag: pickerTag)
+        let initialValues = tbCnfg.initialDataPickerValues(withTag: pickerTag)
         cell.configure(withTitles: [endOptions], andWithInitialValues: initialValues, andDelegate: self)
       }
 
@@ -554,12 +560,12 @@ extension EditShowTaskViewController: UITableViewDelegate {
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     var height: CGFloat = CGFloat.min
     
-    if tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].state == CellState.Hidden {
+    if tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state == CellState.Hidden {
       // if cell is hidden, it's height = ~ 0
       return height
     } else {
       // in other cases cell's height depends on its type
-      let cellType = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].type
+      let cellType = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].type
       switch cellType {
       case .TextFieldCell, .TitleValueCell, .TitleSegmentCell:
         height = regularCellHeight
@@ -576,7 +582,7 @@ extension EditShowTaskViewController: UITableViewDelegate {
   
   func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
     if editState { // in edit state user can select some types of cells
-      let cellType = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].type
+      let cellType = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].type
       if cellType == .TextFieldCell || cellType == .TitleValueCell || cellType == .TitleSegmentCell {
         return indexPath
       } else {
@@ -584,7 +590,7 @@ extension EditShowTaskViewController: UITableViewDelegate {
       }
       
     } else { // in show state user can select only accessory cells
-      let cellState = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].state
+      let cellState = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state
       if cellState == .Accessory {
         return indexPath
       } else {
@@ -599,8 +605,8 @@ extension EditShowTaskViewController: UITableViewDelegate {
     
     let section = indexPath.section
     let row = indexPath.row
-    let cellType = tbCnfg.cellTagTypeState[section][row].type
-    let cellState = tbCnfg.cellTagTypeState[section][row].state
+    let cellType = tbCnfg.cellsTagTypeState[section][row].type
+    let cellState = tbCnfg.cellsTagTypeState[section][row].state
     
     if cellState == .Accessory {
       if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
@@ -626,7 +632,7 @@ extension EditShowTaskViewController: UITableViewDelegate {
     case .TitleSegmentCell, .TitleValueCell:
       
       let pickerCellRow = row + 1 // picker lies under tapped cell
-      let pickerCellState = tbCnfg.cellTagTypeState[section][pickerCellRow].state
+      let pickerCellState = tbCnfg.cellsTagTypeState[section][pickerCellRow].state
       let pickerCellIndPth = NSIndexPath(forRow: pickerCellRow, inSection: section)
       
       if cellType == .TitleSegmentCell {
@@ -681,15 +687,15 @@ extension EditShowTaskViewController: UITableViewDelegate {
   func closeAllOpenPickerCells() -> [NSIndexPath] {
     var rowsToReload: [NSIndexPath] = []
     
-    for s in 0..<tbCnfg.cellTagTypeState.count {
-      for r in 0..<tbCnfg.cellTagTypeState[s].count {
+    for s in 0..<tbCnfg.cellsTagTypeState.count {
+      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
         
-        let cell = tbCnfg.cellTagTypeState[s][r]
+        let cell = tbCnfg.cellsTagTypeState[s][r]
         
         if (cell.type == .DataPickerCell || cell.type == .TimePickerCell || cell.type == .DateTimePickerCell || cell.type == .ComplexPickerCell) && cell.state != .Hidden {
           // if cell contains picker and is not hidden
           
-          tbCnfg.cellTagTypeState[s][r].state = .Hidden // change state to hidden
+          tbCnfg.cellsTagTypeState[s][r].state = .Hidden // change state to hidden
           rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
           
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? StgTitleValueCell {
@@ -714,7 +720,7 @@ extension EditShowTaskViewController: UITableViewDelegate {
   func updateCells(withTags tags: [Int]) {
     var indexPaths: [NSIndexPath] = []
     for tag in tags {
-      tbCnfg.updateTitleValueValues(ofTag: tag, byTask: task)
+      tbCnfg.updateTitleValueValues(ofTag: tag)
       if let indexPath = tbCnfg.indexPathForTag(tag) {
         indexPaths.append(indexPath)
       }
@@ -733,7 +739,7 @@ extension EditShowTaskViewController: UITextFieldDelegate {
   // start text inputing
   func activateVisibleTextField(textField: UITextField) {
     if let indexPath = tbCnfg.indexPathForTag(textField.tag) {
-      tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].state = .Active
+      tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state = .Active
     }
     
     textField.textColor = VisualConfiguration.textBlackColor
@@ -743,7 +749,7 @@ extension EditShowTaskViewController: UITextFieldDelegate {
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
     if let indexPath = tbCnfg.indexPathForTag(textField.tag) {
-      tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].state = .Visible
+      tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state = .Visible
     }
     
     textField.textColor = VisualConfiguration.textGrayColor
@@ -758,7 +764,7 @@ extension EditShowTaskViewController: UITextFieldDelegate {
       let newText = (oldText as NSString).stringByReplacingCharactersInRange(range, withString: string) as NSString
       // some text was typed - need to save new text in task
       tbCnfg.updateTask(byTextFieldWithTag: textField.tag, byString: newText as String)
-      tbCnfg.updateTitleValueValues(ofTag: textField.tag, byTask: task)
+      tbCnfg.updateTitleValueValues(ofTag: textField.tag)
     }
     
     return true
@@ -766,13 +772,13 @@ extension EditShowTaskViewController: UITextFieldDelegate {
   
   // deactivate all text fields
   func deactivateAllActiveTextFields() {
-    for s in 0..<tbCnfg.cellTagTypeState.count {
-      for r in 0..<tbCnfg.cellTagTypeState[s].count {
+    for s in 0..<tbCnfg.cellsTagTypeState.count {
+      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
         
-        let cellTTS = tbCnfg.cellTagTypeState[s][r]
+        let cellTTS = tbCnfg.cellsTagTypeState[s][r]
         
         if cellTTS.type == .TextFieldCell && cellTTS.state == .Active {
-          tbCnfg.cellTagTypeState[s][r].state = .Visible
+          tbCnfg.cellsTagTypeState[s][r].state = .Visible
           
           let indexPath = NSIndexPath(forRow: r, inSection: s)
           if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTextFieldCell {
@@ -800,11 +806,18 @@ extension EditShowTaskViewController: DataPickerViewDelegate {
     // when picker chooses some values, after having been hidden - no data is needed from it
     if let cellIndexPath = tbCnfg.indexPathForTag(picker.tag) {
       
-      if tbCnfg.cellTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
+      if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
         if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? StgComplexPickerCell {
+          
+          let pickerIsHidden = cell.hidden(forTag: picker.tag)
+          if pickerIsHidden {
+            
+          }
+          
+          
           return !cell.hidden(forTag: picker.tag)
         }
-      } else if tbCnfg.cellTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
+      } else if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
         return true
       }
     }
@@ -816,7 +829,7 @@ extension EditShowTaskViewController: DataPickerViewDelegate {
  // MARK: DatePickerDelegate
 extension EditShowTaskViewController: DatePickerDelegate {
   func datePicker(picker: UIDatePicker, didPickDate date: NSDate) {
-    let tagsToUpdate = tbCnfg.updateTask(task, ByPickerViewWithTag: picker.tag, byDateTimeValue: date)
+    let tagsToUpdate = tbCnfg.updateTask(byPickerViewWithTag: picker.tag, byDateTimeValue: date)
     updateCells(withTags: tagsToUpdate)
   }
   
@@ -826,13 +839,14 @@ extension EditShowTaskViewController: DatePickerDelegate {
   }
   
   func dateStillNeeded(fromPicker picker: UIDatePicker) -> Bool {
+    
     if let cellIndexPath = tbCnfg.indexPathForTag(picker.tag) {
       
-      if tbCnfg.cellTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
+      if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
         if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? StgComplexPickerCell {
           return !cell.hidden(forTag: picker.tag)
         }
-      } else if tbCnfg.cellTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
+      } else if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
         return true
       }
     }
@@ -862,15 +876,28 @@ extension EditShowTaskViewController: StgComplexPickerCellDelegate {
     // get options and initial values for a picker, corresponding for specific end type (end-days or end-times)
     let et = Task.EndType(rawValue: index)
     let endOptions = tbCnfg.endOptions(byNewEndType: et)
-    let initialStrings = tbCnfg.initialDPickerStrings(withTag: tag, andNewEndType: et)
+    let initialValues = tbCnfg.initialDataPickerValues(withTag: tag, andNewEndType: et)
    
-    return ([endOptions], initialStrings, self)
+    return ([endOptions], initialValues, self)
+  }
+  
+  func getPickerInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> [String] {
+    // get initial values for a picker, corresponding for specific end type (end-days or end-times)
+    let et = Task.EndType(rawValue: index)
+    let initialValues = tbCnfg.initialDataPickerValues(withTag: tag, andNewEndType: et)
+    return initialValues
   }
   
   func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> (iDate: NSDate, mDate: NSDate, delegate: DatePickerDelegate) {
     // get initial and minimum dates for picker for end-date
-    let dates = tbCnfg.initialDTPickerDate(withTag: tag)
+    let dates = tbCnfg.initialDateTimePickerDate(withTag: tag)
     return (dates.initialDate, dates.minimumDate, self)
+  }
+  
+  func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> NSDate {
+    // get initial date for picker for end-date
+    let dates = tbCnfg.initialDateTimePickerDate(withTag: tag)
+    return dates.initialDate
   }
 }
 
@@ -879,10 +906,10 @@ extension EditShowTaskViewController: EditShowMinutesDoseTaskVCDelegate {
   func editShowMinutesDoseTaskVC(viewController: EditShowMinutesDoseTaskViewController, didEditMinutesDoseOfTask task: Task, withTblType tblType: ESMinutesDoseTaskTblCnfgType) {
     
     if tblType == .Minutes {
-      tbCnfg.updatePreviousMinutes()
+      tbCnfg.savePreviousMinutes()
       tbCnfg.scheduleWasChanged = true
     } else if tblType == .Dose {
-      tbCnfg.updatePreviousDose()
+      tbCnfg.savePreviousDose()
     }
     
     if editState {
