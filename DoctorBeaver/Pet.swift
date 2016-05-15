@@ -25,14 +25,18 @@ class Pet: NSManagedObject {
       self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
       
       id = NSDate().timeIntervalSince1970
-      name = "Имя питомца"
-      selected = false
-      image = "noPet"
+      
       tasks = []
       
     } else {
       return nil
     }
+  }
+  
+  func configure(withTypeItem typeItem: TaskTypeItem) {
+    name = ""
+    selected = false
+    image = ""
   }
   
   // считаем, сколько неоконченных заданий у питомца

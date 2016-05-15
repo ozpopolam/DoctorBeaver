@@ -31,6 +31,7 @@ class TaskTypeItemBasicValues: NSManagedObject {
       endDaysOrTimesSegmentTitles = ""
       endDaysOrTimesOptionsPreposition = ""
       timesOptions = ""
+      commentPlaceholder = ""
       
     } else {
       return nil

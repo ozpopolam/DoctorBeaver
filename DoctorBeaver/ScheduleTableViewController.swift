@@ -372,11 +372,11 @@ extension ScheduleTableViewController: UITableViewDataSource {
     let minutesString = DateHelper.minutesToString(minutes)
     cell.timeLabel.text = minutesString
     
-    let iconName = tr.realization.task.type.iconName()
+    let iconName = tr.realization.task.typeItem.iconName
     cell.iconImageView.image = UIImage(named: iconName)
     
     if tr.realization.task.name.isEmpty {
-      cell.taskTitleLabel.text = tr.realization.task.type.toString()
+      cell.taskTitleLabel.text = tr.realization.task.typeItem.name
     } else {
       cell.taskTitleLabel.text = tr.realization.task.name
     }

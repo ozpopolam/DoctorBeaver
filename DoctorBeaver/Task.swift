@@ -17,18 +17,7 @@ class Task: NSManagedObject {
     }
   }
   
-  // тип задания
-  var type: TaskType {
-    get {
-      if let t = TaskType(rawValue: typeId) {
-        return t
-      } else {
-        return .Error
-      }
-    }
-  }
-  
-  // тип окончания задания
+  // endDate can be set specifically or calculated from startDate by adding some days or times
   enum EndType: Int {
     case EndDate = 2
     case EndDays = 0
@@ -49,6 +38,39 @@ class Task: NSManagedObject {
     }
   }
   
+  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
+    if let entity = NSEntityDescription.entityForName(Task.entityName, inManagedObjectContext: managedContext) {
+      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
+      realizations = []
+    } else {
+      return nil
+    }
+  }
+  
+  func configure(withTypeItem typeItem: TaskTypeItem) {
+    self.typeItem = typeItem
+    
+    name = ""
+    typeId = typeItem.id
+    
+    timesPerDay = typeItem.timesPerDayForInitialization
+    minutesForTimes = [typeItem.minutesForTimesForInitialization]
+    doseForTimes = [typeItem.doseForTimesForInitialization]
+    specialFeature = typeItem.specialFeatureForInitialization
+
+    startDate = NSDate()
+    frequency = []
+    endDaysOrTimes = 0
+    endDate = startDate
+    
+    comment = ""
+  }
+  
+  var doseUnit: String {
+    get {
+      return typeItem.doseUnit
+    }
+  }
   
   var namePlaceholder: String {
     get {
@@ -107,6 +129,34 @@ class Task: NSManagedObject {
       return getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: typeItem.separator)
     }
   }
+  var doseForTimesForInitialization: String {
+    get {
+      return typeItem.doseForTimesForInitialization
+    }
+  }
+  
+  func dosePrintable(forTime time: Int) -> String {
+    guard time < doseForTimes.count else { return "" }
+    
+    let whitespace = " "
+    let stringDoses = getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator).filter{$0 != whitespace}
+    let numberDoses = stringDoses.map{ Double($0) }.flatMap{ $0 }
+    
+    if numberDoses.count == stringDoses.count {
+      return String(numberDoses.reduce(0, combine: { $0 + $1 }))
+    } else {
+      return stringDoses.reduce("", combine: { $0 == "" ? $1 : $0 + whitespace + $1 })
+    }
+  }
+  
+  func doseAsArrayOfStrings(forTime time: Int) -> [String] {
+    guard time < doseForTimes.count else { return [] }
+    return getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator)
+  }
+  
+  func doseFromArrayOfStrings(arrayOfStrings: [String]) -> String {
+    return arrayOfStrings.reduce("", combine: { $0 == "" ? $1 : $0 + String(separator) + $1 })
+  }
   
   var specialFeatureTitle: String {
     get {
@@ -156,28 +206,34 @@ class Task: NSManagedObject {
       return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: typeItem.separator)
     }
   }
-  var endDaysOrTimesOptions: [String] {
+  
+  func endDaysOrTimesOptions(byNewEndType newEndType: Task.EndType? = nil) -> [String] {
+    var endType: EndType
+    
+    if let newEndType = newEndType {
+      endType = newEndType
+    } else {
+      endType = self.endType
+    }
+    
+    var stringOptions = ""
+    if endType == .EndDays {
+      stringOptions = typeItem.basicValues.daysOptions
+    } else if endType == .EndTimes {
+      stringOptions = typeItem.basicValues.timesOptions
+    }
+    
+    let options = getOneDimArrayOfStrings(fromUnseparatedString: stringOptions, withSeparator: separator).map { typeItem.basicValues.endDaysOrTimesOptionsPreposition + " " + $0 }
+    return options
+  }
+  
+  var commentPlaceholder: String {
     get {
-      var stringOptions = ""
-      if endType == .EndDays {
-        stringOptions = typeItem.basicValues.daysOptions
-      } else if endType == .EndTimes {
-        stringOptions = typeItem.basicValues.daysOptions
-      }
-      
-      let options = getOneDimArrayOfStrings(fromUnseparatedString: stringOptions, withSeparator: separator).map { typeItem.basicValues.endDaysOrTimesOptionsPreposition + $0 }
-      return options
+      return typeItem.basicValues.commentPlaceholder
     }
   }
   
-  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
-    if let entity = NSEntityDescription.entityForName(Task.entityName, inManagedObjectContext: managedContext) {
-      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      realizations = []
-    } else {
-      return nil
-    }
-  }
+  
   
   // подсчитать конечную дату, если задано число дней или число раз
   func countEndDate() {
@@ -656,7 +712,7 @@ class Task: NSManagedObject {
   func details(forTime time: Int) -> String {
     let dsPrnt = dosePrintable(forTime: time)
     if !dsPrnt.isEmpty {
-      return "\(dosePrintable(forTime: time)) \(type.doseUnit()) \(specialFeature)"
+      return "\(dosePrintable(forTime: time)) \(doseUnit) \(specialFeature)"
     } else {
       return "\(specialFeature)"
     }
@@ -681,20 +737,7 @@ class Task: NSManagedObject {
   }
   
   
-  // дозировка в читабельном виде
-  func dosePrintable(forTime time: Int) -> String {
-    guard time < doseForTimes.count else { return "" }
-    
-    let whitespace = " "
-    let stringDoses = getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator).filter{$0 != whitespace}
-    let numberDoses = stringDoses.map{ Double($0) }.flatMap{ $0 }
-    
-    if numberDoses.count == stringDoses.count {
-      return String(numberDoses.reduce(0, combine: { $0 + $1 }))
-    } else {
-      return stringDoses.reduce("", combine: { $0 == "" ? $1 : $0 + whitespace + $1 })
-    }
-  }
+  
   
 /////////////
   

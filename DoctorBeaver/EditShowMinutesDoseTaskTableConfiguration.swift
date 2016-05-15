@@ -43,13 +43,13 @@ class EditShowMinutesDoseTaskTableConfiguration {
   // комплексная настройка для целого задания
   func configure(withTask task: Task, andtTblType tblType: ESMinutesDoseTaskTblCnfgType) {
     
-    tskCnfg = TaskConfigurationByType(task: task)
+    //tskCnfg = TaskConfigurationByType(task: task)
     self.task = task
     self.tblType = tblType
     
     equalDoseSwitchOn = task.allDosesAreEqual()
     
-    configureCellTagTypeState(forType: task.type)
+    //configureCellTagTypeState(forType: task.type)
     configureTitleValueTitles()
     configureTitleValueValues()
     
@@ -209,7 +209,7 @@ class EditShowMinutesDoseTaskTableConfiguration {
       strValue = DateHelper.minutesToString(minutes)
     } else if tblType == .Dose {
       let indInDoseForTimes = ( tag - doseStartTag ) / 2
-      strValue = tskCnfg.doseString(atInd: indInDoseForTimes) + " " + task.type.doseUnit()
+//      strValue = tskCnfg.doseString(atInd: indInDoseForTimes) + " " + task.type.doseUnit()
     }
     
     titleValueValues[tag] = strValue
@@ -221,7 +221,8 @@ class EditShowMinutesDoseTaskTableConfiguration {
     
     if tagIsInDoseTags(tag) {
       let indInDoseForTimes = ( tag - doseStartTag ) / 2
-      return tskCnfg.doseStringsFromDoseString(atIndex: indInDoseForTimes)
+      return []
+//      return tskCnfg.doseStringsFromDoseString(atIndex: indInDoseForTimes)
     } else {
       return []
     }
@@ -267,7 +268,7 @@ class EditShowMinutesDoseTaskTableConfiguration {
     
     if tagIsInDoseTags(tag) {
       let indInDoseForTimes = ( tag - doseStartTag ) / 2
-      task.doseForTimes[indInDoseForTimes] = tskCnfg.doseSeparatedString(fromStrings: strings)
+//      task.doseForTimes[indInDoseForTimes] = tskCnfg.doseSeparatedString(fromStrings: strings)
       return tagsToUpdate
     } else {
       return []

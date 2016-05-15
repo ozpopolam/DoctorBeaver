@@ -78,8 +78,9 @@ class JsonTaskPrimaryValuesParser {
       let daysOptions = dict["daysOptions"] as? String,
       let endDaysOrTimesTitle = dict["endDaysOrTimesTitle"] as? String,
       let endDaysOrTimesSegmentTitles = dict["endDaysOrTimesSegmentTitles"] as? String,
-      let endDaysOrTimesOptionsPreposition = dict["endDaysOrTimesSegmentTitles"] as? String,
-      let timesOptions = dict["timesOptions"] as? String
+      let endDaysOrTimesOptionsPreposition = dict["endDaysOrTimesOptionsPreposition"] as? String,
+      let timesOptions = dict["timesOptions"] as? String,
+      let commentPlaceholder = dict["commentPlaceholder"] as? String
       else { return nil}
     
     if let taskTypeItemBasicValues = petsRepository.insertTaskTypeItemBasicValues() {
@@ -91,6 +92,7 @@ class JsonTaskPrimaryValuesParser {
       taskTypeItemBasicValues.endDaysOrTimesSegmentTitles = endDaysOrTimesSegmentTitles
       taskTypeItemBasicValues.endDaysOrTimesOptionsPreposition = endDaysOrTimesOptionsPreposition
       taskTypeItemBasicValues.timesOptions = timesOptions
+      taskTypeItemBasicValues.commentPlaceholder = commentPlaceholder
       
       if petsRepository.saveOrRollback() {
         return taskTypeItemBasicValues
@@ -193,9 +195,6 @@ class JsonPetsParser: JsonParser {
         }
       }
     }
-    
-    
-    
   }
 
   

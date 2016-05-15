@@ -27,7 +27,7 @@ extension Task {
   func printInBlock() {
     print("   TASK of \(pet.name)")
     print("   name: \(name)")
-    print("   type: \(type.toString())")
+    //print("   type: \(type.toString())")
     print("   timesPerDay: \(timesPerDay)")
     
     var s: String = ""
