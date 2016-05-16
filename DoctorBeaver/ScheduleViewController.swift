@@ -11,7 +11,7 @@ import CoreData
 
 class ScheduleViewController: UIViewController {
   
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
   
   @IBOutlet weak var petImageView: UIImageView!
   @IBOutlet weak var petBorderView: UIImageView!

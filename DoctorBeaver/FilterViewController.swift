@@ -16,7 +16,7 @@ protocol FilterDelegate: class {
 
 class FilterViewController: UIViewController {
   
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var toolBar: UIToolbar!
   

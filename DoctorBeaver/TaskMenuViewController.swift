@@ -18,7 +18,7 @@ protocol TaskMenuViewControllerDelegate: class {
 class TaskMenuViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
   
   weak var delegate: TaskMenuViewControllerDelegate?
   

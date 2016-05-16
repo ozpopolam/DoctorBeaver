@@ -15,7 +15,7 @@ protocol EditShowMinutesDoseTaskVCDelegate: class {
 
 class EditShowMinutesDoseTaskViewController: UIViewController {
   
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var tableView: UITableView!
   
   weak var delegate: EditShowMinutesDoseTaskVCDelegate?

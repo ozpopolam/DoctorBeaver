@@ -11,7 +11,7 @@ import CoreData
 
 class PetsViewController: UIViewController, PetsRepositorySettable {
   
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var collectionView: UICollectionView!
   @IBOutlet weak var warningLabel: UILabel!
   
