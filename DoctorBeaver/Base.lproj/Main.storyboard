@@ -721,10 +721,10 @@
             </objects>
             <point key="canvasLocation" x="1675" y="-1475.5"/>
         </scene>
-        <!--Edit Show Task View Controller-->
+        <!--Task Menu View Controller-->
         <scene sceneID="kxf-A9-kNz">
             <objects>
-                <viewController id="skV-Mj-83R" customClass="EditShowTaskViewController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="skV-Mj-83R" customClass="TaskMenuViewController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="AYB-QQ-6F6"/>
                         <viewControllerLayoutGuide type="bottom" id="ax6-fy-vhq"/>

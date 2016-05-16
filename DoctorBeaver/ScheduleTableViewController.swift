@@ -297,7 +297,7 @@ class ScheduleTableViewController: UIViewController {
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == editShowTaskSegueId {
       
-      if let destinationVC = segue.destinationViewController as? EditShowTaskViewController {
+      if let destinationVC = segue.destinationViewController as? TaskMenuViewController {
         destinationVC.petsRepository = petsRepository
         if let accessoryButtonTask = accessoryButtonTask {
           destinationVC.delegate = self
@@ -486,8 +486,8 @@ extension ScheduleTableViewController: UITableViewDelegate {
   
 }
 
-extension ScheduleTableViewController: EditShowTaskVCDelegate {
-  func editShowTaskVC(viewController: EditShowTaskViewController, didDeleteTask task: Task) {
+extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
+  func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
     navigationController?.popViewControllerAnimated(true)
     
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
@@ -500,17 +500,17 @@ extension ScheduleTableViewController: EditShowTaskVCDelegate {
     prepareDataSourceAndReloadTable()
   }
   
-  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditScheduleOfTask task: Task) {
+  func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task) {
     petsRepository.saveOrRollback() // save changes in task
     tableView.reloadData() // reload table
   }
   
-  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditScheduleOfTask task: Task) {
+  func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task) {
     
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete outdated timeRealizations
     
     
-    task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
+    let _ = task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
     
     
     for realization in task.realizations {

@@ -9,18 +9,18 @@
 import UIKit
 import CoreData
 
-protocol EditShowTaskVCDelegate: class {
-  func editShowTaskVC(viewController: EditShowTaskViewController, didDeleteTask task: Task)
-  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditScheduleOfTask task: Task)
-  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditScheduleOfTask task: Task)
+protocol TaskMenuViewControllerDelegate: class {
+  func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task)
+  func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task)
+  func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task)
 }
 
-class EditShowTaskViewController: UIViewController {
+class TaskMenuViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
   
-  weak var delegate: EditShowTaskVCDelegate?
+  weak var delegate: TaskMenuViewControllerDelegate?
   
   var petsRepository: PetsRepository!
   
@@ -174,9 +174,9 @@ class EditShowTaskViewController: UIViewController {
       if tbCnfg.scheduleWasChanged {
         // time frame of task changed
         task.countEndDate()
-        delegate?.editShowTaskVC(self, didFullyEditScheduleOfTask: task)
+        delegate?.taskMenuViewController(self, didFullyEditScheduleOfTask: task)
       } else {
-        delegate?.editShowTaskVC(self, didSlightlyEditScheduleOfTask: task)
+        delegate?.taskMenuViewController(self, didSlightlyEditScheduleOfTask: task)
       }
     }
     
@@ -189,7 +189,7 @@ class EditShowTaskViewController: UIViewController {
     
     let confirmAction = UIAlertAction(title: "Да, давайте удалим", style: .Destructive) {
       (action) -> Void in
-      self.delegate?.editShowTaskVC(self, didDeleteTask: self.task)
+      self.delegate?.taskMenuViewController(self, didDeleteTask: self.task)
     }
     
     let cancelAction = UIAlertAction(title: "Нет, я передумал", style: .Cancel) {
@@ -281,7 +281,7 @@ class EditShowTaskViewController: UIViewController {
 }
 
  // MARK: UITableViewDataSource
-extension EditShowTaskViewController: UITableViewDataSource {
+extension TaskMenuViewController: UITableViewDataSource {
   
   // user's possibility to select segmented control in a cell
   func configureUserInteractionForEditState() {
@@ -532,7 +532,7 @@ extension EditShowTaskViewController: UITableViewDataSource {
 }
 
  // MARK: UITableViewDelegate
-extension EditShowTaskViewController: UITableViewDelegate {
+extension TaskMenuViewController: UITableViewDelegate {
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if tbCnfg.sectionTitles[section].isVoid { // don't need header for section without title
@@ -734,7 +734,7 @@ extension EditShowTaskViewController: UITableViewDelegate {
 }
 
  // MARK: UITextFieldDelegate
-extension EditShowTaskViewController: UITextFieldDelegate {
+extension TaskMenuViewController: UITextFieldDelegate {
   
   // start text inputing
   func activateVisibleTextField(textField: UITextField) {
@@ -794,7 +794,7 @@ extension EditShowTaskViewController: UITextFieldDelegate {
 }
 
  // MARK: DataPickerViewDelegate
-extension EditShowTaskViewController: DataPickerViewDelegate {
+extension TaskMenuViewController: DataPickerViewDelegate {
   
   func dataPicker(picker: DataPickerView, didPickValues values: [String]) {
     // picker picked some values - need to update cell, which is assigned to show it
@@ -827,7 +827,7 @@ extension EditShowTaskViewController: DataPickerViewDelegate {
 }
 
  // MARK: DatePickerDelegate
-extension EditShowTaskViewController: DatePickerDelegate {
+extension TaskMenuViewController: DatePickerDelegate {
   func datePicker(picker: UIDatePicker, didPickDate date: NSDate) {
     let tagsToUpdate = tbCnfg.updateTask(byPickerViewWithTag: picker.tag, byDateTimeValue: date)
     updateCells(withTags: tagsToUpdate)
@@ -857,7 +857,7 @@ extension EditShowTaskViewController: DatePickerDelegate {
 }
 
  // MARK: DoubleOptionSegmControlDelegate
-extension EditShowTaskViewController: DoubleOptionSegmControlDelegate {
+extension TaskMenuViewController: DoubleOptionSegmControlDelegate {
   func segmControl(sgCtrl: UISegmentedControl, didSelectSegment segment: Int) {
     // first or second option was chosen
     let tagsToUpdate = tbCnfg.updateTask(bySegmentedControlWithTag: sgCtrl.tag, andSegment: segment)
@@ -870,7 +870,7 @@ extension EditShowTaskViewController: DoubleOptionSegmControlDelegate {
 }
 
  // MARK: StgComplexPickerCellDelegate
-extension EditShowTaskViewController: StgComplexPickerCellDelegate {
+extension TaskMenuViewController: StgComplexPickerCellDelegate {
   
   func getPickerOptionsAndInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> (options: [[String]], initialValues: [String], delegate: DataPickerViewDelegate) {
     // get options and initial values for a picker, corresponding for specific end type (end-days or end-times)
@@ -902,7 +902,7 @@ extension EditShowTaskViewController: StgComplexPickerCellDelegate {
 }
 
 
-extension EditShowTaskViewController: EditShowMinutesDoseTaskVCDelegate {
+extension TaskMenuViewController: EditShowMinutesDoseTaskVCDelegate {
   func editShowMinutesDoseTaskVC(viewController: EditShowMinutesDoseTaskViewController, didEditMinutesDoseOfTask task: Task, withTblType tblType: ESMinutesDoseTaskTblCnfgType) {
     
     if tblType == .Minutes {
