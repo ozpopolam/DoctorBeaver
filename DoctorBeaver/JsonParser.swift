@@ -28,13 +28,12 @@ class JsonTaskPrimaryValuesParser {
     self.petsRepository = petsRepository
   }
   
-  func populateRepositoryWithTaskPrimaryValues(withFileName fileName: String, andType fileType: String) -> Bool {
+  func populateRepositoryWithBasicValues(withFileName fileName: String, andType fileType: String) -> Bool {
     if let filePath = NSBundle.mainBundle().pathForResource(fileName, ofType: fileType) {
       if let data = NSData(contentsOfFile: filePath) {
         do {
           if let jsonDict = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String: AnyObject] {
-            
-            
+            // first populate base with all TaskTypeItems
             if let jsonTaskTypeItemBasicValues = jsonDict["taskTypeItemBasicValues"] as? [String: AnyObject] {
               
               if let taskTypeItemBasicValues = populateRepositoryWithTaskTypeItemBasicValues(fromJSONDictionary: jsonTaskTypeItemBasicValues) {
@@ -51,17 +50,16 @@ class JsonTaskPrimaryValuesParser {
                       return false
                     }
                   }
-                  
-//                  for tti in taskTypeItems {
-//                    print(tti.id_)
-//                    print(tti.name_)
-//                    print(tti.basicValues.taskNamePlaceholder)
-//                  }
-                  
-                  return true
                 }
               }
             }
+            // then populate with PetBasicValues
+            if let jsonPetBasicValues = jsonDict["petBasicValues"] as? [String: AnyObject] {
+              if let _ = populateRepositoryWithPetBasicValues(fromJSONDictionary: jsonPetBasicValues) {
+                return true
+              }
+            }
+            
           }
         } catch {
           print("Some error with JSON-file!")
@@ -172,6 +170,26 @@ class JsonTaskPrimaryValuesParser {
     return nil
   }
   
+  func populateRepositoryWithPetBasicValues(fromJSONDictionary dict: [String: AnyObject]) -> PetBasicValues? {
+    guard let namePlaceholder = dict["namePlaceholder"] as? String,
+      let sectionTitles = dict["sectionTitles"] as? String,
+      let selectedTitle = dict["selectedTitle"] as? String,
+      let selectedForInitialization = dict["selectedForInitialization"] as? Bool
+      else { return nil}
+    
+    if let petBasicValues = petsRepository.insertPetBasicValues() {
+      petBasicValues.namePlaceholder = namePlaceholder
+      petBasicValues.sectionTitles = sectionTitles
+      petBasicValues.selectedTitle = selectedTitle
+      petBasicValues.selectedForInitialization = selectedForInitialization
+      
+      if petsRepository.saveOrRollback() {
+        return petBasicValues
+      }
+    }
+    return nil
+  }
+  
 }
 
 class JsonPetsParser: JsonParser {
@@ -214,6 +232,11 @@ class JsonPetsParser: JsonParser {
     }
     
     if let pet = petsRepository.insertPet() {
+      
+      if let petBasicValues = petsRepository.fetchPetBasicValues() {
+        pet.basicValues = petBasicValues
+      }
+      
       pet.name = name
       pet.image = image
       pet.selected = selected

@@ -11,7 +11,20 @@ import CoreData
 
 
 class PetBasicValues: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
-
+  
+  static var entityName: String {
+    get {
+      return "PetBasicValues"
+    }
+  }
+  
+  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
+    if let entity = NSEntityDescription.entityForName(PetBasicValues.entityName, inManagedObjectContext: managedContext) {
+      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
+      pets = []
+    } else {
+      return nil
+    }
+  }
+  
 }

@@ -103,6 +103,14 @@ class PetsRepository {
     }
   }
   
+  func insertPetBasicValues() -> PetBasicValues? {
+    if let petBasicValues = PetBasicValues(insertIntoManagedObjectContext: context) {
+      return petBasicValues
+    } else {
+      return nil
+    }
+  }
+  
   func insertPet() -> Pet? {
     if let pet = Pet(insertIntoManagedObjectContext: context) {
       return pet
@@ -171,6 +179,19 @@ class PetsRepository {
     return []
   }
   
+  func fetchPetBasicValues() -> PetBasicValues? {
+    let fetchRequest = NSFetchRequest(entityName: PetBasicValues.entityName)
+    fetchRequest.fetchLimit = 1
+    
+    do {
+      if let results = try context.executeFetchRequest(fetchRequest) as? [PetBasicValues] {
+        return results.first
+      }
+    } catch {
+      print("Fetching error!")
+    }
+    return nil
+  }
   
   func fetchTaskTypeItem(withId id: Int) -> TaskTypeItem? {
     let fetchRequest = NSFetchRequest(entityName: TaskTypeItem.entityName)

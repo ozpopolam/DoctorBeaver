@@ -26,17 +26,6 @@
       }
       populateManagedObjectContextWithJsonPetData()
     }
-    
-//    var doses: [String] = []
-//          for i in 1...100 {
-//            doses.append(String(i))
-//          }
-//    
-//    print(doses)
-//    
-//    
-//    let x = doses.reduce("", combine: { $0 == "" ? $1 : $0 + "|" + $1 })
-//    print(x)
  
     // начинаем со вкладки расписания
     self.selectedIndex = 1
@@ -94,11 +83,12 @@
   
   func preparePetsRepositoryForUse() -> Bool {
     let jsonBasicValuesParser = JsonTaskPrimaryValuesParser(forPetsRepository: petsRepository)
-    return jsonBasicValuesParser.populateRepositoryWithTaskPrimaryValues(withFileName: "RuTaskPrimaryValues", andType: "json")
+    return jsonBasicValuesParser.populateRepositoryWithBasicValues(withFileName: "RuBasicValues", andType: "json")
   }
   
   func _helperDeleteAllData() {
     petsRepository.deleteAllObjects(forEntityName: Pet.entityName)
+    petsRepository.deleteAllObjects(forEntityName: PetBasicValues.entityName)
     petsRepository.deleteAllObjects(forEntityName: TaskTypeItem.entityName)
     petsRepository.deleteAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)
 //    print(petsRepository.fetchAllObjects(forEntityName: Pet.entityName)?.count)

@@ -62,7 +62,7 @@
 		62C64DA21CE28651006B4CEF /* TaskTypeItemBasicValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D9D1CE28651006B4CEF /* TaskTypeItemBasicValues.swift */; };
 		62C64DA61CE286AE006B4CEF /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64DA41CE286AE006B4CEF /* Task+CoreDataProperties.swift */; };
 		62C64DA91CE28C39006B4CEF /* PetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64DA81CE28C39006B4CEF /* PetsRepository.swift */; };
-		62C64DAB1CE292E3006B4CEF /* RuPrimaryValues.json in Resources */ = {isa = PBXBuildFile; fileRef = 62C64DAA1CE292E3006B4CEF /* RuPrimaryValues.json */; };
+		62C64DAB1CE292E3006B4CEF /* RuBasicValues.json in Resources */ = {isa = PBXBuildFile; fileRef = 62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */; };
 		62DCB0C71C77952C00ABF206 /* StgTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0C61C77952C00ABF206 /* StgTextFieldCell.swift */; };
 		62DCB0CC1C78DC1100ABF206 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0CB1C78DC1000ABF206 /* TaskType.swift */; };
 		62F0FEB71CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */; };
@@ -149,7 +149,7 @@
 		62C64D9D1CE28651006B4CEF /* TaskTypeItemBasicValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTypeItemBasicValues.swift; sourceTree = "<group>"; };
 		62C64DA41CE286AE006B4CEF /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Task+CoreDataProperties.swift"; path = "../Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		62C64DA81CE28C39006B4CEF /* PetsRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsRepository.swift; sourceTree = "<group>"; };
-		62C64DAA1CE292E3006B4CEF /* RuPrimaryValues.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuPrimaryValues.json; sourceTree = "<group>"; };
+		62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuBasicValues.json; sourceTree = "<group>"; };
 		62DCB0C61C77952C00ABF206 /* StgTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTextFieldCell.swift; sourceTree = "<group>"; };
 		62DCB0CB1C78DC1000ABF206 /* TaskType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
 		62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditShowMinutesDoseTaskViewController.swift; sourceTree = "<group>"; };
@@ -262,7 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
-				62C64DAA1CE292E3006B4CEF /* RuPrimaryValues.json */,
+				62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */,
 				62DCB0CB1C78DC1000ABF206 /* TaskType.swift */,
 				62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */,
 				628E3CC31C963A55000C122A /* RuPets.json */,
@@ -491,7 +491,7 @@
 				6203728C1C68137000352617 /* Assets.xcassets in Resources */,
 				627F2C9E1C8842DF00B9ADFF /* DataPickerView.xib in Resources */,
 				62A83B8D1C6D278800A8DE8D /* FakeNavigationBarView.xib in Resources */,
-				62C64DAB1CE292E3006B4CEF /* RuPrimaryValues.json in Resources */,
+				62C64DAB1CE292E3006B4CEF /* RuBasicValues.json in Resources */,
 				628E3CC41C963A55000C122A /* RuPets.json in Resources */,
 				6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */,
 			);
