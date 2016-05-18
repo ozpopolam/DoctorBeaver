@@ -32,7 +32,7 @@ class TaskMenuViewController: UIViewController {
   
   // types of cells in table
   let headerCellId = "headerCell"
-  let stgTextFieldCellId = "stgTextFieldCell"
+  let menuTextFieldCellId = "menuTextFieldCell"
   let stgTitleValueCellId = "stgTitleValueCell"
   let stgTitleSegmentCellId = "stgTitleSegmentCell"
   let stgDataPickerCellId = "stgDataPickerCell"
@@ -345,7 +345,7 @@ extension TaskMenuViewController: UITableViewDataSource {
     
     switch cellType {
     case .TextFieldCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(stgTextFieldCellId) as? StgTextFieldCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuTextFieldCellId) as? MenuTextFieldCell {
         configureTextFieldCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
@@ -389,7 +389,7 @@ extension TaskMenuViewController: UITableViewDataSource {
   }
   
  // MARK: Configuration of cells of different types
-  func configureTextFieldCell(cell: StgTextFieldCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureTextFieldCell(cell: MenuTextFieldCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let tag = tbCnfg.tagForIndexPath(indexPath)
     cell.textField.tag = tag
     cell.textField.delegate = self
@@ -622,7 +622,7 @@ extension TaskMenuViewController: UITableViewDelegate {
     switch cellType {
 
     case .TextFieldCell:
-      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTextFieldCell {
+      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
         activateVisibleTextField(cell.textField)
         rowsToReload = closeAllOpenPickerCells()
         indexPathToScroll = indexPath
@@ -781,7 +781,7 @@ extension TaskMenuViewController: UITextFieldDelegate {
           tbCnfg.cellsTagTypeState[s][r].state = .Visible
           
           let indexPath = NSIndexPath(forRow: r, inSection: s)
-          if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTextFieldCell {
+          if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
             textFieldShouldReturn(cell.textField)
           } else {
             UIApplication.sharedApplication().sendAction("resignFirstResponder", to: nil, from: nil, forEvent: nil)

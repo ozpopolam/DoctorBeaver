@@ -86,7 +86,7 @@ class Task: NSManagedObject {
   
   var sectionTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: separator)
     }
   }
   
@@ -97,7 +97,7 @@ class Task: NSManagedObject {
   }
   var timesPerDayOptions: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: separator)
     }
   }
   
@@ -108,7 +108,7 @@ class Task: NSManagedObject {
   }
   var minutesForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: typeItem.separator)
+      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
@@ -120,13 +120,13 @@ class Task: NSManagedObject {
   }
   var doseForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: typeItem.separator)
+      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
   var doseForTimesOptions: [[String]] {
     get {
-      return getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: typeItem.separator)
+      return getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: separator)
     }
   }
   var doseForTimesForInitialization: String {
@@ -165,7 +165,7 @@ class Task: NSManagedObject {
   }
   var specialFeatureOptions: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: separator)
     }
   }
   
@@ -182,7 +182,7 @@ class Task: NSManagedObject {
   }
   var frequencySegmentTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: separator)
     }
   }
   var frequencyOptions: [[String]] {
@@ -203,7 +203,7 @@ class Task: NSManagedObject {
   }
   var endDaysOrTimesSegmentTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: separator)
     }
   }
   

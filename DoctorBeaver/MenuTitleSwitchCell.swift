@@ -8,16 +8,16 @@
 
 import UIKit
 
-protocol EqualSwitchDelegate: class {
-  func equalSwitch(eqSwt: UISwitch, didSetOn setOn: Bool)
+protocol StateSwitchDelegate: class {
+  func stateSwitch(stateSwitch: UISwitch, didSetOn setOn: Bool)
 }
 
-class StgTitleSwitchCell: UITableViewCell {
+class MenuTitleSwitchCell: UITableViewCell {
   
   @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var equalSwitch: UISwitch!
+  @IBOutlet weak var stateSwitch: UISwitch!
   
-  weak var delegate: EqualSwitchDelegate?
+  weak var delegate: StateSwitchDelegate?
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -28,7 +28,7 @@ class StgTitleSwitchCell: UITableViewCell {
   }
   
   @IBAction func toggleEqualSwitch(sender: UISwitch) {
-    delegate?.equalSwitch(sender, didSetOn: sender.on)
+    delegate?.stateSwitch(sender, didSetOn: sender.on)
   }
   
 }

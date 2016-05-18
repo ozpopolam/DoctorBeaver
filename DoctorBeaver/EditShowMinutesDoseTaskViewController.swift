@@ -196,19 +196,19 @@ class EditShowMinutesDoseTaskViewController: UIViewController {
   // активируем или деактивируем нажатие элементов на ячейках
   func configureUserInteractionForEditState() {
     
-    for s in 0..<tbCnfg.cellTagTypeState.count {
-      for r in 0..<tbCnfg.cellTagTypeState[s].count {
-        
-        let cellTTS = tbCnfg.cellTagTypeState[s][r]
-        if cellTTS.type == .TitleSwitchCell && cellTTS.state != .Hidden {
-          
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSwitchCell {
-            cell.equalSwitch.userInteractionEnabled = editState
-            configureSwitchTintColor(cell.equalSwitch)
-          }
-        }
-      }
-    }
+//    for s in 0..<tbCnfg.cellTagTypeState.count {
+//      for r in 0..<tbCnfg.cellTagTypeState[s].count {
+//        
+//        let cellTTS = tbCnfg.cellTagTypeState[s][r]
+//        if cellTTS.type == .TitleSwitchCell && cellTTS.state != .Hidden {
+//          
+//          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSwitchCell {
+//            cell.equalSwitch.userInteractionEnabled = editState
+//            configureSwitchTintColor(cell.equalSwitch)
+//          }
+//        }
+//      }
+//    }
   }
   
   func configureCellsSelectionStyle() {
@@ -267,12 +267,12 @@ extension EditShowMinutesDoseTaskViewController: UITableViewDataSource {
         generalCell = cell
       }
       
-    case .TitleSwitchCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(stgTitleSwitchCellId) as? StgTitleSwitchCell {
-        configureTitleSwitchCell(cell, forRowAtIndexPath: indexPath)
-        
-        generalCell = cell
-      }
+    //case .TitleSwitchCell:
+//      if let cell = tableView.dequeueReusableCellWithIdentifier(stgTitleSwitchCellId) as? StgTitleSwitchCell {
+//        configureTitleSwitchCell(cell, forRowAtIndexPath: indexPath)
+//        
+//        generalCell = cell
+//      }
       
     case .DataPickerCell:
       if let cell = tableView.dequeueReusableCellWithIdentifier(stgDataPickerCellId) as? StgDataPickerCell {
@@ -295,13 +295,13 @@ extension EditShowMinutesDoseTaskViewController: UITableViewDataSource {
   }
   
   func configureCellSelectionStyle(cell: UITableViewCell) {
-    if !(cell is StgTitleSwitchCell) {
-      if editState {
-        cell.selectionStyle = .Gray
-      } else {
-        cell.selectionStyle = .None
-      }
-    }
+//    if !(cell is StgTitleSwitchCell) {
+//      if editState {
+//        cell.selectionStyle = .Gray
+//      } else {
+//        cell.selectionStyle = .None
+//      }
+//    }
   }
 
   func configureTitleValueCell(cell: StgTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -333,27 +333,27 @@ extension EditShowMinutesDoseTaskViewController: UITableViewDataSource {
     
   }
   
-  func configureTitleSwitchCell(cell: StgTitleSwitchCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    let section = indexPath.section
-    let row = indexPath.row
-    cell.tag = tbCnfg.cellTagTypeState[section][row].tag
-    cell.delegate = self
-    
-    cell.selectionStyle = .None
-    cell.equalSwitch.userInteractionEnabled = editState
-    
-    configureSwitchTintColor(cell.equalSwitch)
-    
-    //    if let title = tbCnfg.titleValueTitles[cell.tag] {
-    //      cell.titleLabel.text = title
-    //    }
-///
-    cell.titleLabel.text = "Одинаковая дозировка"
-///
-//    let allDosesAreEqual = tbCnfg.allDosesAreEqual()
-    cell.equalSwitch.setOn(tbCnfg.equalDoseSwitchOn, animated: false)
-    
-  }
+//  func configureTitleSwitchCell(cell: StgTitleSwitchCell, forRowAtIndexPath indexPath: NSIndexPath) {
+//    let section = indexPath.section
+//    let row = indexPath.row
+//    cell.tag = tbCnfg.cellTagTypeState[section][row].tag
+//    cell.delegate = self
+//    
+//    cell.selectionStyle = .None
+//    cell.equalSwitch.userInteractionEnabled = editState
+//    
+//    configureSwitchTintColor(cell.equalSwitch)
+//    
+//    //    if let title = tbCnfg.titleValueTitles[cell.tag] {
+//    //      cell.titleLabel.text = title
+//    //    }
+/////
+//    cell.titleLabel.text = "Одинаковая дозировка"
+/////
+////    let allDosesAreEqual = tbCnfg.allDosesAreEqual()
+//    cell.equalSwitch.setOn(tbCnfg.equalDoseSwitchOn, animated: false)
+//    
+//  }
   
   func configureDataPickerCell(cell: StgDataPickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
@@ -595,16 +595,16 @@ extension EditShowMinutesDoseTaskViewController: DataPickerViewDelegate {
 
 
 
-extension EditShowMinutesDoseTaskViewController: EqualSwitchDelegate {
-  func equalSwitch(eqSwt: UISwitch, didSetOn setOn: Bool) {
-
-    let rowsToReload = toggleCellsState(forSwitchState: setOn)
-    
-    tableView.beginUpdates()
-    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
-    tableView.endUpdates()
-  }
-}
+//extension EditShowMinutesDoseTaskViewController: EqualSwitchDelegate {
+//  func equalSwitch(eqSwt: UISwitch, didSetOn setOn: Bool) {
+//
+//    let rowsToReload = toggleCellsState(forSwitchState: setOn)
+//    
+//    tableView.beginUpdates()
+//    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
+//    tableView.endUpdates()
+//  }
+//}
 
 // обращения с CoreData
 //extension EditShowMinutesDoseTaskViewController: ManagedObjectContextSettable {

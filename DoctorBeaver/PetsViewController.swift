@@ -142,7 +142,15 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    
+    if let pet = sender as? Pet {
+      if segue.identifier == editShowPetSegueId {
+        if let destinationViewController = segue.destinationViewController as? PetMenuViewController {
+          destinationViewController.pet = pet
+          destinationViewController.menuMode = .Add
+          destinationViewController.hidesBottomBarWhenPushed = true
+        }
+      }
+    }
   }
   
 }
@@ -182,7 +190,7 @@ extension PetsViewController: UICollectionViewDataSource {
 extension PetsViewController: UICollectionViewDelegate {
   
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    performSegueWithIdentifier(editShowPetSegueId, sender: self)
+    performSegueWithIdentifier(editShowPetSegueId, sender: pets[indexPath.row])
   }
 }
 

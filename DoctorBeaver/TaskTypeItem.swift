@@ -22,8 +22,6 @@ class TaskTypeItem: NSManagedObject {
     case id = "id"
   }
   
-  let separator: Character = "|"
-  
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
     if let entity = NSEntityDescription.entityForName(TaskTypeItem.entityName, inManagedObjectContext: managedContext) {
       self.init(entity: entity, insertIntoManagedObjectContext: managedContext)

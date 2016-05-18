@@ -342,8 +342,9 @@
                     }],
   "petBasicValues": {
     "namePlaceholder": "Имя питомца",
+    "separator": "|",
     "sectionTitles": " |Задания",
-    "selectedTitle": "",
+    "selectedTitle": "Отображать в расписании",
     "selectedForInitialization": true
   }
 }

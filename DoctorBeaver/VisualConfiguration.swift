@@ -13,8 +13,9 @@ import Foundation
 struct VisualConfiguration {
   
   static let buttonIconSize = CGSize(width: 44.0, height: 44.0)
-  
   static let barIconSize = CGSize(width: 25, height: 25)
+  static let accessoryIconSize = CGSize(width: 22, height: 22)
+  static let infoIconSize = CGSize(width: 22, height: 22)
   
   static let animationDuration: NSTimeInterval = 0.5
   
@@ -61,10 +62,11 @@ struct VisualConfiguration {
   static let textGrayColor = UIColor.lightGrayColor()
   static let textOrangeColor = UIColor.lightOrangeColor()
   
-  static let accentOnWhiteColor = UIColor.lightOrangeColor()
-
-  static let pickerTextColor = UIColor.blackColor()
+  static let lightOrangeColor = UIColor.lightOrangeColor()
+  static let lightGrayColor = UIColor.lightGrayColor()
   
+  static let accentOnWhiteColor = UIColor.lightOrangeColor()
+  static let pickerTextColor = UIColor.blackColor()
   static let segmentTintColor = UIColor.lightGrayColor()
   
 }

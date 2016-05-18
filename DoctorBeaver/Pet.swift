@@ -39,6 +39,35 @@ class Pet: NSManagedObject {
     image = ""
   }
   
+  var separator: Character {
+    get {
+      return basicValues.separator.characters.first ?? " "
+    }
+  }
+  
+  func getOneDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [String] {
+    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: false).map{String($0)}
+    return oneDimArray
+  }
+  
+  var sectionTitles: [String] {
+    get {
+      return getOneDimArrayOfStrings(fromUnseparatedString: basicValues.sectionTitles, withSeparator: separator)
+    }
+  }
+  
+  var namePlaceholder: String {
+    get {
+      return basicValues.namePlaceholder
+    }
+  }
+  
+  var selectedTitle: String {
+    get {
+      return basicValues.selectedTitle
+    }
+  }
+  
   // считаем, сколько неоконченных заданий у питомца
   func countActiveTasks(forDate date: NSDate) -> Int {
     var actTsks = 0
@@ -53,6 +82,23 @@ class Pet: NSManagedObject {
       }
     }
     return actTsks
+  }
+  
+  func tasksSorted() -> [Task] {
+    
+    var tskSrt = [Task]()
+    
+    for task in tasks {
+      if let task = task as? Task {
+        tskSrt.append(task)
+      }
+    }
+    
+    tskSrt.sortInPlace{DateHelper.compareDatesToMinuteUnit(firstDate: $0.endDate, secondDate: $1.endDate)}
+    
+    
+    
+    return tskSrt
   }
   
 }

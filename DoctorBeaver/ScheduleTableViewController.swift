@@ -24,8 +24,6 @@ class ScheduleTableViewController: UIViewController {
   
   // максимальная высота ячейки
   let maxCellHeight: CGFloat = 88.0
-  // размер инонки с i
-  let infoIconSize = CGSize(width: 22, height: 22)
   // иконка со значком i
   var infoIcon: UIImage?
   
@@ -58,7 +56,7 @@ class ScheduleTableViewController: UIViewController {
     tableView.tableFooterView = UIView(frame: .zero)
     
     infoIcon = UIImage(named: "info")
-    infoIcon = infoIcon?.ofSize(infoIconSize)
+    infoIcon = infoIcon?.ofSize(VisualConfiguration.infoIconSize)
     
     // если view загружено, подгружаем в него данные
     if viewIsReadyToBeLoadedWithSchedule() {
@@ -385,8 +383,8 @@ extension ScheduleTableViewController: UITableViewDataSource {
     
     if let infoIcon = infoIcon {
       let detailButton = UIButton(type: .Custom)
-      detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: infoIconSize)
-      detailButton.setImage(withImage: infoIcon, ofSize: infoIconSize, withTintColor: UIColor.blackColor())
+      detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.infoIconSize)
+      detailButton.setImage(withImage: infoIcon, ofSize: VisualConfiguration.infoIconSize, withTintColor: UIColor.blackColor())
       detailButton.addTarget(self, action: "detailButtonTapped:", forControlEvents: .TouchUpInside)
       
       cell.accessoryView = detailButton

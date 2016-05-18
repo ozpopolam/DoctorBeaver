@@ -774,7 +774,7 @@
                                             <outlet property="titleLabel" destination="eFc-Xx-cTH" id="OMe-cD-z2l"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="stgTextFieldCell" id="oNc-Nb-hjc" customClass="StgTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuTextFieldCell" id="oNc-Nb-hjc" customClass="MenuTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oNc-Nb-hjc" id="EOd-HV-Pfl">
@@ -1297,7 +1297,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="335"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="stgTextFieldCell" id="iD9-aO-Oo1" customClass="StgTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuTextFieldCell" id="iD9-aO-Oo1" customClass="MenuTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iD9-aO-Oo1" id="QSG-rb-cuj">
@@ -1566,10 +1566,10 @@
             </objects>
             <point key="canvasLocation" x="876" y="-1375"/>
         </scene>
-        <!--View Controller-->
+        <!--Pet Menu View Controller-->
         <scene sceneID="cZE-y9-SJE">
             <objects>
-                <viewController id="UR7-QB-FNU" sceneMemberID="viewController">
+                <viewController id="UR7-QB-FNU" customClass="PetMenuViewController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="uY7-Yv-unL"/>
                         <viewControllerLayoutGuide type="bottom" id="PgC-4S-cKd"/>
@@ -1619,7 +1619,7 @@
                                             <outlet property="titleLabel" destination="e6Y-0M-8Uw" id="AzU-eJ-RmM"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="stgTextFieldCell" id="Cnj-At-mS7" customClass="StgTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuTextFieldCell" id="Cnj-At-mS7" customClass="MenuTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Cnj-At-mS7" id="vgH-7v-3Er">
@@ -1643,7 +1643,7 @@
                                             <outlet property="textField" destination="Tce-WD-s1X" id="DMh-yz-J0j"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="stgImageCell" id="cSE-FK-QHJ">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="menuTitleImageCell" id="cSE-FK-QHJ" customClass="MenuTitleImageCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="94" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cSE-FK-QHJ" id="VwI-kz-DLI">
@@ -1651,28 +1651,45 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ihF-R5-Ma3">
-                                                    <rect key="frame" x="16" y="1" width="41.5" height="41.5"/>
+                                                    <rect key="frame" x="517.5" y="1" width="41.5" height="41.5"/>
+                                                    <color key="backgroundColor" red="1" green="0.43529412150000002" blue="0.81176471709999998" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="ihF-R5-Ma3" secondAttribute="height" multiplier="1:1" id="xXg-H7-1V9"/>
                                                     </constraints>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Свойство" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ch-Ne-Urx">
+                                                    <rect key="frame" x="16" y="12" width="70" height="20"/>
+                                                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottomMargin" secondItem="ihF-R5-Ma3" secondAttribute="bottom" constant="1" id="4UF-7B-HNZ"/>
                                                 <constraint firstItem="ihF-R5-Ma3" firstAttribute="top" secondItem="VwI-kz-DLI" secondAttribute="topMargin" constant="1" id="9tT-4X-xN7"/>
+                                                <constraint firstItem="1ch-Ne-Urx" firstAttribute="leading" secondItem="VwI-kz-DLI" secondAttribute="leadingMargin" constant="8" id="G3E-tx-qRM"/>
                                                 <constraint firstItem="ihF-R5-Ma3" firstAttribute="leading" secondItem="VwI-kz-DLI" secondAttribute="leadingMargin" constant="8" id="Oce-7b-9j1"/>
                                                 <constraint firstItem="ihF-R5-Ma3" firstAttribute="top" secondItem="VwI-kz-DLI" secondAttribute="top" constant="1" id="cnn-6P-qzV"/>
                                                 <constraint firstAttribute="bottom" secondItem="ihF-R5-Ma3" secondAttribute="bottom" constant="1" id="dpU-Ws-eJi"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ihF-R5-Ma3" secondAttribute="trailing" constant="4" id="hW1-2C-J6V"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ihF-R5-Ma3" secondAttribute="trailing" id="lco-rh-gSM"/>
+                                                <constraint firstItem="1ch-Ne-Urx" firstAttribute="centerY" secondItem="VwI-kz-DLI" secondAttribute="centerY" id="liF-63-HLx"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
                                                     <exclude reference="4UF-7B-HNZ"/>
                                                     <exclude reference="9tT-4X-xN7"/>
+                                                    <exclude reference="Oce-7b-9j1"/>
+                                                    <exclude reference="hW1-2C-J6V"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="imageImageView" destination="ihF-R5-Ma3" id="DqN-ON-Bju"/>
+                                            <outlet property="titleLabel" destination="1ch-Ne-Urx" id="8uU-ZP-5fX"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgTitleSwitchCell" id="zoI-m1-CbT" userLabel="stgTitleSwitchCell" customClass="StgTitleSwitchCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuTitleSwitchCell" id="zoI-m1-CbT" customClass="MenuTitleSwitchCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="138" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zoI-m1-CbT" id="11b-Wa-f5R">
@@ -1687,9 +1704,9 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NcB-rE-l6W">
                                                     <rect key="frame" x="543" y="6.5" width="51" height="31"/>
-                                                    <color key="tintColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="tintColor" red="0.94117647059999998" green="0.67843137249999996" blue="0.18823529410000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <connections>
-                                                        <action selector="toggleEqualSwitch:" destination="zoI-m1-CbT" eventType="touchUpInside" id="3JF-0M-IGe"/>
+                                                        <action selector="toggleEqualSwitch:" destination="zoI-m1-CbT" eventType="valueChanged" id="Tut-DN-OCc"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>
@@ -1709,11 +1726,11 @@
                                             </variation>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="equalSwitch" destination="NcB-rE-l6W" id="qT8-OP-Cee"/>
-                                            <outlet property="titleLabel" destination="KRw-wd-tRw" id="7lV-6r-hra"/>
+                                            <outlet property="stateSwitch" destination="NcB-rE-l6W" id="wit-2X-oKI"/>
+                                            <outlet property="titleLabel" destination="KRw-wd-tRw" id="zRY-fT-rH1"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgIconTitleCell" id="Ynt-IU-WyA">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuIconTitleCell" id="Ynt-IU-WyA" customClass="MenuIconTitleCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="182" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ynt-IU-WyA" id="yp4-e0-7zd">
@@ -1772,8 +1789,40 @@
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="iconImageView" destination="V1D-jg-psB" id="JeC-cb-e6K"/>
+                                            <outlet property="taskLastRealization" destination="JP8-ne-E4K" id="gcw-8r-X61"/>
+                                            <outlet property="taskNameLabel" destination="xk0-Iq-q4O" id="bI0-da-RXL"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuTitleCell" id="DZi-EC-f8W" customClass="MenuTitleCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="226" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DZi-EC-f8W" id="KVq-WK-Cum">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Свойство" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wfb-DD-8n1">
+                                                    <rect key="frame" x="54" y="12" width="70" height="20"/>
+                                                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="wfb-DD-8n1" firstAttribute="leading" secondItem="KVq-WK-Cum" secondAttribute="leadingMargin" constant="46" id="V8J-jl-158"/>
+                                                <constraint firstItem="wfb-DD-8n1" firstAttribute="centerY" secondItem="KVq-WK-Cum" secondAttribute="centerY" id="kcj-RH-4iv"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="titleLabel" destination="wfb-DD-8n1" id="W3w-Va-UMD"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="UR7-QB-FNU" id="03U-2d-jcG"/>
+                                    <outlet property="delegate" destination="UR7-QB-FNU" id="1u9-Eq-OzV"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1787,6 +1836,10 @@
                             <constraint firstAttribute="trailing" secondItem="GhO-fL-gJI" secondAttribute="trailing" id="wyy-Eb-2Gi"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="decoratedNavigationBar" destination="ZtR-9i-nZG" id="v7f-ya-oAN"/>
+                        <outlet property="tableView" destination="GhO-fL-gJI" id="MeU-tk-9CO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XIf-Mj-nZC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -62,6 +62,11 @@ struct DateHelper {
     return calendar.compareDate(firstDate, toDate: secondDate, toUnitGranularity: .Day)
   }
   
+  // сравниваем даты по значение минут
+  static func compareDatesToMinuteUnit(firstDate firstDate: NSDate, secondDate: NSDate) -> Bool {
+    return calendar.compareDate(firstDate, toDate: secondDate, toUnitGranularity: .Minute) == .OrderedAscending
+  }
+  
   // календарная разница в днях
   static func calendarDayDifference(fromDate fd: NSDate, toDate sd: NSDate) -> Int {
     let dayComponents = calendar.components(.Day, fromDate: fd, toDate: sd, options: [])
