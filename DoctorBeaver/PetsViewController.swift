@@ -11,7 +11,7 @@ import CoreData
 
 class PetsViewController: UIViewController, PetsRepositorySettable {
   
-  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
+  @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var collectionView: UICollectionView!
   @IBOutlet weak var warningLabel: UILabel!
   
@@ -29,7 +29,7 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   var petsRepository: PetsRepository! {
     didSet {
       if viewIsReadyToBeLoadedWithPetsRepository() {
-        fullyReloadPetCollection()
+        reloadPetsCollection(withFetchRequest: true)
       }
     }
   }
@@ -45,22 +45,22 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
-    fakeNavigationBar.titleLabel.text = "Питомцы".uppercaseString
+    decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
+    decoratedNavigationBar.titleLabel.text = "Питомцы".uppercaseString
     
     // button "Sorting"
-    fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.leftButton.addTarget(self, action: "sort:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.leftButton.addTarget(self, action: "sort:", forControlEvents: .TouchUpInside)
     
     // button "Add pet"
-    fakeNavigationBar.setButtonImage("add", forButton: .Right, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.rightButton.addTarget(self, action: "add:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.setButtonImage("add", forButton: .Right, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.rightButton.addTarget(self, action: "add:", forControlEvents: .TouchUpInside)
     
     let numberOfCellsInALine: CGFloat = 2
     countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine) // count size and insets of cells
     
     if viewIsReadyToBeLoadedWithPetsRepository() {
-      fullyReloadPetCollection()
+      reloadPetsCollection(withFetchRequest: true)
     }
   }
   
@@ -86,7 +86,7 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   func sort(sender: UIButton) {
     
     // configure button's icon and action
-    fakeNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+    decoratedNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
     pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending : .OrderedAscending))
     
     sortedAZ = !sortedAZ // new type of current sorting
@@ -110,13 +110,18 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   }
   
   // fetch data, show warning or reload collection view
-  func fullyReloadPetCollection() {
+  func reloadPetsCollection(withFetchRequest withFetchRequest: Bool = false) {
     
     if petsRepository.countAll(Pet.entityName) == 0 {
+      decoratedNavigationBar.hideButton(.Left)
       showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
     } else {
+      decoratedNavigationBar.showButton(.Left)
       hideWarningMessage()
-      pets = petsRepository.fetchAllPets()
+      
+      if withFetchRequest {
+        pets = petsRepository.fetchAllPets()
+      }
       
       // get cropped version of all pets' icons
       croppedPetImages = [ : ]
@@ -143,11 +148,16 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let pet = sender as? Pet {
-      if segue.identifier == editShowPetSegueId {
-        if let destinationViewController = segue.destinationViewController as? PetMenuViewController {
-          destinationViewController.pet = pet
+      if let destinationViewController = segue.destinationViewController as? PetMenuViewController {
+        destinationViewController.pet = pet
+        destinationViewController.petsRepository = petsRepository
+        destinationViewController.delegate = self
+        destinationViewController.hidesBottomBarWhenPushed = true
+        
+        if segue.identifier == addPetSegueId {
           destinationViewController.menuMode = .Add
-          destinationViewController.hidesBottomBarWhenPushed = true
+        } else if segue.identifier == editShowPetSegueId {
+          destinationViewController.menuMode = .Show
         }
       }
     }
@@ -236,4 +246,20 @@ extension PetsViewController: UICollectionViewDelegateFlowLayout {
     return minimumSpacing
   }
   
+}
+
+extension PetsViewController: PetMenuViewControllerDelegate {
+  func petMenuViewController(viewController: PetMenuViewController, didDeletePet pet: Pet) {
+    navigationController?.popViewControllerAnimated(true)
+    
+    // delete pet from list of pets
+    pets = pets.filter{ pet.id != $0.id }
+    
+    // delete pet and save it
+    petsRepository.deleteObject(pet)
+    petsRepository.saveOrRollback()
+    
+    // reload collection
+    reloadPetsCollection()
+  }
 }

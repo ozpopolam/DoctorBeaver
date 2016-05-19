@@ -68,7 +68,7 @@ class Pet: NSManagedObject {
     }
   }
   
-  // считаем, сколько неоконченных заданий у питомца
+  // count how many unfinished tasks pet has
   func countActiveTasks(forDate date: NSDate) -> Int {
     var actTsks = 0
     
@@ -82,6 +82,23 @@ class Pet: NSManagedObject {
       }
     }
     return actTsks
+  }
+  
+  // copy settings without tasks
+  func copySettings(fromPet pet: Pet) {
+    self.id = pet.id
+    self.name = pet.name
+    self.selected = pet.selected
+    self.image = pet.image
+  }
+  
+  // check whether settings of two pets are equal
+  func settingsAreEqual(toPet pet: Pet) -> Bool {
+    guard id == pet.id else { return false }
+    guard name == pet.name else { return false }
+    guard selected == pet.selected else { return false }
+    guard image == pet.image else { return false }
+    return true
   }
   
   func tasksSorted() -> [Task] {

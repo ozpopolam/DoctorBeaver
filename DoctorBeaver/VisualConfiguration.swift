@@ -65,6 +65,9 @@ struct VisualConfiguration {
   static let lightOrangeColor = UIColor.lightOrangeColor()
   static let lightGrayColor = UIColor.lightGrayColor()
   
+  static let graySelection: UITableViewCellSelectionStyle = .Gray
+  
+  
   static let accentOnWhiteColor = UIColor.lightOrangeColor()
   static let pickerTextColor = UIColor.blackColor()
   static let segmentTintColor = UIColor.lightGrayColor()

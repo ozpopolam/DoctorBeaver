@@ -323,7 +323,7 @@ extension TaskMenuViewController: UITableViewDataSource {
       if let cell = cell as? StgComplexPickerCell {
         cell.selectionStyle = .None
       } else {
-        cell.selectionStyle = .Gray
+        cell.selectionStyle = VisualConfiguration.graySelection
       }
     } else {
       cell.selectionStyle = .None

@@ -20,6 +20,7 @@ enum PetMenuCellType {
 // states of cells
 enum PetMenuCellState {
   case Visible
+  case Hidden
   case Active
   case Disclosure
   case Detail
@@ -47,13 +48,13 @@ class PetMenuConfiguration {
   var taskAddTag = 0 // calculated based on amount of tasks
   
   // configuration of menu
-  func configure(withPet pet: Pet) {
+  func configure(withPet pet: Pet, forMenuMode menuMode: PetMenuMode) {
     self.pet = pet
     
     sectionTitles = pet.sectionTitles
     
     // structure of cells, forming the menu
-    configureCellTagTypeState()
+    configureCellTagTypeState(forMenuMode: menuMode)
     
     textFieldValues = [
       nameTag: pet.name
@@ -69,24 +70,41 @@ class PetMenuConfiguration {
   }
   
   // forimg the structure of cells, forming the menu
-  func configureCellTagTypeState() {
+  func configureCellTagTypeState(forMenuMode menuMode: PetMenuMode) {
     
     guard sectionTitles.count == 2 else { return }
     cellsTagTypeState = []
     
+    let menuSection = 0
     cellsTagTypeState.append([])
-    cellsTagTypeState[0].append((nameTag, .TextFieldCell, .Visible))
-    cellsTagTypeState[0].append((imageTag, .TitleImageCell, .Disclosure))
-    cellsTagTypeState[0].append((selectedTitleTag, .TitleSwitchCell, .Visible))
+    cellsTagTypeState[menuSection].append((nameTag, .TextFieldCell, .Visible))
+    cellsTagTypeState[menuSection].append((imageTag, .TitleImageCell, .Disclosure))
+    cellsTagTypeState[menuSection].append((selectedTitleTag, .TitleSwitchCell, .Visible))
     
+    let tasksSection = menuSection + 1
     cellsTagTypeState.append([])
-    
-    for ind in 0..<pet.tasks.count {
-      cellsTagTypeState[1].append((taskStartTag + ind, .IconTitleCell, .Detail))
-    }
+    configureCellTagTypeStateForTasks()
     
     taskAddTag = taskStartTag + pet.tasks.count
-    cellsTagTypeState[1].append((taskAddTag, .AddCell, .Visible))
+    cellsTagTypeState[tasksSection].append((taskAddTag, .AddCell, .Visible))
+    configureCellTagTypeStateAddCell(forMenuMode: menuMode)
+  }
+  
+  func configureCellTagTypeStateForTasks() {
+    let tasksSection = cellsTagTypeState.count - 1
+    cellsTagTypeState[tasksSection] = []
+    
+    for ind in 0..<pet.tasks.count {
+      cellsTagTypeState[tasksSection].append((taskStartTag + ind, .IconTitleCell, .Detail))
+    }
+  }
+  
+  func configureCellTagTypeStateAddCell(forMenuMode menuMode: PetMenuMode) {
+    let tasksSection = cellsTagTypeState.count - 1
+    
+    if cellsTagTypeState[tasksSection][pet.tasks.count].type == PetMenuCellType.AddCell {
+      cellsTagTypeState[tasksSection][pet.tasks.count].state = (menuMode == .Show ? .Hidden : .Disclosure)
+    }
   }
   
   func tagForIndexPath(indexPath: NSIndexPath) -> Int {

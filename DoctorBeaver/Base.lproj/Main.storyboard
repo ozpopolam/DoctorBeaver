@@ -22,7 +22,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XNM-Ov-AgN">
                                 <rect key="frame" x="20" y="11.5" width="560" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -1226,7 +1226,7 @@
                     <navigationItem key="navigationItem" id="alD-hf-07z"/>
                     <connections>
                         <outlet property="collectionView" destination="FVd-2T-mxE" id="SgC-yK-pwP"/>
-                        <outlet property="fakeNavigationBar" destination="BZ5-iH-69G" id="HYm-BS-DGz"/>
+                        <outlet property="decoratedNavigationBar" destination="BZ5-iH-69G" id="c5R-3z-Lrb"/>
                         <outlet property="warningLabel" destination="dbU-pZ-5Hz" id="ME3-2s-7Ku"/>
                         <segue destination="UR7-QB-FNU" kind="show" identifier="editShowPetSegue" id="CbL-MS-VxT"/>
                         <segue destination="UR7-QB-FNU" kind="presentation" identifier="addPetSegue" id="CUJ-bD-W6g"/>
@@ -1803,8 +1803,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Свойство" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wfb-DD-8n1">
-                                                    <rect key="frame" x="54" y="12" width="70" height="20"/>
-                                                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                                                    <rect key="frame" x="54" y="13.5" width="61.5" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>

@@ -9,9 +9,15 @@
 import UIKit
 
 protocol PetMenuViewControllerDelegate: class {
-  func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task)
-  func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task)
-  func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task)
+  func petMenuViewController(viewController: PetMenuViewController, didDeletePet pet: Pet)
+//  func petMenuViewController(viewController: PetMenuViewController, didSlightlyEditScheduleOfTask task: Task)
+//  func petMenuViewController(viewController: PetMenuViewController, didFullyEditScheduleOfTask task: Task)
+}
+
+enum PetMenuMode {
+  case Add
+  case Edit
+  case Show
 }
 
 class PetMenuViewController: UIViewController {
@@ -19,7 +25,7 @@ class PetMenuViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   
-  weak var delegate: TaskMenuViewControllerDelegate?
+  weak var delegate: PetMenuViewControllerDelegate?
   
   var petsRepository: PetsRepository!
   
@@ -30,11 +36,7 @@ class PetMenuViewController: UIViewController {
   
   var menu = PetMenuConfiguration()
   
-  enum PetMenuMode {
-    case Add
-    case Edit
-    case Show
-  }
+  
   var menuMode: PetMenuMode = .Add
   
   // types of cells in table
@@ -82,12 +84,16 @@ class PetMenuViewController: UIViewController {
     
     addIcon = UIImage(named: "addAccessory")
     addIcon = addIcon?.ofSize(VisualConfiguration.accessoryIconSize)
-    
+
     configureForMenuMode()
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
     
-    reloadMenuTable()
+    menu.configure(withPet: pet, forMenuMode: menuMode)
+    tasksSorted = pet.tasksSorted()
+    tableView.reloadData()
+    
+    //reloadMenuTable()
   }
   
   // configuring user's possibility of interaction, selection style of cells, showing or hiding necessary buttons
@@ -122,16 +128,17 @@ class PetMenuViewController: UIViewController {
       decoratedNavigationBar.rightButton.addTarget(self, action: "edit:", forControlEvents: .TouchUpInside)
     }
     
-    configureUserInteractionForEditState()
-    configureCellsSelectionStyle()
+    configureInteractionAccessoriesForMenuMode()
+    configureCellsSelectionStyleForMenuMode()
+    configureAddCellForMenuMode()
   }
   
   // fully reload table with data of task
-  func reloadMenuTable() {
-    menu.configure(withPet: pet)
-    tasksSorted = pet.tasksSorted()
-    tableView.reloadData()
-  }
+//  func reloadMenuTable() {
+//    menu.configure(withPet: pet)
+//    tasksSorted = pet.tasksSorted()
+//    tableView.reloadData()
+//  }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
@@ -201,38 +208,38 @@ class PetMenuViewController: UIViewController {
   
   // Delete-button
   func trash(sender: UIButton) {
-//    let deleteController = UIAlertController(title: "Удалить задание?", message: nil, preferredStyle: .ActionSheet)
-//    
-//    let confirmAction = UIAlertAction(title: "Да, давайте удалим", style: .Destructive) {
-//      (action) -> Void in
-//      self.delegate?.taskMenuViewController(self, didDeleteTask: self.task)
-//    }
-//    
-//    let cancelAction = UIAlertAction(title: "Нет, я передумал", style: .Cancel) {
-//      (action) -> Void in
-//    }
-//    
-//    deleteController.addAction(confirmAction)
-//    deleteController.addAction(cancelAction)
-//    
-//    presentViewController(deleteController, animated: true, completion: nil)
+    let deleteController = UIAlertController(title: "Удалить питомца?", message: nil, preferredStyle: .ActionSheet)
+    
+    let confirmAction = UIAlertAction(title: "Да, давайте удалим", style: .Destructive) {
+      (action) -> Void in
+      self.delegate?.petMenuViewController(self, didDeletePet: self.pet)
+    }
+    
+    let cancelAction = UIAlertAction(title: "Нет, я передумал", style: .Cancel) {
+      (action) -> Void in
+    }
+    
+    deleteController.addAction(confirmAction)
+    deleteController.addAction(cancelAction)
+    
+    presentViewController(deleteController, animated: true, completion: nil)
   }
   
   // Edit-button
   func edit(sender: UIButton) {
-//    editState = true
-//    saveInitialSettings()
-//    configureForEditState(withAnimationDuration: animationDuration)
+    menuMode = .Edit
+    saveInitialSettings()
+    configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
-  // save initial setting of task
+  // save initial setting of pet
   func saveInitialSettings() {
-//    if taskWithInitialSettings == nil {
-//      taskWithInitialSettings = petsRepository.insertTask()
-//      if let taskWithInitialSettings = taskWithInitialSettings {
-//        taskWithInitialSettings.copySettings(fromTask: task, withPet: true)
-//      }
-//    }
+    if petWithInitialSettings == nil {
+      petWithInitialSettings = petsRepository.insertPet()
+      if let petWithInitialSettings = petWithInitialSettings {
+        petWithInitialSettings.copySettings(fromPet: pet)
+      }
+    }
   }
   
   // Cancel-button
@@ -300,47 +307,6 @@ class PetMenuViewController: UIViewController {
 // MARK: UITableViewDataSource
 extension PetMenuViewController: UITableViewDataSource {
   
-  // user's possibility to select segmented control in a cell
-  func configureUserInteractionForEditState() {
-    
-//    for s in 0..<menu.cellsTagTypeState.count {
-//      for r in 0..<menu.cellsTagTypeState[s].count {
-//        
-//        let cellTagTypeState = menu.cellsTagTypeState[s][r]
-//        if cellTagTypeState.type == .TitleSegmentCell && cellTagTypeState.state != .Hidden {
-//          
-//          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSegmentCell {
-//            cell.hideShowSgCtrl.userInteractionEnabled = editState
-//          }
-//        }
-//      }
-//    }
-  }
-  
-  // selection style for all cells
-  func configureCellsSelectionStyle() {
-    for s in 0..<menu.cellsTagTypeState.count {
-      for r in 0..<menu.cellsTagTypeState[s].count {
-        if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) {
-          configureCellSelectionStyle(cell)
-        }
-      }
-    }
-  }
-  
-  // selection style of a cell depending on editState
-  func configureCellSelectionStyle(cell: UITableViewCell) {
-//    if editState {
-//      if let cell = cell as? StgComplexPickerCell {
-//        cell.selectionStyle = .None
-//      } else {
-//        cell.selectionStyle = .Gray
-//      }
-//    } else {
-//      cell.selectionStyle = .None
-//    }
-  }
-  
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return menu.sectionTitles.count
   }
@@ -386,10 +352,71 @@ extension PetMenuViewController: UITableViewDataSource {
       }
     }
     
-    configureCellSelectionStyle(generalCell)
-    
+    configureCellSelectionStyleForMenuMode(generalCell, atIndexPath: indexPath)
     return generalCell
   }
+  
+  // user's possibility to select switch control in a cell or tap on a cell with Disclosure-accessory
+  func configureInteractionAccessoriesForMenuMode() {
+    
+    for section in 0..<menu.cellsTagTypeState.count {
+      for row in 0..<menu.cellsTagTypeState[section].count {
+        let cellType = menu.cellsTagTypeState[section][row].type
+        if cellType == PetMenuCellType.TitleSwitchCell || cellType == PetMenuCellType.TitleImageCell {
+          let indexPath = NSIndexPath(forRow: row, inSection: section)
+          if let _ = tableView.cellForRowAtIndexPath(indexPath) {
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+          }
+        }
+      }
+    }
+    
+  }
+  
+  // selection style for all cells
+  func configureCellsSelectionStyleForMenuMode() {
+    for s in 0..<menu.cellsTagTypeState.count {
+      for r in 0..<menu.cellsTagTypeState[s].count {
+        let indexPath = NSIndexPath(forRow: r, inSection: s)
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+          configureCellSelectionStyleForMenuMode(cell, atIndexPath: indexPath)
+        }
+      }
+    }
+  }
+  
+  // selection style of a cell depending on menuMode
+  func configureCellSelectionStyleForMenuMode(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    
+    let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
+    if cellType == .IconTitleCell ||
+      menuMode != .Show && (cellType == .TextFieldCell || cellType == .TitleImageCell || cellType == .AddCell)
+    {
+      cell.selectionStyle = VisualConfiguration.graySelection
+    } else {
+      cell.selectionStyle = .None
+    }
+    
+  }
+  
+  // selection style for all cells
+  func configureAddCellForMenuMode() {
+    //menu.configureCellTagTypeStateAddCell(forMenuMode: menuMode)
+    
+    for section in 0..<menu.cellsTagTypeState.count {
+      for row in 0..<menu.cellsTagTypeState[section].count {
+        
+        if menu.cellsTagTypeState[section][row].type == .AddCell {
+          menu.cellsTagTypeState[section][row].state = (menuMode == .Show ? .Hidden : .Disclosure)
+          let indexPath = NSIndexPath(forRow: row, inSection: section)
+          if let _ = tableView.cellForRowAtIndexPath(indexPath) {
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+          }
+        }
+      }
+    }
+  }
+  
   
   // MARK: Configuration of cells of different types
   func configureTextFieldCell(cell: MenuTextFieldCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -401,8 +428,8 @@ extension PetMenuViewController: UITableViewDataSource {
     cell.textField.keyboardAppearance = .Dark
     cell.textField.keyboardType = .Default
     cell.textField.returnKeyType = .Done
-    cell.textField.placeholder = pet.namePlaceholder //menu.textFieldPlaceholders[tag]
-    cell.textField.text = pet.name //menu.textFieldValues[tag]
+    cell.textField.placeholder = pet.namePlaceholder
+    cell.textField.text = pet.name
     
     cell.textField.userInteractionEnabled = false
     cell.textField.resignFirstResponder()
@@ -412,10 +439,10 @@ extension PetMenuViewController: UITableViewDataSource {
     cell.tag = menu.tagForIndexPath(indexPath)
     cell.titleLabel.text = "Изображение питомца"
     cell.imageImageView.image = UIImage(named: pet.image)
-    configureTitleImageCellAccessory(cell)
+    configureTitleImageCellAccessoryForMenuMode(cell)
   }
   
-  func configureTitleImageCellAccessory(cell: MenuTitleImageCell) {
+  func configureTitleImageCellAccessoryForMenuMode(cell: MenuTitleImageCell) {
     if menuMode == .Add || menuMode == .Edit {
       cell.accessoryType = .DisclosureIndicator
     } else { // menuMode == .Show
@@ -425,11 +452,11 @@ extension PetMenuViewController: UITableViewDataSource {
   
   func configureTitleSwitchCell(cell: MenuTitleSwitchCell, forRowAtIndexPath indexPath: NSIndexPath) {
     cell.tag = menu.tagForIndexPath(indexPath)
-    cell.titleLabel.text = pet.selectedTitle //menu.titleSwitchTitles[tag]
-    configureTitleSwitchCellTintColor(cell)
+    cell.titleLabel.text = pet.selectedTitle
+    configureTitleSwitchCellForMenuMode(cell)
   }
   
-  func configureTitleSwitchCellTintColor(cell: MenuTitleSwitchCell) {
+  func configureTitleSwitchCellForMenuMode(cell: MenuTitleSwitchCell) {
     if menuMode == .Add || menuMode == .Edit {
       cell.stateSwitch.onTintColor = VisualConfiguration.lightOrangeColor
       cell.stateSwitch.tintColor = VisualConfiguration.lightOrangeColor
@@ -437,6 +464,8 @@ extension PetMenuViewController: UITableViewDataSource {
       cell.stateSwitch.onTintColor = VisualConfiguration.lightGrayColor
       cell.stateSwitch.tintColor = VisualConfiguration.lightGrayColor
     }
+    
+    cell.stateSwitch.userInteractionEnabled = menuMode != .Show
   }
   
   func configureIconTitleCell(cell: MenuIconTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -458,7 +487,7 @@ extension PetMenuViewController: UITableViewDataSource {
   }
   
   func configureTitleCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    cell.titleLabel.text = ""
+    cell.titleLabel.text = "Добавить задание"
     
     if let addIcon = addIcon {
       let detailButton = UIButton(type: .Custom)
@@ -470,11 +499,20 @@ extension PetMenuViewController: UITableViewDataSource {
     }
   }
   
-  // определяем, detail-кнопка какой ячейки была нажата и вызываем accessoryButtonTappedForRowWithIndexPath
+  // determine index path for cell, which accessory-button was tapped and call accessoryButtonTappedForRowWithIndexPath
   func detailButtonTapped(sender: UIButton) {
     let senderPoint = sender.convertPoint(CGPointZero, toView: tableView)
     if let indexPath = tableView.indexPathForRowAtPoint(senderPoint) {
-      tableView(tableView, accessoryButtonTappedForRowWithIndexPath: indexPath)
+      
+      let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
+      
+      if cellType == .IconTitleCell {
+        print(tasksSorted[indexPath.row].name)
+      } else if cellType == .AddCell {
+        print("Add new task!")
+      }
+      
+      //tableView(tableView, accessoryButtonTappedForRowWithIndexPath: indexPath)
     }
   }
   
@@ -508,28 +546,22 @@ extension PetMenuViewController: UITableViewDelegate {
   }
   
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    if menu.cellsTagTypeState[indexPath.section][indexPath.row].type == PetMenuCellType.TitleImageCell {
-      return titleImageCellHeight
+    if menu.cellsTagTypeState[indexPath.section][indexPath.row].state == PetMenuCellState.Hidden {
+      // if cell is hidden, it's height = ~ 0
+      return CGFloat.min
     } else {
-      return regularCellHeight
+      if menu.cellsTagTypeState[indexPath.section][indexPath.row].type == PetMenuCellType.TitleImageCell {
+        return titleImageCellHeight
+      }
     }
+    return regularCellHeight
   }
   
   func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-    if menuMode == .Add || menuMode == .Edit { // in edit state user can select some types of cells
-      let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
-      if cellType == .TextFieldCell {
-        return indexPath
-      } else {
-        return nil
-      }
-    } else { // in show state user can select only accessory cells
-      let cellState = menu.cellsTagTypeState[indexPath.section][indexPath.row].state
-      if cellState == .Disclosure {
-        return indexPath
-      } else {
-        return nil
-      }
+    if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+      return cell.selectionStyle == VisualConfiguration.graySelection ? indexPath : nil
+    } else {
+      return nil
     }
   }
   
@@ -543,29 +575,45 @@ extension PetMenuViewController: UITableViewDelegate {
     // TextFieldCell, TitleValueCell, TitleSegmentCell or Accessory-cell was selected
     // tapping on the first three leads to opening/closing underlying cells with picker view for value selectio
     
+    deactivateAllActiveTextFields()
+    
     let section = indexPath.section
     let row = indexPath.row
     let cellType = menu.cellsTagTypeState[section][row].type
-    let cellState = menu.cellsTagTypeState[section][row].state
-    
-    if cellState == .Disclosure {
-      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleImageCell {
-        // prepare to edit minutes or doses of task
-        performSegueWithIdentifier(editShowMinutesDoseSegueId, sender: cell)
-      }
-    }
-    
-    deactivateAllActiveTextFields()
-    var rowsToReload: [NSIndexPath] = [] // after opening new picker cell or starting typing in text field, the old picker cell must be closed
-    var indexPathToScroll = indexPath
+    //let cellState = menu.cellsTagTypeState[section][row].state
     
     switch cellType {
-      
     case .TextFieldCell:
       if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
         activateVisibleTextField(cell.textField)
-        indexPathToScroll = indexPath
       }
+      
+    case .IconTitleCell:
+      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuIconTitleCell {
+        print(cell.taskNameLabel.text)
+      }
+    
+    default:
+      break
+    }
+    
+//    if cellState == .Disclosure {
+//      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleImageCell {
+//        // prepare to edit minutes or doses of task
+//        performSegueWithIdentifier(editShowMinutesDoseSegueId, sender: cell)
+//      }
+//    }
+    
+//    deactivateAllActiveTextFields()
+//    var rowsToReload: [NSIndexPath] = [] // after opening new picker cell or starting typing in text field, the old picker cell must be closed
+    
+    //switch cellType {
+      
+//    case .TextFieldCell:
+//      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
+//        activateVisibleTextField(cell.textField)
+//        indexPathToScroll = indexPath
+//      }
       
 //      // after tapping on these cell, cell with picker must be revealed or hidden
 //    case .TitleSegmentCell, .TitleValueCell:
@@ -609,17 +657,17 @@ extension PetMenuViewController: UITableViewDelegate {
 //        }
 //      }
       
-    default:
-      break
-    }
+//    default:
+//      break
+//    }
     
-    tableView.beginUpdates()
-    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
-    tableView.endUpdates()
+//    tableView.beginUpdates()
+//    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
+//    tableView.endUpdates()
     
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
     // focus on selected cell
-    tableView.scrollToRowAtIndexPath(indexPathToScroll, atScrollPosition: .Middle, animated: true)
+    tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: true)
   }
   
   // cells with given tags need to be reloaded
@@ -674,6 +722,13 @@ extension PetMenuViewController: UITextFieldDelegate {
     }
     
     return true
+  }
+  
+  override func resignFirstResponder() -> Bool {
+    return super.resignFirstResponder()
+    
+    
+    
   }
   
   // deactivate all text fields

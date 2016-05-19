@@ -18,7 +18,7 @@
     
     configureView()
     
-    if false {
+    if true {
       _helperDeleteAllData()
       let firstLaunch = true
       if firstLaunch {
