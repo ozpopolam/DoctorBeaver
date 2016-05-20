@@ -417,22 +417,26 @@ extension PetMenuViewController: UITableViewDataSource {
     }
   }
   
-  
   // MARK: Configuration of cells of different types
   func configureTextFieldCell(cell: MenuTextFieldCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let tag = menu.tagForIndexPath(indexPath)
-    cell.textField.tag = tag
-    cell.textField.delegate = self
+    let textField = cell.textField
     
-    cell.textField.autocapitalizationType = .Words
-    cell.textField.keyboardAppearance = .Dark
-    cell.textField.keyboardType = .Default
-    cell.textField.returnKeyType = .Done
-    cell.textField.placeholder = pet.namePlaceholder
-    cell.textField.text = pet.name
+    textField.tag = tag
+    textField.delegate = self
     
-    cell.textField.userInteractionEnabled = false
-    cell.textField.resignFirstResponder()
+    textField.autocapitalizationType = .Words
+    textField.keyboardAppearance = .Dark
+    textField.keyboardType = .Default
+    textField.returnKeyType = .Done
+    textField.placeholder = pet.namePlaceholder
+    textField.text = pet.name
+    
+    textField.textColorResponder = VisualConfiguration.blackColor
+    textField.textColorNonResponder = VisualConfiguration.lightGrayColor
+    
+    let cellState = menu.cellsTagTypeState[indexPath.section][indexPath.row].state
+    cellState == PetMenuCellState.Visible ? textField.resignFirstResponder() : textField.becomeFirstResponder()
   }
   
   func configureTitleImageCell(cell: MenuTitleImageCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -451,8 +455,9 @@ extension PetMenuViewController: UITableViewDataSource {
   }
   
   func configureTitleSwitchCell(cell: MenuTitleSwitchCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    cell.tag = menu.tagForIndexPath(indexPath)
     cell.titleLabel.text = pet.selectedTitle
+    cell.stateSwitch.tag = menu.tagForIndexPath(indexPath)
+    cell.delegate = self
     configureTitleSwitchCellForMenuMode(cell)
   }
   
@@ -487,15 +492,18 @@ extension PetMenuViewController: UITableViewDataSource {
   }
   
   func configureTitleCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    cell.titleLabel.text = "Добавить задание"
     
-    if let addIcon = addIcon {
-      let detailButton = UIButton(type: .Custom)
-      detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.accessoryIconSize)
-      detailButton.setImage(withImage: addIcon, ofSize: VisualConfiguration.accessoryIconSize, withTintColor: UIColor.blackColor())
-      detailButton.addTarget(self, action: "detailButtonTapped:", forControlEvents: .TouchUpInside)
+    if menu.cellsTagTypeState[indexPath.section][indexPath.row].state != .Hidden {
+      cell.titleLabel.text = "Добавить задание"
       
-      cell.accessoryView = detailButton
+      if let addIcon = addIcon {
+        let detailButton = UIButton(type: .Custom)
+        detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.accessoryIconSize)
+        detailButton.setImage(withImage: addIcon, ofSize: VisualConfiguration.accessoryIconSize, withTintColor: UIColor.blackColor())
+        detailButton.addTarget(self, action: "detailButtonTapped:", forControlEvents: .TouchUpInside)
+        
+        cell.accessoryView = detailButton
+      }
     }
   }
   
@@ -511,11 +519,9 @@ extension PetMenuViewController: UITableViewDataSource {
       } else if cellType == .AddCell {
         print("Add new task!")
       }
-      
-      //tableView(tableView, accessoryButtonTappedForRowWithIndexPath: indexPath)
+    
     }
   }
-  
   
 }
 
@@ -670,20 +676,20 @@ extension PetMenuViewController: UITableViewDelegate {
     tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: true)
   }
   
-  // cells with given tags need to be reloaded
-  func updateCells(withTags tags: [Int]) {
-    var indexPaths: [NSIndexPath] = []
-    for tag in tags {
-      menu.updateTitleValueValues(ofTag: tag)
-      if let indexPath = menu.indexPathForTag(tag) {
-        indexPaths.append(indexPath)
-      }
-    }
-    
-    tableView.beginUpdates()
-    tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-    tableView.endUpdates()
-  }
+//  // cells with given tags need to be reloaded
+//  func updateCells(withTags tags: [Int]) {
+//    var indexPaths: [NSIndexPath] = []
+//    for tag in tags {
+//      menu.updateTitleValueValues(ofTag: tag)
+//      if let indexPath = menu.indexPathForTag(tag) {
+//        indexPaths.append(indexPath)
+//      }
+//    }
+//    
+//    tableView.beginUpdates()
+//    tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+//    tableView.endUpdates()
+//  }
   
 }
 
@@ -696,8 +702,6 @@ extension PetMenuViewController: UITextFieldDelegate {
       menu.cellsTagTypeState[indexPath.section][indexPath.row].state = .Active
     }
     
-    textField.textColor = VisualConfiguration.textBlackColor
-    textField.userInteractionEnabled = true
     textField.becomeFirstResponder()
   }
   
@@ -705,10 +709,7 @@ extension PetMenuViewController: UITextFieldDelegate {
     if let indexPath = menu.indexPathForTag(textField.tag) {
       menu.cellsTagTypeState[indexPath.section][indexPath.row].state = .Visible
     }
-    
-    textField.textColor = VisualConfiguration.textGrayColor
     textField.resignFirstResponder()
-    textField.userInteractionEnabled = false
     return true
   }
   
@@ -717,18 +718,10 @@ extension PetMenuViewController: UITextFieldDelegate {
     if let oldText = textField.text {
       let newText = (oldText as NSString).stringByReplacingCharactersInRange(range, withString: string) as NSString
       // some text was typed - need to save new text in task
-      menu.updateTask(byTextFieldWithTag: textField.tag, byString: newText as String)
-      menu.updateTitleValueValues(ofTag: textField.tag)
+      menu.updatePet(byTextFieldWithTag: textField.tag, byString: newText as String)
     }
     
     return true
-  }
-  
-  override func resignFirstResponder() -> Bool {
-    return super.resignFirstResponder()
-    
-    
-    
   }
   
   // deactivate all text fields
@@ -739,12 +732,11 @@ extension PetMenuViewController: UITextFieldDelegate {
         let cellTTS = menu.cellsTagTypeState[s][r]
         
         if cellTTS.type == .TextFieldCell && cellTTS.state == .Active {
-          menu.cellsTagTypeState[s][r].state = .Visible
-          
           let indexPath = NSIndexPath(forRow: r, inSection: s)
           if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
             textFieldShouldReturn(cell.textField)
           } else {
+            menu.cellsTagTypeState[s][r].state = .Visible
             UIApplication.sharedApplication().sendAction("resignFirstResponder", to: nil, from: nil, forEvent: nil)
           }
         }
@@ -752,4 +744,12 @@ extension PetMenuViewController: UITextFieldDelegate {
     }
   }
   
+}
+
+extension PetMenuViewController: StateSwitchDelegate {
+  func stateSwitch(stateSwitch: UISwitch, didSetOn setOn: Bool) {
+    deactivateAllActiveTextFields()
+    menu.updatePet(byStateSwitchWithTag: stateSwitch.tag, byState: setOn)
+    print(pet.selected)
+  }
 }

@@ -62,6 +62,7 @@ struct VisualConfiguration {
   static let textGrayColor = UIColor.lightGrayColor()
   static let textOrangeColor = UIColor.lightOrangeColor()
   
+  static let blackColor = UIColor.blackColor()
   static let lightOrangeColor = UIColor.lightOrangeColor()
   static let lightGrayColor = UIColor.lightGrayColor()
   

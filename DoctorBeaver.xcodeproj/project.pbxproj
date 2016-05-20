@@ -18,6 +18,7 @@
 		620372D81C6A621000352617 /* ManyPetsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372D71C6A621000352617 /* ManyPetsCell.swift */; };
 		620372DA1C6AAC6800352617 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372D91C6AAC6800352617 /* HeaderCell.swift */; };
 		620373191C6BE98E00352617 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620373181C6BE98E00352617 /* UIColor.swift */; };
+		621916761CEE3C6B00F073C7 /* DecoratedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621916751CEE3C6B00F073C7 /* DecoratedTextField.swift */; };
 		6219B4741CA06605006E4E14 /* JsonParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6219B4731CA06605006E4E14 /* JsonParser.swift */; };
 		6232B06C1C870B38007D7D23 /* StgComplexPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6232B06B1C870B38007D7D23 /* StgComplexPickerCell.swift */; };
 		623B4FF11C7508B80016EC92 /* BasicPetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF01C7508B80016EC92 /* BasicPetCell.swift */; };
@@ -110,6 +111,7 @@
 		620372D71C6A621000352617 /* ManyPetsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManyPetsCell.swift; sourceTree = "<group>"; };
 		620372D91C6AAC6800352617 /* HeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		620373181C6BE98E00352617 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		621916751CEE3C6B00F073C7 /* DecoratedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecoratedTextField.swift; sourceTree = "<group>"; };
 		6219B4731CA06605006E4E14 /* JsonParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonParser.swift; sourceTree = "<group>"; };
 		6232B06B1C870B38007D7D23 /* StgComplexPickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgComplexPickerCell.swift; sourceTree = "<group>"; };
 		623B4FF01C7508B80016EC92 /* BasicPetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicPetCell.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				627F2C9D1C8842DF00B9ADFF /* DataPickerView.xib */,
 				6271ADCE1CC0292700CD0F5F /* StgDatePicker.swift */,
 				628425181C85BA5C0016E32F /* HideShowSegmentedControl.swift */,
+				621916751CEE3C6B00F073C7 /* DecoratedTextField.swift */,
 			);
 			name = "Custom controls";
 			sourceTree = "<group>";
@@ -546,6 +549,7 @@
 				62C64D521CCD33DB006B4CEF /* CalendarPopoverController.swift in Sources */,
 				62A83B8C1C6D278800A8DE8D /* DecoratedNavigationBarView.swift in Sources */,
 				62C64D851CDA795C006B4CEF /* PetCVCell.swift in Sources */,
+				621916761CEE3C6B00F073C7 /* DecoratedTextField.swift in Sources */,
 				628425171C84B1450016E32F /* StgTitleSegmentCell.swift in Sources */,
 				623BCD691CAC701C00784705 /* DateHelper.swift in Sources */,
 				62C64DA11CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift in Sources */,

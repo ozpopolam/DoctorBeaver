@@ -27,7 +27,6 @@ enum PetMenuCellState {
 }
 
 class PetMenuConfiguration {
-  
   var pet: Pet!
   
   // structure of menu, consisting of cell
@@ -36,9 +35,9 @@ class PetMenuConfiguration {
   
   var sectionTitles: [String] = []
   
-  var textFieldValues: [Int: String] = [:] // [tag: title]
-  var textFieldPlaceholders: [Int : String] = [:]
-  var titleSwitchTitles: [Int: String] = [:]
+  //var textFieldValues: [Int: String] = [:] // [tag: title]
+  //var textFieldPlaceholders: [Int : String] = [:]
+  //var titleSwitchTitles: [Int: String] = [:]
   
   // tags of cells and their pickers
   let nameTag = 00
@@ -56,17 +55,17 @@ class PetMenuConfiguration {
     // structure of cells, forming the menu
     configureCellTagTypeState(forMenuMode: menuMode)
     
-    textFieldValues = [
-      nameTag: pet.name
-    ]
-    
-    textFieldPlaceholders = [
-      nameTag: pet.namePlaceholder
-    ]
-    
-    titleSwitchTitles = [
-      selectedTitleTag: pet.selectedTitle
-    ]
+//    textFieldValues = [
+//      nameTag: pet.name
+//    ]
+//    
+//    textFieldPlaceholders = [
+//      nameTag: pet.namePlaceholder
+//    ]
+//    
+//    titleSwitchTitles = [
+//      selectedTitleTag: pet.selectedTitle
+//    ]
   }
   
   // forimg the structure of cells, forming the menu
@@ -86,8 +85,7 @@ class PetMenuConfiguration {
     configureCellTagTypeStateForTasks()
     
     taskAddTag = taskStartTag + pet.tasks.count
-    cellsTagTypeState[tasksSection].append((taskAddTag, .AddCell, .Visible))
-    configureCellTagTypeStateAddCell(forMenuMode: menuMode)
+    cellsTagTypeState[tasksSection].append((taskAddTag, .AddCell, .Hidden))
   }
   
   func configureCellTagTypeStateForTasks() {
@@ -96,14 +94,6 @@ class PetMenuConfiguration {
     
     for ind in 0..<pet.tasks.count {
       cellsTagTypeState[tasksSection].append((taskStartTag + ind, .IconTitleCell, .Detail))
-    }
-  }
-  
-  func configureCellTagTypeStateAddCell(forMenuMode menuMode: PetMenuMode) {
-    let tasksSection = cellsTagTypeState.count - 1
-    
-    if cellsTagTypeState[tasksSection][pet.tasks.count].type == PetMenuCellType.AddCell {
-      cellsTagTypeState[tasksSection][pet.tasks.count].state = (menuMode == .Show ? .Hidden : .Disclosure)
     }
   }
   
@@ -122,24 +112,26 @@ class PetMenuConfiguration {
     return nil
   }
   
-  // update values-part of TitleValueCell by task
-  func updateTitleValueValues(ofTag tag: Int) {
-    if tag == nameTag {
-      textFieldValues[tag] = pet.name
-    }
-  }
+//  // update values-part of TitleValueCell by task
+//  func updateTitleValueValues(ofTag tag: Int) {
+//    if tag == nameTag {
+//      textFieldValues[tag] = pet.name
+//    }
+//  }
   
   
   // MARK: update task by entered data from cells
   // after updating task, some cells, which are supposed to show this data, must be reloaded - return their tags
-  func updateTask(byTextFieldWithTag tag: Int, byString string: String) -> [Int] {
-    let tagsToUpdate = [tag]
-    
+  func updatePet(byTextFieldWithTag tag: Int, byString string: String) {
     if tag == nameTag {
       pet.name = string
     }
-    
-    return tagsToUpdate
+  }
+  
+  func updatePet(byStateSwitchWithTag tag: Int, byState state: Bool) {
+    if tag == selectedTitleTag {
+      pet.selected = state
+    }
   }
   
 }
