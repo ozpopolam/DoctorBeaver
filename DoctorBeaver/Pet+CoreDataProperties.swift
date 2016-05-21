@@ -18,7 +18,7 @@ extension Pet {
   
   @NSManaged var name: String
   @NSManaged var selected: Bool
-  @NSManaged var image: String
+  @NSManaged var imageName: String
   
   @NSManaged var tasks: NSSet
 }

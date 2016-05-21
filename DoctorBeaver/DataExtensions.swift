@@ -12,7 +12,7 @@ extension Pet {
   func printInBlock() {
     print("PET name: \(name)")
     print("selected: \(selected)")
-    print("image: \(image)")
+    print("image: \(imageName)")
     
     for task in tasks {
       if let task = task as? Task {

@@ -73,4 +73,30 @@ struct VisualConfiguration {
   static let pickerTextColor = UIColor.blackColor()
   static let segmentTintColor = UIColor.lightGrayColor()
   
+  // counting sizes and insets of cells, based on view's width and cells' number
+  static func countFlowLayoutValues(forNumberOfCellsInALine numberOfCellsInALine: CGFloat, andViewWidth viewWidth: CGFloat) -> (sectionInset: UIEdgeInsets, minimumSpacing: CGFloat, cellSize: CGSize, cellCornerRadius: CGFloat) {
+    let maxWidth = viewWidth
+    
+    let inset = floor(maxWidth * 3.0 / 100.0)
+    let sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+    
+    let tempMinimumSpacing = maxWidth * 4.0 / 100.0 // temporary value to be specified
+    
+    let cellWidth = ceil( (maxWidth - (inset * 2 + tempMinimumSpacing * (numberOfCellsInALine - 1) ) ) / numberOfCellsInALine )
+    
+    let minimumSpacing = floor( (maxWidth - (inset * 2 + cellWidth * numberOfCellsInALine) ) / (numberOfCellsInALine - 1) )
+    
+    let tempLabel = UILabel()
+    tempLabel.font = VisualConfiguration.smallPetNameFont
+    tempLabel.text = "X"
+    tempLabel.sizeToFit()
+    
+    let cellHeight = ceil(cellWidth + tempLabel.frame.size.height)
+    let cellSize = CGSize(width: cellWidth, height: cellHeight)
+    
+    let cellCornerRadius = cellWidth / CGFloat(VisualConfiguration.cornerProportion)
+    
+    return (sectionInset, minimumSpacing, cellSize, cellCornerRadius)
+  }
+  
 }

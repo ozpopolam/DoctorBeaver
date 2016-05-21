@@ -1626,7 +1626,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tce-WD-s1X" customClass="DecoratedTextField" customModule="DoctorBeaver" customModuleProvider="target">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tce-WD-s1X" customClass="RespondingTextField" customModule="DoctorBeaver" customModuleProvider="target">
                                                     <rect key="frame" x="16" y="7" width="576" height="30"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
@@ -1650,7 +1650,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ihF-R5-Ma3">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ihF-R5-Ma3">
                                                     <rect key="frame" x="517.5" y="1" width="41.5" height="41.5"/>
                                                     <color key="backgroundColor" red="1" green="0.43529412150000002" blue="0.81176471709999998" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
@@ -1839,11 +1839,113 @@
                     <connections>
                         <outlet property="decoratedNavigationBar" destination="ZtR-9i-nZG" id="v7f-ya-oAN"/>
                         <outlet property="tableView" destination="GhO-fL-gJI" id="MeU-tk-9CO"/>
+                        <segue destination="Diu-6Y-lcj" kind="show" identifier="editPetImageSegue" id="F2I-Sc-qy9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XIf-Mj-nZC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3198" y="-3729"/>
+            <point key="canvasLocation" x="3130" y="-3729"/>
+        </scene>
+        <!--Pet Image View Controller-->
+        <scene sceneID="zZY-E2-RST">
+            <objects>
+                <viewController id="Diu-6Y-lcj" customClass="PetImageViewController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hv7-LP-8gl"/>
+                        <viewControllerLayoutGuide type="bottom" id="XRM-Uj-Jzw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hOt-2O-HUM">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7me-LY-7dz" customClass="DecoratedNavigationBarView" customModule="DoctorBeaver" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
+                                <color key="backgroundColor" red="0.94117647059999998" green="0.67843137249999996" blue="0.18823529410000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="FRx-2w-h3j"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="RZE-8Q-oqS">
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="yGM-1X-vo0">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="petImageCell" id="0mP-i6-ubY" customClass="PetImageCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lum-ir-dlQ" customClass="RoundedCornersView" customModule="DoctorBeaver" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                                    <color key="backgroundColor" red="0.50196081400000003" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oM6-I3-I6p" customClass="RoundedCornersImageView" customModule="DoctorBeaver" customModuleProvider="target">
+                                                    <rect key="frame" x="4" y="4" width="192" height="192"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="oM6-I3-I6p" secondAttribute="height" multiplier="1:1" id="K36-It-x3K"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="oM6-I3-I6p" firstAttribute="leading" secondItem="0mP-i6-ubY" secondAttribute="leading" constant="4" id="0xR-pI-ypb"/>
+                                            <constraint firstAttribute="bottom" secondItem="lum-ir-dlQ" secondAttribute="bottom" id="2Bv-aA-Ll8"/>
+                                            <constraint firstAttribute="bottom" secondItem="oM6-I3-I6p" secondAttribute="bottom" constant="4" id="FmA-0S-ioi"/>
+                                            <constraint firstItem="lum-ir-dlQ" firstAttribute="top" secondItem="0mP-i6-ubY" secondAttribute="top" id="L9D-xy-x9w"/>
+                                            <constraint firstAttribute="trailing" secondItem="oM6-I3-I6p" secondAttribute="trailing" constant="4" id="NMN-kY-12b"/>
+                                            <constraint firstItem="oM6-I3-I6p" firstAttribute="centerY" secondItem="0mP-i6-ubY" secondAttribute="centerY" id="NYI-KC-gKB"/>
+                                            <constraint firstItem="oM6-I3-I6p" firstAttribute="centerX" secondItem="0mP-i6-ubY" secondAttribute="centerX" id="PLK-1o-GQv"/>
+                                            <constraint firstAttribute="trailing" secondItem="lum-ir-dlQ" secondAttribute="trailing" id="cGt-DK-f9u"/>
+                                            <constraint firstItem="lum-ir-dlQ" firstAttribute="leading" secondItem="0mP-i6-ubY" secondAttribute="leading" id="dSl-85-IXW"/>
+                                            <constraint firstItem="oM6-I3-I6p" firstAttribute="top" secondItem="0mP-i6-ubY" secondAttribute="top" constant="4" id="ta1-ly-ccI"/>
+                                        </constraints>
+                                        <size key="customSize" width="200" height="200"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="FmA-0S-ioi"/>
+                                                <exclude reference="NMN-kY-12b"/>
+                                                <exclude reference="ta1-ly-ccI"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <outlet property="petImageView" destination="oM6-I3-I6p" id="3e3-7E-VtE"/>
+                                            <outlet property="selectedView" destination="lum-ir-dlQ" id="ibw-3x-14J"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Diu-6Y-lcj" id="rAM-Ge-FfB"/>
+                                    <outlet property="delegate" destination="Diu-6Y-lcj" id="s1l-nr-oir"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="7me-LY-7dz" secondAttribute="trailing" id="99H-Pv-dPJ"/>
+                            <constraint firstItem="7me-LY-7dz" firstAttribute="top" secondItem="hOt-2O-HUM" secondAttribute="top" id="9VP-iX-knD"/>
+                            <constraint firstItem="XRM-Uj-Jzw" firstAttribute="top" secondItem="RZE-8Q-oqS" secondAttribute="bottom" id="Gqk-1g-V2d"/>
+                            <constraint firstItem="7me-LY-7dz" firstAttribute="leading" secondItem="hOt-2O-HUM" secondAttribute="leading" id="HJP-oL-CRX"/>
+                            <constraint firstItem="RZE-8Q-oqS" firstAttribute="leading" secondItem="hOt-2O-HUM" secondAttribute="leading" id="Kx4-vg-vg2"/>
+                            <constraint firstItem="RZE-8Q-oqS" firstAttribute="top" secondItem="7me-LY-7dz" secondAttribute="bottom" id="eJN-V0-1Wm"/>
+                            <constraint firstAttribute="trailing" secondItem="RZE-8Q-oqS" secondAttribute="trailing" id="jyZ-ti-Y2f"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="RZE-8Q-oqS" id="qDe-Hc-HC8"/>
+                        <outlet property="decoratedNavigationBar" destination="7me-LY-7dz" id="uN4-j3-IZp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tsa-FI-2D4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3863" y="-3729"/>
         </scene>
         <!--Pets-->
         <scene sceneID="owC-2K-Zse">

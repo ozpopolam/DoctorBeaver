@@ -220,7 +220,7 @@ class JsonPetsParser: JsonParser {
   
   func populatePetInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) {
     guard let name = dict["name"] as? String,
-      let image = dict["image"] as? String,
+      let imageName = dict["imageName"] as? String,
       let selected = dict["selected"] as? Bool,
       let jsonTasks = dict["tasks"] as? [[String: AnyObject]]
       else { return }
@@ -240,7 +240,7 @@ class JsonPetsParser: JsonParser {
       }
       
       pet.name = name
-      pet.image = image
+      pet.imageName = imageName
       pet.selected = selected
       pet.tasks = tasks
       

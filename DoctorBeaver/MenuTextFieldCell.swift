@@ -10,7 +10,7 @@ import UIKit
 
 class MenuTextFieldCell: UITableViewCell {
   
-  @IBOutlet weak var textField: DecoratedTextField!
+  @IBOutlet weak var textField: RespondingTextField!
   
   override func awakeFromNib() {
     super.awakeFromNib()

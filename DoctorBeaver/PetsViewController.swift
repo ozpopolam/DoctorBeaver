@@ -20,7 +20,7 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   
   // settings for layout of UICollectionView
   let petCellId = "petCell"
-  var cellWidth: CGFloat = 0.0
+  var cellWidth: CGFloat = 0.0 //////////////???????????
   var cellSize = CGSize(width: 0.0, height: 0.0)
   var cellCornerRadius: CGFloat = 0.0
   var sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
@@ -126,7 +126,7 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
       // get cropped version of all pets' icons
       croppedPetImages = [ : ]
       for pet in pets {
-        if let petImage = UIImage(named: pet.image) {
+        if let petImage = UIImage(named: pet.imageName) {
           croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
         }
       }
@@ -177,7 +177,7 @@ extension PetsViewController: UICollectionViewDataSource {
       let pet = pets[indexPath.row]
       cell.layer.cornerRadius = cellCornerRadius
       
-      cell.petImageView.image = UIImage(named: pet.image)
+      cell.petImageView.image = UIImage(named: pet.imageName)
       cell.borderImageView.image = croppedPetImages[pet.id]
       
       cell.petName.font = VisualConfiguration.smallPetNameFont

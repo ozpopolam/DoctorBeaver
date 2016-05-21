@@ -169,7 +169,7 @@ extension FilterViewController: UITableViewDataSource {
     if let cell = tableView.dequeueReusableCellWithIdentifier("filterCell", forIndexPath: indexPath) as? FilterCell {
       let pet = pets[indexPath.row]
       
-      cell.petImageView.image = UIImage(named: pet.image)
+      cell.petImageView.image = UIImage(named: pet.imageName)
       cell.petNameLabel.text = pet.name
       
       // считаем, сколько неоконченных заданий у питомца

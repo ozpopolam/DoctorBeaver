@@ -1,5 +1,5 @@
 //
-//  DecoratedTextField.swift
+//  RespondingTextField.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 19.05.16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DecoratedTextField: UITextField {
+class RespondingTextField: UITextField {
   
   var textColorResponder: UIColor?
   var textColorNonResponder: UIColor?

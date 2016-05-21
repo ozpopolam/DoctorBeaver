@@ -2,7 +2,7 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
     <entity name="Pet" representedClassName=".Pet" syncable="YES">
         <attribute name="id" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="image" attributeType="String" syncable="YES"/>
+        <attribute name="imageName" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="selected" attributeType="Boolean" syncable="YES"/>
         <relationship name="basicValues" maxCount="1" deletionRule="Nullify" destinationEntity="PetBasicValues" inverseName="pets" inverseEntity="PetBasicValues" syncable="YES"/>

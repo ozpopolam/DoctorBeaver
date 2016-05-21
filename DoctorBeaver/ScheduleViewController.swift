@@ -196,7 +196,7 @@ class ScheduleViewController: UIViewController {
   func showPetInfo(pet: Pet) {
     petNameLabel.hidden = false
     petNameLabel.text = pet.name
-    setPetImageWithBorder(pet.image)
+    setPetImageWithBorder(pet.imageName)
     
     petsNamesText.hidden = true
   }

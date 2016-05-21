@@ -47,6 +47,8 @@ class PetMenuViewController: UIViewController {
   let titleSwitchCellId = "menuTitleSwitchCell"
   let iconTitleCellId = "menuIconTitleCell"
   
+  let editPetImageSegueId = "editPetImageSegue"
+  
   // heights of cells
   let headerHeight: CGFloat = 22.0
   let regularCellHeight: CGFloat = 44.0
@@ -57,8 +59,6 @@ class PetMenuViewController: UIViewController {
   var addIcon: UIImage?
   
   var keyboardHeight: CGFloat!
-  
-  let editShowMinutesDoseSegueId = "editShowMinutesDoseSegue"
   
   let animationDuration: NSTimeInterval = 0.5 // to animate change of button's icon
   
@@ -85,6 +85,7 @@ class PetMenuViewController: UIViewController {
     addIcon = UIImage(named: "addAccessory")
     addIcon = addIcon?.ofSize(VisualConfiguration.accessoryIconSize)
 
+    menuMode = .Edit
     configureForMenuMode()
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
@@ -287,19 +288,13 @@ class PetMenuViewController: UIViewController {
   }
  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//    if segue.identifier == editShowMinutesDoseSegueId {
-//      if let destinationVC = segue.destinationViewController as? EditShowMinutesDoseTaskViewController {
-//        if let cell = sender as? StgTitleValueCell {
-//          destinationVC.task = task
-//          destinationVC.delegate = self
-//          
-//          let tblType = menu.getESMinutesDoseTaskTblCnfgType(ofTag: cell.tag)
-//          destinationVC.minutesDoseTblType = tblType
-//          destinationVC.editState = editState
-//        }
-//      }
-//      
-//    }
+    if segue.identifier == editPetImageSegueId {
+      
+      if let destinationViewController = segue.destinationViewController as? PetImageViewController {
+        destinationViewController.petsRepository = petsRepository
+      }
+      
+    }
   }
   
 }
@@ -442,7 +437,7 @@ extension PetMenuViewController: UITableViewDataSource {
   func configureTitleImageCell(cell: MenuTitleImageCell, forRowAtIndexPath indexPath: NSIndexPath) {
     cell.tag = menu.tagForIndexPath(indexPath)
     cell.titleLabel.text = "Изображение питомца"
-    cell.imageImageView.image = UIImage(named: pet.image)
+    cell.imageImageView.image = UIImage(named: pet.imageName)
     configureTitleImageCellAccessoryForMenuMode(cell)
   }
   
@@ -480,48 +475,48 @@ extension PetMenuViewController: UITableViewDataSource {
     cell.taskNameLabel.text = task.name
     cell.taskLastRealization.text = "заканчивается: " + DateHelper.dateToString(task.endDate, withDateFormat: DateFormatterFormat.DateTime.rawValue)
     
-    if let infoIcon = infoIcon {
-      let detailButton = UIButton(type: .Custom)
-      detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.accessoryIconSize)
-      detailButton.setImage(withImage: infoIcon, ofSize: VisualConfiguration.accessoryIconSize, withTintColor: UIColor.blackColor())
-      detailButton.addTarget(self, action: "detailButtonTapped:", forControlEvents: .TouchUpInside)
-      
-      cell.accessoryView = detailButton
-    }
-    
+    cell.accessoryView = getAccessoryImageView(withIcon: infoIcon)
   }
   
   func configureTitleCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
     
     if menu.cellsTagTypeState[indexPath.section][indexPath.row].state != .Hidden {
       cell.titleLabel.text = "Добавить задание"
-      
-      if let addIcon = addIcon {
-        let detailButton = UIButton(type: .Custom)
-        detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.accessoryIconSize)
-        detailButton.setImage(withImage: addIcon, ofSize: VisualConfiguration.accessoryIconSize, withTintColor: UIColor.blackColor())
-        detailButton.addTarget(self, action: "detailButtonTapped:", forControlEvents: .TouchUpInside)
-        
-        cell.accessoryView = detailButton
-      }
+      cell.accessoryView = getAccessoryImageView(withIcon: addIcon)
     }
   }
   
-  // determine index path for cell, which accessory-button was tapped and call accessoryButtonTappedForRowWithIndexPath
-  func detailButtonTapped(sender: UIButton) {
-    let senderPoint = sender.convertPoint(CGPointZero, toView: tableView)
-    if let indexPath = tableView.indexPathForRowAtPoint(senderPoint) {
+  // create image view to use it as accessory view in a cell
+  func getAccessoryImageView(withIcon icon: UIImage?) -> UIView? {
+    if let icon = icon {
+      let iconImageView = UIImageView()
       
-      let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
+      iconImageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.accessoryIconSize)
+      iconImageView.contentMode = .ScaleAspectFit
+      iconImageView.image = icon
       
-      if cellType == .IconTitleCell {
-        print(tasksSorted[indexPath.row].name)
-      } else if cellType == .AddCell {
-        print("Add new task!")
-      }
-    
+      return iconImageView
+    } else {
+      return nil
     }
+    
   }
+  
+//  // determine index path for cell, which accessory-button was tapped and call accessoryButtonTappedForRowWithIndexPath
+//  func detailButtonTapped(sender: UIButton) {
+//    let senderPoint = sender.convertPoint(CGPointZero, toView: tableView)
+//    if let indexPath = tableView.indexPathForRowAtPoint(senderPoint) {
+//      
+//      let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
+//      
+//      if cellType == .IconTitleCell {
+//        print(tasksSorted[indexPath.row].name)
+//      } else if cellType == .AddCell {
+//        print("Add new task!")
+//      }
+//    
+//    }
+//  }
   
 }
 
@@ -571,12 +566,6 @@ extension PetMenuViewController: UITableViewDelegate {
     }
   }
   
-  func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-//    let timeRealization = timeRealizationForRowAtIndexPath(indexPath)
-//    accessoryButtonTask = timeRealization.realization.task
-//    performSegueWithIdentifier(editShowTaskSegueId, sender: self)
-  }
-  
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     // TextFieldCell, TitleValueCell, TitleSegmentCell or Accessory-cell was selected
     // tapping on the first three leads to opening/closing underlying cells with picker view for value selectio
@@ -589,107 +578,35 @@ extension PetMenuViewController: UITableViewDelegate {
     //let cellState = menu.cellsTagTypeState[section][row].state
     
     switch cellType {
-    case .TextFieldCell:
+    case .TextFieldCell: // cell for pet's name
       if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
         activateVisibleTextField(cell.textField)
       }
       
-    case .IconTitleCell:
+    case .TitleImageCell: // cell for pet's image
+      performSegueWithIdentifier(editPetImageSegueId, sender: self)
+      
+    case .IconTitleCell: // cell for pet's task
       if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuIconTitleCell {
         print(cell.taskNameLabel.text)
+      }
+      
+    case .AddCell: // cell for adding pet's task
+      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleCell {
+        print(cell.titleLabel.text)
       }
     
     default:
       break
     }
     
-//    if cellState == .Disclosure {
-//      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleImageCell {
-//        // prepare to edit minutes or doses of task
-//        performSegueWithIdentifier(editShowMinutesDoseSegueId, sender: cell)
-//      }
-//    }
-    
-//    deactivateAllActiveTextFields()
-//    var rowsToReload: [NSIndexPath] = [] // after opening new picker cell or starting typing in text field, the old picker cell must be closed
-    
-    //switch cellType {
-      
-//    case .TextFieldCell:
-//      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
-//        activateVisibleTextField(cell.textField)
-//        indexPathToScroll = indexPath
-//      }
-      
-//      // after tapping on these cell, cell with picker must be revealed or hidden
-//    case .TitleSegmentCell, .TitleValueCell:
-//      
-//      let pickerCellRow = row + 1 // picker lies under tapped cell
-//      let pickerCellState = menu.cellsTagTypeState[section][pickerCellRow].state
-//      let pickerCellIndPth = NSIndexPath(forRow: pickerCellRow, inSection: section)
-//      
-//      if cellType == .TitleSegmentCell {
-//        
-//        if menu.frequencySegmentFirstOption() { // segmented control with first option selected
-//          rowsToReload = closeAllOpenPickerCells()
-//        } else { // segmented control with second option selected
-//          if pickerCellState == .Hidden { // underlying picker was hidden and about to be revealed
-//            rowsToReload = closeAllOpenPickerCells()
-//          }
-//          menu.toggleCellTagTypeState(atIndexPath: pickerCellIndPth)
-//          rowsToReload.append(pickerCellIndPth)
-//        }
-//        
-//      } else if cellType == .TitleValueCell {
-//        
-//        if pickerCellState == .Hidden {
-//          rowsToReload = closeAllOpenPickerCells()
-//        }
-//        
-//        if cellState != .Accessory {
-//          if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
-//            if pickerCellState == .Hidden {
-//              // if cell with picker is about to be revealed, text color of selected cell will become orange (active)
-//              cell.valueLabel.textColor = VisualConfiguration.textOrangeColor
-//            } else {
-//              // if cell with picker is about to be hidden, text color of selected cell will become grey (inactive)
-//              cell.valueLabel.textColor = VisualConfiguration.textGrayColor
-//            }
-//          }
-//          
-//          menu.toggleCellTagTypeState(atIndexPath: pickerCellIndPth) // change state of picker cell from hidden to open or vice versa
-//          rowsToReload.append(pickerCellIndPth) // reload cells, which state or appearance was modified
-//          indexPathToScroll = pickerCellIndPth // cell to be focused on
-//        }
-//      }
-      
-//    default:
-//      break
-//    }
-    
-//    tableView.beginUpdates()
-//    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
-//    tableView.endUpdates()
+    editPetImageSegueId
+
     
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
     // focus on selected cell
     tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Middle, animated: true)
   }
-  
-//  // cells with given tags need to be reloaded
-//  func updateCells(withTags tags: [Int]) {
-//    var indexPaths: [NSIndexPath] = []
-//    for tag in tags {
-//      menu.updateTitleValueValues(ofTag: tag)
-//      if let indexPath = menu.indexPathForTag(tag) {
-//        indexPaths.append(indexPath)
-//      }
-//    }
-//    
-//    tableView.beginUpdates()
-//    tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-//    tableView.endUpdates()
-//  }
   
 }
 

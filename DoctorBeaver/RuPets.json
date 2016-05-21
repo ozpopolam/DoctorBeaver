@@ -1,7 +1,7 @@
 {
   "pets": [{
            "name": "Белка",
-           "image": "dog2",
+           "imageName": "dog2",
            "selected": true,
            "tasks": [{
                      "typeId": 0,

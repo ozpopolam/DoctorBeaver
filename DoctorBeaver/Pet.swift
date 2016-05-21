@@ -36,7 +36,7 @@ class Pet: NSManagedObject {
   func configure(withTypeItem typeItem: TaskTypeItem) {
     name = ""
     selected = false
-    image = ""
+    imageName = ""
   }
   
   var separator: Character {
@@ -47,6 +47,7 @@ class Pet: NSManagedObject {
   
   func getOneDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [String] {
     let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: false).map{String($0)}
+    
     return oneDimArray
   }
   
@@ -89,7 +90,7 @@ class Pet: NSManagedObject {
     self.id = pet.id
     self.name = pet.name
     self.selected = pet.selected
-    self.image = pet.image
+    self.imageName = pet.imageName
   }
   
   // check whether settings of two pets are equal
@@ -97,7 +98,7 @@ class Pet: NSManagedObject {
     guard id == pet.id else { return false }
     guard name == pet.name else { return false }
     guard selected == pet.selected else { return false }
-    guard image == pet.image else { return false }
+    guard imageName == pet.imageName else { return false }
     return true
   }
   

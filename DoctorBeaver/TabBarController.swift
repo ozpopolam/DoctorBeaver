@@ -18,7 +18,7 @@
     
     configureView()
     
-    if true {
+    if false {
       _helperDeleteAllData()
       let firstLaunch = true
       if firstLaunch {
@@ -26,6 +26,8 @@
       }
       populateManagedObjectContextWithJsonPetData()
     }
+    
+    let fileManager = NSFileManager.defaultManager()
  
     // начинаем со вкладки расписания
     self.selectedIndex = 0
