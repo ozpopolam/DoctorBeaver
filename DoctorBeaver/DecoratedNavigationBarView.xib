@@ -29,46 +29,56 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9M2-qi-qhv" userLabel="Navigation Bar View">
                     <rect key="frame" x="0.0" y="20" width="418" height="44"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g52-xS-lFO" userLabel="Title">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g52-xS-lFO" userLabel="Title">
                             <rect key="frame" x="192" y="12" width="33.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="shE-zg-Tet" userLabel="Left Button">
-                            <rect key="frame" x="8" y="0.0" width="44" height="44"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="shE-zg-Tet" secondAttribute="height" multiplier="1:1" id="Jcu-im-man"/>
-                            </constraints>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RyS-bj-lD1" userLabel="Center Right Button">
-                            <rect key="frame" x="322" y="0.0" width="44" height="44"/>
+                            <rect key="frame" x="326" y="0.0" width="44" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="RyS-bj-lD1" secondAttribute="height" multiplier="1:1" id="gXN-5r-XTB"/>
                             </constraints>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1pJ-TK-VKn" userLabel="Right Button">
-                            <rect key="frame" x="366" y="0.0" width="44" height="44"/>
+                            <rect key="frame" x="370" y="0.0" width="44" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="1pJ-TK-VKn" secondAttribute="height" multiplier="1:1" id="EBh-Xa-fjt"/>
+                            </constraints>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="shE-zg-Tet" userLabel="Left Button">
+                            <rect key="frame" x="4" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="shE-zg-Tet" secondAttribute="height" multiplier="1:1" id="Jcu-im-man"/>
                             </constraints>
                         </button>
                     </subviews>
                     <constraints>
                         <constraint firstItem="1pJ-TK-VKn" firstAttribute="leading" secondItem="RyS-bj-lD1" secondAttribute="trailing" id="1Ya-8U-Umg"/>
+                        <constraint firstItem="shE-zg-Tet" firstAttribute="leading" secondItem="9M2-qi-qhv" secondAttribute="leading" constant="4" id="7xT-cW-pSa"/>
                         <constraint firstAttribute="height" constant="44" id="AH5-a6-3R0"/>
                         <constraint firstItem="shE-zg-Tet" firstAttribute="width" secondItem="shE-zg-Tet" secondAttribute="height" multiplier="1:1" id="Def-fL-V4Z"/>
                         <constraint firstItem="shE-zg-Tet" firstAttribute="centerY" secondItem="9M2-qi-qhv" secondAttribute="centerY" id="KOm-P0-OK2"/>
                         <constraint firstItem="g52-xS-lFO" firstAttribute="centerY" secondItem="9M2-qi-qhv" secondAttribute="centerY" id="Ked-oU-zVK"/>
+                        <constraint firstItem="RyS-bj-lD1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="g52-xS-lFO" secondAttribute="trailing" id="L0S-3d-EXN"/>
+                        <constraint firstItem="g52-xS-lFO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="shE-zg-Tet" secondAttribute="trailing" id="MRF-s5-A4C"/>
                         <constraint firstItem="1pJ-TK-VKn" firstAttribute="height" secondItem="9M2-qi-qhv" secondAttribute="height" id="R1t-QH-fxQ"/>
+                        <constraint firstAttribute="trailing" secondItem="1pJ-TK-VKn" secondAttribute="trailing" constant="4" id="Str-z9-5zk"/>
                         <constraint firstItem="RyS-bj-lD1" firstAttribute="centerY" secondItem="9M2-qi-qhv" secondAttribute="centerY" id="TLs-eR-DYe"/>
                         <constraint firstItem="1pJ-TK-VKn" firstAttribute="trailing" secondItem="9M2-qi-qhv" secondAttribute="trailingMargin" id="YSE-io-pRV"/>
                         <constraint firstItem="shE-zg-Tet" firstAttribute="height" secondItem="9M2-qi-qhv" secondAttribute="height" id="eON-fo-Uoo"/>
                         <constraint firstItem="RyS-bj-lD1" firstAttribute="height" secondItem="9M2-qi-qhv" secondAttribute="height" id="exe-mu-FoD"/>
                         <constraint firstItem="g52-xS-lFO" firstAttribute="centerX" secondItem="9M2-qi-qhv" secondAttribute="centerX" id="h07-dd-w2T"/>
                         <constraint firstItem="1pJ-TK-VKn" firstAttribute="centerY" secondItem="9M2-qi-qhv" secondAttribute="centerY" id="pWB-6T-iV5"/>
-                        <constraint firstItem="shE-zg-Tet" firstAttribute="leading" secondItem="9M2-qi-qhv" secondAttribute="leadingMargin" id="shG-Xf-lTp"/>
+                        <constraint firstItem="shE-zg-Tet" firstAttribute="leading" secondItem="9M2-qi-qhv" secondAttribute="leadingMargin" constant="4" id="shG-Xf-lTp"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="shG-Xf-lTp"/>
+                            <exclude reference="YSE-io-pRV"/>
+                        </mask>
+                    </variation>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

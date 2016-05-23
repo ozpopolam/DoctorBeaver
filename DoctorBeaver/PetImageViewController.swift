@@ -8,19 +8,27 @@
 
 import UIKit
 
+protocol PetImageViewControllerDelegate: class {
+  func petImageViewControllerDidCancel(viewController: PetImageViewController)
+  func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String)
+}
+
 class PetImageViewController: UIViewController {
   
   @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var collectionView: UICollectionView!
   
-  var petsRepository: PetsRepository! {
-    didSet {
-      if viewIsReadyToBeLoadedWithPetsRepository() {
-        reloadImagesCollection()
-      }
-    }
-  }
-  var viewWasLoadedWithPetsRepository = false
+  weak var delegate: PetImageViewControllerDelegate?
+  var petCurrentImageName: String = ""
+  
+//  var petsRepository: PetsRepository! {
+//    didSet {
+//      if viewIsReadyToBeLoadedWithPetsRepository() {
+//        reloadImagesCollection()
+//      }
+//    }
+//  }
+//  var viewWasLoadedWithPetsRepository = false
   
   // settings for layout of UICollectionView
   let petImageCellId = "petImageCell"
@@ -29,8 +37,9 @@ class PetImageViewController: UIViewController {
   var sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
   var minimumSpacing: CGFloat = 0.0
   
+  let folderName = "DefaultPetImages/"
   var imagesNames = ["dog0", "cat0", "dog1", "cat1", "dog2", "cat2", "dog3", "cat3"]
-  var imagesSelected = [Bool]()
+  var imagesSelection = [Bool]()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -38,28 +47,47 @@ class PetImageViewController: UIViewController {
     decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
     decoratedNavigationBar.titleLabel.text = "Картинка питомца".uppercaseString
     
-    imagesNames.map{ _ in imagesSelected.append(false) }
+    // button "Cancel"
+    decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: VisualConfiguration.darkGrayColor)
+    decoratedNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
+    
+    // button "Add photo"
+    decoratedNavigationBar.setButtonImage("camera", forButton: .CenterRight, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.rightButton.addTarget(self, action: "addPhoto:", forControlEvents: .TouchUpInside)
+    
+    // button "Done"
+    decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: VisualConfiguration.darkGrayColor)
+    decoratedNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
+    
+    imagesNames = imagesNames.map{ folderName + $0 } // update all names to full form
+    imagesSelection = [Bool](count: imagesNames.count, repeatedValue: false) // at first, all images are not selected
+    
+    if let indexOfCurrentImageName = imagesNames.indexOf(petCurrentImageName) { // if current pet's image name is already in list, set selected state in imagesSelection array
+      imagesSelection[indexOfCurrentImageName] = true
+    } else { // if it is not, add it at the beginning or imagesNames-array and imagesSelection-array
+      let firstIndex = 0
+      imagesNames.insert(petCurrentImageName, atIndex: firstIndex)
+      imagesSelection.insert(true, atIndex: firstIndex)
+    }
     
     let numberOfCellsInALine: CGFloat = 3
     (sectionInset, minimumSpacing, cellSize, cellCornerRadius) = countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine)
     
-    if viewIsReadyToBeLoadedWithPetsRepository() {
-      reloadImagesCollection()
-    }
+    reloadImagesCollection()
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
   
-  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
-    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
-      viewWasLoadedWithPetsRepository = true
-      return true
-    } else {
-      return false
-    }
-  }
+//  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
+//    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
+//      viewWasLoadedWithPetsRepository = true
+//      return true
+//    } else {
+//      return false
+//    }
+//  }
   
   func reloadImagesCollection() {
     collectionView.reloadData()
@@ -85,6 +113,45 @@ class PetImageViewController: UIViewController {
     return (sectionInset, minimumSpacing, cellSize, cellCornerRadius)
   }
   
+  // Cancel-button
+  func cancel(sender: UIButton) {
+    delegate?.petImageViewControllerDidCancel(self)
+  }
+  
+  // Done-button
+  func done(sender: UIButton) {
+    var petNewImageName: String? // expected new image name for per
+    
+    for ind in 0..<imagesSelection.count { // try to find selected image
+      if imagesSelection[ind] {
+        petNewImageName = imagesNames[ind]
+        break
+      }
+    }
+    
+    if let petNewImageName = petNewImageName { // some image was selected
+      if petNewImageName == petCurrentImageName { // check whether new name and old name are the same
+        delegate?.petImageViewControllerDidCancel(self) // nothing has changed
+      } else {
+        delegate?.petImageViewController(self, didSelectNewImageName: petNewImageName)
+      }
+      
+    } else { // no image was selected
+      delegate?.petImageViewControllerDidCancel(self)
+    }
+
+  }
+  
+  // Camera-button
+  func addPhoto(sender: UIButton) {
+    //    editState = false // stop editing task
+    //    closePickerCellsForShowState()
+    //    deactivateAllActiveTextFields()
+    //    configureForEditState(withAnimationDuration: animationDuration)
+    //
+    //    edited = taskDidChange()
+  }
+  
 }
 
 extension PetImageViewController: UICollectionViewDataSource {
@@ -92,37 +159,51 @@ extension PetImageViewController: UICollectionViewDataSource {
   func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return imagesNames.count
   }
+  
   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(petImageCellId, forIndexPath: indexPath) as? PetImageCell {
       
-      //cell.backgroundColor = UIColor.greenColor()
+      cell.selectedView.backgroundColor = VisualConfiguration.lightOrangeColor
+      cell.selectedView.cornerProportion = VisualConfiguration.cornerProportion
+      cell.selectedView.hidden = !imagesSelection[indexPath.row]
       
       cell.petImageView.image = UIImage(named: imagesNames[indexPath.row])
       cell.petImageView.cornerProportion = VisualConfiguration.cornerProportion
       
-      cell.selectedView.backgroundColor = VisualConfiguration.lightOrangeColor
-      cell.selectedView.cornerProportion = VisualConfiguration.cornerProportion
-      
-      cell.selectedView.hidden = !imagesSelected[indexPath.row]
-      
       return cell
+    } else {
+      return UICollectionViewCell()
     }
-    
-    
-    return UICollectionViewCell()
   }
   
 }
 
 extension PetImageViewController: UICollectionViewDelegate {
   
+  // update imagesSelected and show or hide selectedView accordingly
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
     
-    if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? PetImageCell {
-      imagesSelected[indexPath.row] = !imagesSelected[indexPath.row]
-      
-      cell.selectedView.hidden = !imagesSelected[indexPath.row]
+    imagesSelection[indexPath.row] = !imagesSelection[indexPath.row]
+    
+    var rowsToUpdate = [Int]()
+    
+    if imagesSelection[indexPath.row] { // if item was selected
+      for ind in 0..<imagesSelection.count { // need to deselect all previously selected items
+        if ind != indexPath.row && imagesSelection[ind] {
+          imagesSelection[ind] = false
+          rowsToUpdate.append(ind)
+        }
+      }
     }
+    
+    rowsToUpdate.append(indexPath.row) // selected item itself
+    
+    for row in rowsToUpdate { // update selectedView' visibility
+      if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forRow: row, inSection: indexPath.section)) as? PetImageCell {
+        cell.selectedView.hidden = !imagesSelection[row]
+      }
+    }
+    
   }
   
 }

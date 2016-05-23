@@ -1884,10 +1884,9 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lum-ir-dlQ" customClass="RoundedCornersView" customModule="DoctorBeaver" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
-                                                    <color key="backgroundColor" red="0.50196081400000003" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                                 </view>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oM6-I3-I6p" customClass="RoundedCornersImageView" customModule="DoctorBeaver" customModuleProvider="target">
-                                                    <rect key="frame" x="4" y="4" width="192" height="192"/>
+                                                    <rect key="frame" x="2" y="2" width="196" height="196"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="oM6-I3-I6p" secondAttribute="height" multiplier="1:1" id="K36-It-x3K"/>
                                                     </constraints>
@@ -1896,7 +1895,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="oM6-I3-I6p" firstAttribute="leading" secondItem="0mP-i6-ubY" secondAttribute="leading" constant="4" id="0xR-pI-ypb"/>
+                                            <constraint firstItem="oM6-I3-I6p" firstAttribute="leading" secondItem="0mP-i6-ubY" secondAttribute="leading" constant="2" id="0xR-pI-ypb"/>
                                             <constraint firstAttribute="bottom" secondItem="lum-ir-dlQ" secondAttribute="bottom" id="2Bv-aA-Ll8"/>
                                             <constraint firstAttribute="bottom" secondItem="oM6-I3-I6p" secondAttribute="bottom" constant="4" id="FmA-0S-ioi"/>
                                             <constraint firstItem="lum-ir-dlQ" firstAttribute="top" secondItem="0mP-i6-ubY" secondAttribute="top" id="L9D-xy-x9w"/>
