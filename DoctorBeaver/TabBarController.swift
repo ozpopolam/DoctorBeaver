@@ -27,8 +27,6 @@
       populateManagedObjectContextWithJsonPetData()
     }
     
-    let fileManager = NSFileManager.defaultManager()
- 
     // начинаем со вкладки расписания
     self.selectedIndex = 0
     delegate = self

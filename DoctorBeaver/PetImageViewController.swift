@@ -53,7 +53,8 @@ class PetImageViewController: UIViewController {
     
     // button "Add photo"
     decoratedNavigationBar.setButtonImage("camera", forButton: .CenterRight, withTintColor: UIColor.fogColor())
-    decoratedNavigationBar.rightButton.addTarget(self, action: "addPhoto:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.centerRightButton.addTarget(self, action: "addPhoto:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.centerRightButton.hidden = true
     
     // button "Done"
     decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: VisualConfiguration.darkGrayColor)

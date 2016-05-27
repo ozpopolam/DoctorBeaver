@@ -290,11 +290,11 @@
 		620372D61C6A61DD00352617 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				628E3CC31C963A55000C122A /* RuPets.json */,
 				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
 				62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */,
 				62DCB0CB1C78DC1000ABF206 /* TaskType.swift */,
 				62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */,
-				628E3CC31C963A55000C122A /* RuPets.json */,
 				6219B4731CA06605006E4E14 /* JsonParser.swift */,
 				62DCB0CA1C78DBB600ABF206 /* Data Model */,
 			);

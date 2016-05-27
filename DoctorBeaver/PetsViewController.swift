@@ -87,14 +87,18 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
     
     // configure button's icon and action
     decoratedNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending : .OrderedAscending))
     
-    sortedAZ = !sortedAZ // new type of current sorting
+    sortPetsByName()
     
     // reload all cells
     collectionView.performBatchUpdates({
       self.collectionView.reloadSections(NSIndexSet(index: 0))
       }, completion: nil)
+  }
+  
+  func sortPetsByName() {
+    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending : .OrderedAscending))
+    sortedAZ = !sortedAZ // new type of current sorting
   }
   
   func sortedByName(direction: NSComparisonResult) -> ((lh: Pet, rh: Pet) -> Bool) {
@@ -122,6 +126,9 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
       if withFetchRequest {
         pets = petsRepository.fetchAllPets()
       }
+      
+      sortedAZ = !sortedAZ // after reloading, collection actually hasn't been sorted as sortedAZ shows -> need to reset it
+      sortPetsByName()
       
       // get cropped version of all pets' icons
       croppedPetImages = [ : ]
@@ -259,6 +266,11 @@ extension PetsViewController: PetMenuViewControllerDelegate {
     petsRepository.deleteObject(pet)
     petsRepository.saveOrRollback()
     
+    // reload collection
+    reloadPetsCollection()
+  }
+  
+  func petMenuViewController(viewController: PetMenuViewController, didEditPet pet: Pet) {
     // reload collection
     reloadPetsCollection()
   }

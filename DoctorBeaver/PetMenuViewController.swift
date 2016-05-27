@@ -10,8 +10,7 @@ import UIKit
 
 protocol PetMenuViewControllerDelegate: class {
   func petMenuViewController(viewController: PetMenuViewController, didDeletePet pet: Pet)
-//  func petMenuViewController(viewController: PetMenuViewController, didSlightlyEditScheduleOfTask task: Task)
-//  func petMenuViewController(viewController: PetMenuViewController, didFullyEditScheduleOfTask task: Task)
+  func petMenuViewController(viewController: PetMenuViewController, didEditPet pet: Pet)
 }
 
 enum PetMenuMode {
@@ -31,11 +30,11 @@ class PetMenuViewController: UIViewController {
   
   var pet: Pet! // pet to show or edit
   var petWithInitialSettings: Pet? // needed to store initial values
+  var petWasEdited = false // some settings of pet were edited
   
   var tasksSorted: [Task]!
   
   var menu = PetMenuConfiguration()
-  
   
   var menuMode: PetMenuMode = .Add
   
@@ -85,7 +84,7 @@ class PetMenuViewController: UIViewController {
     addIcon = UIImage(named: "addAccessory")
     addIcon = addIcon?.ofSize(VisualConfiguration.accessoryIconSize)
 
-    menuMode = .Edit
+    //menuMode = .Edit
     configureForMenuMode()
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
@@ -134,13 +133,6 @@ class PetMenuViewController: UIViewController {
     configureAddCellForMenuMode()
   }
   
-  // fully reload table with data of task
-//  func reloadMenuTable() {
-//    menu.configure(withPet: pet)
-//    tasksSorted = pet.tasksSorted()
-//    tableView.reloadData()
-//  }
-  
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.navigationBarHidden = true
@@ -187,22 +179,14 @@ class PetMenuViewController: UIViewController {
   
   // Back-button
   func back(sender: UIButton) {
+    // if pet for storing initial setting was created, need to delete it
+    if let petWithInitialSettings = petWithInitialSettings {
+      petsRepository.deleteObject(petWithInitialSettings)
+    }
     
-//    // if task for storing initial setting was created, need to delete it
-//    if let taskWithInitialSettings = taskWithInitialSettings {
-//      petsRepository.deleteObject(taskWithInitialSettings)
-//    }
-//    
-//    if edited {
-//      // task was edited
-//      if menu.scheduleWasChanged {
-//        // time frame of task changed
-//        task.countEndDate()
-//        delegate?.taskMenuViewController(self, didFullyEditScheduleOfTask: task)
-//      } else {
-//        delegate?.taskMenuViewController(self, didSlightlyEditScheduleOfTask: task)
-//      }
-//    }
+    if petWasEdited {
+      delegate?.petMenuViewController(self, didEditPet: pet)
+    }
     
     navigationController?.popViewControllerAnimated(true)
   }
@@ -245,46 +229,39 @@ class PetMenuViewController: UIViewController {
   
   // Cancel-button
   func cancel(sender: UIButton) {
-//    editState = false // stop editing task
-//    deactivateAllActiveTextFields() // close all text fields
-//    
-//    if taskDidChange() {
-//      // settings were changed - need to restore them
-//      loadInitailSettings()
-//      reloadEditShowTaskTable()
-//    } else {
-//      closePickerCellsForShowState() // close all open picker cells
-//    }
-//    
-//    configureForEditState(withAnimationDuration: animationDuration)
+    menuMode = .Show
+    deactivateAllActiveTextFields()
+    
+    if petDidChange() {
+      // settings were changed - need to restore them
+      loadInitailSettings()
+      tableView.reloadData()
+    }
+    configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
-  // check whether some settings of task did change
-  func taskDidChange() -> Bool {
-//    // compare new settings to stored ones
-//    if let taskWithInitialSettings = taskWithInitialSettings {
-//      return !task.settingsAreEqual(toTask: taskWithInitialSettings)
-//    } else {
-//      return false
-//    }
-    return true
+  // check whether some settings of pet did change
+  func petDidChange() -> Bool {
+    if let petWithInitialSettings = petWithInitialSettings {
+      return !pet.settingsAreEqual(toPet: petWithInitialSettings)
+    } else {
+      return false
+    }
   }
   
-  // restore initial settings of task
+  // restore initial settings of pet
   func loadInitailSettings() {
-//    if let taskWithInitialSettings = taskWithInitialSettings {
-//      task.copySettings(fromTask: taskWithInitialSettings)
-//    }
+    if let petWithInitialSettings = petWithInitialSettings {
+      pet.copySettings(fromPet: petWithInitialSettings)
+    }
   }
   
   // Done-button
   func done(sender: UIButton) {
-//    editState = false // stop editing task
-//    closePickerCellsForShowState()
-//    deactivateAllActiveTextFields()
-//    configureForEditState(withAnimationDuration: animationDuration)
-//    
-//    edited = taskDidChange()
+    menuMode = .Show
+    deactivateAllActiveTextFields()
+    configureForMenuMode(withAnimationDuration: animationDuration)
+    petWasEdited = petDidChange()
   }
  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -453,6 +430,7 @@ extension PetMenuViewController: UITableViewDataSource {
   func configureTitleSwitchCell(cell: MenuTitleSwitchCell, forRowAtIndexPath indexPath: NSIndexPath) {
     cell.titleLabel.text = pet.selectedTitle
     cell.stateSwitch.tag = menu.tagForIndexPath(indexPath)
+    cell.stateSwitch.setOn(pet.selected, animated: false)
     cell.delegate = self
     configureTitleSwitchCellForMenuMode(cell)
   }
@@ -679,7 +657,6 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String) {
     navigationController?.popViewControllerAnimated(true)
-    
     pet.imageName = imageName
     
     for section in 0..<menu.cellsTagTypeState.count {
