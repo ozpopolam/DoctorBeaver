@@ -102,21 +102,35 @@ class Pet: NSManagedObject {
     return true
   }
   
-  func tasksSorted() -> [Task] {
+  func tasksSortedByActiveness(forDate date: NSDate) -> (active: [Task], completed: [Task]) {
     
-    var tskSrt = [Task]()
-    
-    for task in tasks {
+    var tasks = [Task]()
+    for task in self.tasks {
       if let task = task as? Task {
-        tskSrt.append(task)
+        tasks.append(task)
       }
     }
     
-    tskSrt.sortInPlace{DateHelper.compareDatesToMinuteUnit(firstDate: $0.endDate, secondDate: $1.endDate)}
+    let compareDatesToMinutes: (firstDate: NSDate, secondDate: NSDate) -> NSComparisonResult = {
+      (fd, sd) in
+      return DateHelper.compareDatesToUnit(firstDate: fd, secondDate: sd, unit: NSCalendarUnit.Minute)
+    }
+
+    var activeTasks = [Task]()
+    var completedTasks = [Task]()
+
+    for task in tasks {
+      if compareDatesToMinutes(firstDate: task.endDate, secondDate: date) == .OrderedDescending {
+        activeTasks.append(task)
+      } else {
+        completedTasks.append(task)
+      }
+    }
+
+    activeTasks.sortInPlace{ compareDatesToMinutes(firstDate: $0.endDate, secondDate: $1.endDate) == .OrderedAscending }
+    completedTasks.sortInPlace{ compareDatesToMinutes(firstDate: $0.endDate, secondDate: $1.endDate) == .OrderedDescending }
     
-    
-    
-    return tskSrt
+    return (activeTasks, completedTasks)
   }
   
 }

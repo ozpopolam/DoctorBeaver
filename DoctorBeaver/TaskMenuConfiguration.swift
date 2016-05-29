@@ -28,7 +28,8 @@ enum TaskMenuCellState {
   case Hidden
 }
 
-enum ESMinutesDoseTaskTblCnfgType {
+// type of menu, which is about to be shown when user select corresponding cell
+enum MinutesDoseMenuType {
   case Minutes
   case Dose
 }

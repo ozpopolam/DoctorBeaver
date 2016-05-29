@@ -31,8 +31,7 @@ class PetMenuViewController: UIViewController {
   var pet: Pet! // pet to show or edit
   var petWithInitialSettings: Pet? // needed to store initial values
   var petWasEdited = false // some settings of pet were edited
-  
-  var tasksSorted: [Task]!
+  var tasksSortedByActiveness: (active: [Task], completed: [Task]) = ([], [])
   
   var menu = PetMenuConfiguration()
   var menuMode: MenuMode = .Add
@@ -89,7 +88,8 @@ class PetMenuViewController: UIViewController {
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
     
     menu.configure(withPet: pet, forMenuMode: menuMode)
-    tasksSorted = pet.tasksSorted()
+    
+    tasksSortedByActiveness = pet.tasksSortedByActiveness(forDate: NSDate())
     tableView.reloadData()
   }
   
@@ -445,17 +445,38 @@ extension PetMenuViewController: UITableViewDataSource {
   }
   
   func configureIconTitleCell(cell: MenuIconTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    let row = indexPath.row
     
-    let task = tasksSorted[indexPath.row]
-    cell.iconImageView.image = UIImage(named: task.typeItem.iconName)
-    cell.taskNameLabel.text = task.name
-    cell.taskLastRealization.text = "заканчивается: " + DateHelper.dateToString(task.endDate, withDateFormat: DateFormatterFormat.DateTime.rawValue)
+    var taskInActiveTasks: Bool?
+    if row < tasksSortedByActiveness.active.count {
+      taskInActiveTasks = true
+    } else if row < tasksSortedByActiveness.active.count + tasksSortedByActiveness.completed.count {
+      taskInActiveTasks = false
+    }
     
-    cell.accessoryView = getAccessoryImageView(withIcon: infoIcon)
+    if let taskInActiveTasks = taskInActiveTasks {
+      var task: Task
+      
+      if taskInActiveTasks {
+        task = tasksSortedByActiveness.active[row]
+      } else {
+        task = tasksSortedByActiveness.completed[row - tasksSortedByActiveness.active.count]
+      }
+      
+      cell.iconImageView.image = UIImage(named: task.typeItem.iconName)
+      cell.taskNameLabel.text = task.name
+      cell.accessoryView = getAccessoryImageView(withIcon: infoIcon)
+      
+      if taskInActiveTasks {
+        cell.taskLastRealization.text = "заканчивается: " + DateHelper.dateToString(task.endDate, withDateFormat: DateFormatterFormat.DateTime.rawValue)
+      } else {
+        cell.taskLastRealization.text = "закончилось"
+      }
+      
+    }
   }
   
   func configureTitleCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    
     if menu.cellsTagTypeState[indexPath.section][indexPath.row].state != .Hidden {
       cell.titleLabel.text = "Добавить задание"
       cell.accessoryView = getAccessoryImageView(withIcon: addIcon)

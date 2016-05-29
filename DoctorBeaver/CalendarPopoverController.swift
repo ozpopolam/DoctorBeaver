@@ -1,5 +1,5 @@
 //
-//  FakeAlertController.swift
+//  CalendarPopoverController.swift
 //  popover
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 23.04.16.
@@ -16,9 +16,11 @@ protocol CalendarPopoverControllerDelegate: class {
 class CalendarPopoverController: UIViewController {
   
   @IBOutlet weak var datePicker: UIDatePicker!
-  @IBOutlet weak var todayButton: UIButton!
-  @IBOutlet weak var cancelButton: UIButton!
   
+  @IBOutlet weak var stackView: UIStackView!
+  
+  @IBOutlet weak var cancelButton: UIButton!
+  @IBOutlet weak var todayButton: UIButton!
   @IBOutlet weak var doneButton: UIButton!
   
   weak var delegate: CalendarPopoverControllerDelegate?
@@ -54,7 +56,7 @@ class CalendarPopoverController: UIViewController {
     var aw: CGFloat = 0.0
     var ah = halfMargin
     
-    let subViews: [UIView] = [datePicker, cancelButton]
+    let subViews: [UIView] = [datePicker, stackView]
     for sv in subViews {
       if aw < margin + sv.frame.width + margin {
         aw = margin + sv.frame.width + margin
@@ -74,12 +76,16 @@ class CalendarPopoverController: UIViewController {
     activeHeight = ah
   }
   
-  // результат выбор неинтересен, скрыть календарь без последствий
   @IBAction func cancel(sender: UIButton) {
     delegate?.calendarDidCancel(self)
   }
   
-  // выбрана новая дата для расписания
+  @IBAction func setToday(sender: UIButton) {
+    let today = NSDate()
+    datePicker.setDate(today, animated: true)
+  }
+  
+  // new date for schedule was chosen
   @IBAction func done(sender: UIButton) {
     delegate?.calendar(self, didPickDate: datePicker.date)
   }
