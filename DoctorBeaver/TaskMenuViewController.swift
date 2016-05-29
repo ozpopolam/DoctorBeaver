@@ -1,5 +1,5 @@
 //
-//  AddNewTaskViewController.swift
+//  TaskMenuViewController.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 18.02.16.
@@ -18,7 +18,7 @@ protocol TaskMenuViewControllerDelegate: class {
 class TaskMenuViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
-  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
+  @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   
   weak var delegate: TaskMenuViewControllerDelegate?
   
@@ -28,10 +28,11 @@ class TaskMenuViewController: UIViewController {
   var taskWithInitialSettings: Task? // needed to store initial values
   var minutesDoseInitialSettings: (minutes: [Int], dose: [String]) = ([], [])
   
-  var tbCnfg = EditShowTaskTableConfiguration()
+  var menu = TaskMenuConfiguration()
+  var menuMode: MenuMode = .Add
   
   // types of cells in table
-  let headerCellId = "headerCell"
+  let headerId = "headerView"
   let menuTextFieldCellId = "menuTextFieldCell"
   let stgTitleValueCellId = "stgTitleValueCell"
   let stgTitleSegmentCellId = "stgTitleSegmentCell"
@@ -51,8 +52,8 @@ class TaskMenuViewController: UIViewController {
   
   let animationDuration: NSTimeInterval = 0.5 // to animate change of button's icon
   
-  var editState = false // adding or editing a task
-  var edited = false // task was edited
+//  var editState = false // adding or editing a task
+  var taskWasEdited = false // task was edited
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -61,59 +62,61 @@ class TaskMenuViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
-    fakeNavigationBar.titleLabel.text = task.typeItem.name.uppercaseString
+    decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
+    decoratedNavigationBar.titleLabel.text = task.typeItem.name.uppercaseString
     
-    // button "Delete" (will be hiden or shown depending on editState)
-    fakeNavigationBar.setButtonImage("trash", forButton: .CenterRight, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-    fakeNavigationBar.centerRightButton.addTarget(self, action: "trash:", forControlEvents: .TouchUpInside)
+    // button "Delete" (will be hiden or shown depending on menuMode)
+    decoratedNavigationBar.setButtonImage("trash", forButton: .CenterRight, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+    decoratedNavigationBar.centerRightButton.addTarget(self, action: "trash:", forControlEvents: .TouchUpInside)
     
-    configureForEditState()
+    let tableSectionHeaderNib = UINib(nibName: "TableSectionHeaderView", bundle: nil)
+    tableView.registerNib(tableSectionHeaderNib, forHeaderFooterViewReuseIdentifier: headerId)
+    
+    configureForMenuMode()
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
-
     reloadEditShowTaskTable()
   }
   
   // configuring user's possibility of interaction, selection style of cells, showing or hiding necessary buttons
-  func configureForEditState(withAnimationDuration animationDuration: NSTimeInterval = 0) {
-    if editState {
+  func configureForMenuMode(withAnimationDuration animationDuration: NSTimeInterval = 0) {
+    if menuMode == .Add || menuMode == .Edit {
       // adding or editing task
       
       // button "Cancel"
-      fakeNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-      fakeNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      fakeNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+      decoratedNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
       
-      fakeNavigationBar.hideButton(.CenterRight) // hide Delete-button
+      decoratedNavigationBar.hideButton(.CenterRight) // hide Delete-button
       
       // button "Done"
-      fakeNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-      fakeNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      fakeNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+      decoratedNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
     } else {
       // browsing settings of task or deleting it
       
       // button "Back"
-      fakeNavigationBar.setButtonImage("back", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-      fakeNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      fakeNavigationBar.leftButton.addTarget(self, action: "back:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.setButtonImage("back", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+      decoratedNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.leftButton.addTarget(self, action: "back:", forControlEvents: .TouchUpInside)
       
-      fakeNavigationBar.showButton(.CenterRight, withAnimationDuration: animationDuration) // show Delete-button
+      decoratedNavigationBar.showButton(.CenterRight, withAnimationDuration: animationDuration) // show Delete-button
       
       // button "Edit"
-      fakeNavigationBar.setButtonImage("edit", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-      fakeNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      fakeNavigationBar.rightButton.addTarget(self, action: "edit:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.setButtonImage("edit", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
+      decoratedNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.rightButton.addTarget(self, action: "edit:", forControlEvents: .TouchUpInside)
     }
     
-    configureUserInteractionForEditState()
-    configureCellsSelectionStyle()
+    configureUserInteractionForMenuMode()
+    configureCellsSelectionStyleForMenuMode()
   }
   
   // fully reload table with data of task
   func reloadEditShowTaskTable() {
-    tbCnfg.configure(withTask: task)
+    menu.configure(withTask: task)
     tableView.reloadData()
   }
   
@@ -169,9 +172,9 @@ class TaskMenuViewController: UIViewController {
       petsRepository.deleteObject(taskWithInitialSettings)
     }
     
-    if edited {
+    if taskWasEdited {
       // task was edited
-      if tbCnfg.scheduleWasChanged {
+      if menu.scheduleWasChanged {
         // time frame of task changed
         task.countEndDate()
         delegate?.taskMenuViewController(self, didFullyEditScheduleOfTask: task)
@@ -204,9 +207,9 @@ class TaskMenuViewController: UIViewController {
   
   // Edit-button
   func edit(sender: UIButton) {
-    editState = true
+    menuMode = .Edit
     saveInitialSettings()
-    configureForEditState(withAnimationDuration: animationDuration)
+    configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
   // save initial setting of task
@@ -221,7 +224,7 @@ class TaskMenuViewController: UIViewController {
   
   // Cancel-button
   func cancel(sender: UIButton) {
-    editState = false // stop editing task
+    menuMode = .Show // stop editing task
     deactivateAllActiveTextFields() // close all text fields
     
     if taskDidChange() {
@@ -232,7 +235,7 @@ class TaskMenuViewController: UIViewController {
       closePickerCellsForShowState() // close all open picker cells
     }
     
-    configureForEditState(withAnimationDuration: animationDuration)
+    configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
   // check whether some settings of task did change
@@ -254,29 +257,29 @@ class TaskMenuViewController: UIViewController {
   
   // Done-button
   func done(sender: UIButton) {
-    editState = false // stop editing task
+    menuMode = .Show
     closePickerCellsForShowState()
     deactivateAllActiveTextFields()
-    configureForEditState(withAnimationDuration: animationDuration)
-    
-    edited = taskDidChange()
+    configureForMenuMode(withAnimationDuration: animationDuration)
+    taskWasEdited = taskDidChange()
   }
+  
   //////////////////////// //////////////////////// //////////////////////// ///////////////////////
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == editShowMinutesDoseSegueId {
-      if let destinationVC = segue.destinationViewController as? EditShowMinutesDoseTaskViewController {
-        if let cell = sender as? StgTitleValueCell {
-          destinationVC.task = task
-          destinationVC.delegate = self
-          
-          let tblType = tbCnfg.getESMinutesDoseTaskTblCnfgType(ofTag: cell.tag)
-          destinationVC.minutesDoseTblType = tblType
-          destinationVC.editState = editState
-        }
-      }
-      
-    }
-  }
+//  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//    if segue.identifier == editShowMinutesDoseSegueId {
+//      if let destinationVC = segue.destinationViewController as? EditShowMinutesDoseTaskViewController {
+//        if let cell = sender as? StgTitleValueCell {
+//          destinationVC.task = task
+//          destinationVC.delegate = self
+//          
+//          let tblType = menu.getESMinutesDoseTaskTblCnfgType(ofTag: cell.tag)
+//          destinationVC.minutesDoseTblType = tblType
+//          //destinationVC.editState = editState
+//        }
+//      }
+//      
+//    }
+//  }
   
 }
 
@@ -284,16 +287,16 @@ class TaskMenuViewController: UIViewController {
 extension TaskMenuViewController: UITableViewDataSource {
   
   // user's possibility to select segmented control in a cell
-  func configureUserInteractionForEditState() {
+  func configureUserInteractionForMenuMode() {
     
-    for s in 0..<tbCnfg.cellsTagTypeState.count {
-      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
+    for s in 0..<menu.cellsTagTypeState.count {
+      for r in 0..<menu.cellsTagTypeState[s].count {
         
-        let cellTagTypeState = tbCnfg.cellsTagTypeState[s][r]
+        let cellTagTypeState = menu.cellsTagTypeState[s][r]
         if cellTagTypeState.type == .TitleSegmentCell && cellTagTypeState.state != .Hidden {
           
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSegmentCell {
-            cell.hideShowSgCtrl.userInteractionEnabled = editState
+            cell.hideShowSgCtrl.userInteractionEnabled = menuMode == .Add || menuMode == .Edit
           }
         }
       }
@@ -301,46 +304,39 @@ extension TaskMenuViewController: UITableViewDataSource {
   }
   
   // selection style for all cells
-  func configureCellsSelectionStyle() {
-    for s in 0..<tbCnfg.cellsTagTypeState.count {
-      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
-        
-        let cell = tbCnfg.cellsTagTypeState[s][r]
-        
-        if cell.state != .Hidden {
-          
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) {
-            configureCellSelectionStyle(cell)
-          }
+  func configureCellsSelectionStyleForMenuMode() {
+    for s in 0..<menu.cellsTagTypeState.count {
+      for r in 0..<menu.cellsTagTypeState[s].count {
+        let indexPath = NSIndexPath(forRow: r, inSection: s)
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+          configureCellSelectionStyleForMenuMode(cell, atIndexPath: indexPath)
         }
       }
     }
   }
   
-  // selection style of a cell depending on editState
-  func configureCellSelectionStyle(cell: UITableViewCell) {
-    if editState {
-      if let cell = cell as? StgComplexPickerCell {
-        cell.selectionStyle = .None
-      } else {
-        cell.selectionStyle = VisualConfiguration.graySelection
-      }
+  // selection style of a cell depending on menuMode
+  func configureCellSelectionStyleForMenuMode(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
+    if menuMode != .Show && cellType != .ComplexPickerCell
+    {
+      cell.selectionStyle = VisualConfiguration.graySelection
     } else {
       cell.selectionStyle = .None
     }
   }
 
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return tbCnfg.sectionTitles.count
+    return menu.sectionTitles.count
   }
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return tbCnfg.cellsTagTypeState[section].count
+    return menu.cellsTagTypeState[section].count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     
-    let cellType = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].type
+    let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
     var generalCell: UITableViewCell!
     
     switch cellType {
@@ -383,46 +379,52 @@ extension TaskMenuViewController: UITableViewDataSource {
       return UITableViewCell()
     }
     
-    configureCellSelectionStyle(generalCell)
+    configureCellSelectionStyleForMenuMode(generalCell, atIndexPath: indexPath)
     
     return generalCell
   }
   
  // MARK: Configuration of cells of different types
   func configureTextFieldCell(cell: MenuTextFieldCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    let tag = tbCnfg.tagForIndexPath(indexPath)
-    cell.textField.tag = tag
-    cell.textField.delegate = self
+    let tag = menu.tagForIndexPath(indexPath)
+    let textField = cell.textField
     
-    cell.textField.autocapitalizationType = .Words
-    cell.textField.keyboardAppearance = .Dark
-    cell.textField.keyboardType = .Default
-    cell.textField.returnKeyType = .Done
-    cell.textField.placeholder = tbCnfg.textFieldPlaceholders[tag]
-    cell.textField.text = tbCnfg.titleValueValues[cell.textField.tag]
+    textField.tag = tag
+    textField.delegate = self
     
-    cell.textField.userInteractionEnabled = false
-    cell.textField.resignFirstResponder()
+    
+    textField.autocapitalizationType = .Words
+    textField.keyboardAppearance = .Dark
+    textField.keyboardType = .Default
+    textField.returnKeyType = .Done
+    textField.placeholder = menu.textFieldPlaceholders[tag]
+    textField.text = menu.titleValueValues[cell.textField.tag]
+    
+    textField.textColorResponder = VisualConfiguration.blackColor
+    textField.textColorNonResponder = VisualConfiguration.lightGrayColor
+    
+    let cellState = menu.cellsTagTypeState[indexPath.section][indexPath.row].state
+    cellState == TaskMenuCellState.Visible ? textField.resignFirstResponder() : textField.becomeFirstResponder()
   }
   
   func configureTitleValueCell(cell: StgTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
-    cell.tag = tbCnfg.tagForIndexPath(indexPath)
+    cell.tag = menu.tagForIndexPath(indexPath)
     
-    cell.titleLabel.text = tbCnfg.titleValueTitles[cell.tag]
+    cell.titleLabel.text = menu.titleValueTitles[cell.tag]
     
-    let state = tbCnfg.cellsTagTypeState[section][row].state
+    let state = menu.cellsTagTypeState[section][row].state
     if state == .Accessory {
       cell.accessoryType = .DisclosureIndicator
       cell.valueLabel.text = ""
     } else {
       cell.accessoryType = .None
-      cell.valueLabel.text = tbCnfg.titleValueValues[cell.tag]
+      cell.valueLabel.text = menu.titleValueValues[cell.tag]
     }
     
     // text color of valueLabel depends on state of underlying cell, which is used to set text of valueLabel of this cell
-    if tbCnfg.cellsTagTypeState[section][row + 1].state == CellState.Hidden {
+    if menu.cellsTagTypeState[section][row + 1].state == TaskMenuCellState.Hidden {
       cell.valueLabel.textColor = VisualConfiguration.textGrayColor
     } else {
       cell.valueLabel.textColor = VisualConfiguration.textOrangeColor
@@ -432,16 +434,16 @@ extension TaskMenuViewController: UITableViewDataSource {
   
   func configureTitleSegmentCell(cell: StgTitleSegmentCell, forRowAtIndexPath indexPath: NSIndexPath) {
     // cell with segmented control with two options: 1 - no value, 2 - some values
-    let tag = tbCnfg.tagForIndexPath(indexPath)
+    let tag = menu.tagForIndexPath(indexPath)
     
     cell.hideShowSgCtrl.tag = tag
     cell.delegate = self
-    cell.hideShowSgCtrl.userInteractionEnabled = editState
+    cell.hideShowSgCtrl.userInteractionEnabled = menuMode == .Add || menuMode == .Edit
 
-    cell.titleLabel.text = tbCnfg.titleValueTitles[tag]
+    cell.titleLabel.text = menu.titleValueTitles[tag]
     
-    var frequencySegmentTitles = tbCnfg.frequencySegmentTitles()
-    let segmentTitle = tbCnfg.frequencySegmentTitle()
+    var frequencySegmentTitles = menu.frequencySegmentTitles()
+    let segmentTitle = menu.frequencySegmentTitle()
     if segmentTitle.isVoid {
       // no value option
       cell.configure(withValues: frequencySegmentTitles, andSelectedSegment: 0)
@@ -458,36 +460,36 @@ extension TaskMenuViewController: UITableViewDataSource {
     let row = indexPath.row
     
     // need to configure it only if it's visible
-    if tbCnfg.cellsTagTypeState[section][row].state != .Hidden {
+    if menu.cellsTagTypeState[section][row].state != .Hidden {
       
-      let tag = tbCnfg.tagForIndexPath(indexPath)
+      let tag = menu.tagForIndexPath(indexPath)
       cell.dataPickerView.tag = tag
       
-      if let options = tbCnfg.pickerOptions[tag] { // all possible values for picker
+      if let options = menu.pickerOptions[tag] { // all possible values for picker
         cell.dataPickerView.font = VisualConfiguration.pickerFont
         cell.dataPickerView.textColor = VisualConfiguration.textBlackColor
         
-        let initialValues = tbCnfg.initialDataPickerValues(withTag: tag) // initial values to select on picker
+        let initialValues = menu.initialDataPickerValues(withTag: tag) // initial values to select on picker
         cell.dataPickerView.configure(withOptions: options, andInitialValues: initialValues, andDelegate: self)
       }
     }
   }
   
-  func configureDatePickerCell(cell: StgDatePickerCell, ofType cellType: SettingCellType, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureDatePickerCell(cell: StgDatePickerCell, ofType cellType: TaskMenuCellType, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
     
-    if tbCnfg.cellsTagTypeState[section][row].state != .Hidden {
-      let tag = tbCnfg.tagForIndexPath(indexPath)
+    if menu.cellsTagTypeState[section][row].state != .Hidden {
+      let tag = menu.tagForIndexPath(indexPath)
       cell.datePicker.tag = tag
       
       switch cellType {
       case .TimePickerCell:
-        let minutes = tbCnfg.initialDateTimePickerTime(withTag: tag)
+        let minutes = menu.initialDateTimePickerTime(withTag: tag)
         cell.datePicker.configure(withDelegate: self, selectedMinutes: minutes)
         
       case .DateTimePickerCell:
-        let dates = tbCnfg.initialDateTimePickerDate(withTag: tag) // initial and minimum possible dates
+        let dates = menu.initialDateTimePickerDate(withTag: tag) // initial and minimum possible dates
         cell.datePicker.configure(withDelegate: self, selectedDate: dates.initialDate, andMinimumDate: dates.minimumDate)
       default:
         break
@@ -501,28 +503,28 @@ extension TaskMenuViewController: UITableViewDataSource {
     let section = indexPath.section
     let row = indexPath.row
     
-    if tbCnfg.cellsTagTypeState[section][row].state != .Hidden {
+    if menu.cellsTagTypeState[section][row].state != .Hidden {
       
       var tags = [Int]() // tags for cell and three pickers
-      tags.append(tbCnfg.tagForIndexPath(indexPath)) // cell's tag
+      tags.append(menu.tagForIndexPath(indexPath)) // cell's tag
       // tags for pickers
-      tags.append(tbCnfg.tagForEndType(Task.EndType.EndDays))
-      tags.append(tbCnfg.tagForEndType(Task.EndType.EndTimes))
-      tags.append(tbCnfg.tagForEndType(Task.EndType.EndDate))
+      tags.append(menu.tagForEndType(Task.EndType.EndDays))
+      tags.append(menu.tagForEndType(Task.EndType.EndTimes))
+      tags.append(menu.tagForEndType(Task.EndType.EndDate))
       
       cell.configure(withTags: tags, andDelegate: self)
       
-      let endSegmentTitles = tbCnfg.endSegmentTitles()
+      let endSegmentTitles = menu.endSegmentTitles()
       cell.configure(withSegmentValues: endSegmentTitles, andSelectedSegment: task.endType.rawValue)
       
-      let pickerTag = tbCnfg.tagForEndType(task.endType)
+      let pickerTag = menu.tagForEndType(task.endType)
       
       if task.endType == .EndDate { // configure date-picker
-        let dates = tbCnfg.initialDateTimePickerDate(withTag: pickerTag)
+        let dates = menu.initialDateTimePickerDate(withTag: pickerTag)
         cell.configure(withDelegate: self, selectedDate: dates.initialDate, andMinimumDate: dates.minimumDate)
       } else { // configure data-picker
-        let endOptions = tbCnfg.endOptions()
-        let initialValues = tbCnfg.initialDataPickerValues(withTag: pickerTag)
+        let endOptions = menu.endOptions()
+        let initialValues = menu.initialDataPickerValues(withTag: pickerTag)
         cell.configure(withTitles: [endOptions], andWithInitialValues: initialValues, andDelegate: self)
       }
 
@@ -535,14 +537,13 @@ extension TaskMenuViewController: UITableViewDataSource {
 extension TaskMenuViewController: UITableViewDelegate {
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if tbCnfg.sectionTitles[section].isVoid { // don't need header for section without title
+    if menu.sectionTitles[section].isVoid { // don't need header for section without title
       return nil
     } else {
-      if let headerCell = tableView.dequeueReusableCellWithIdentifier(headerCellId) as? HeaderCell {
-        headerCell.titleLabel.text = tbCnfg.sectionTitles[section].lowercaseString
-        let view = UIView(frame: headerCell.frame) // wrap cell into view
-        view.addSubview(headerCell)
-        return view
+      if let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(headerId) as? TableSectionHeaderView {
+        header.titleLabel.text = menu.sectionTitles[section].lowercaseString
+        header.view.backgroundColor = VisualConfiguration.lightOrangeColor
+        return header
       } else {
         return nil
       }
@@ -550,7 +551,7 @@ extension TaskMenuViewController: UITableViewDelegate {
   }
 
   func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    if tbCnfg.sectionTitles[section].isVoid { // height of header for section without title is ~ 0
+    if menu.sectionTitles[section].isVoid { // height of header for section without title is ~ 0
       return CGFloat.min
     } else {
       return headerHeight
@@ -560,12 +561,12 @@ extension TaskMenuViewController: UITableViewDelegate {
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     var height: CGFloat = CGFloat.min
     
-    if tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state == CellState.Hidden {
+    if menu.cellsTagTypeState[indexPath.section][indexPath.row].state == TaskMenuCellState.Hidden {
       // if cell is hidden, it's height = ~ 0
       return height
     } else {
       // in other cases cell's height depends on its type
-      let cellType = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].type
+      let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
       switch cellType {
       case .TextFieldCell, .TitleValueCell, .TitleSegmentCell:
         height = regularCellHeight
@@ -581,21 +582,10 @@ extension TaskMenuViewController: UITableViewDelegate {
   }
   
   func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-    if editState { // in edit state user can select some types of cells
-      let cellType = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].type
-      if cellType == .TextFieldCell || cellType == .TitleValueCell || cellType == .TitleSegmentCell {
-        return indexPath
-      } else {
-        return nil
-      }
-      
-    } else { // in show state user can select only accessory cells
-      let cellState = tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state
-      if cellState == .Accessory {
-        return indexPath
-      } else {
-        return nil
-      }
+    if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+      return cell.selectionStyle == VisualConfiguration.graySelection ? indexPath : nil
+    } else {
+      return nil
     }
   }
   
@@ -605,13 +595,13 @@ extension TaskMenuViewController: UITableViewDelegate {
     
     let section = indexPath.section
     let row = indexPath.row
-    let cellType = tbCnfg.cellsTagTypeState[section][row].type
-    let cellState = tbCnfg.cellsTagTypeState[section][row].state
+    let cellType = menu.cellsTagTypeState[section][row].type
+    let cellState = menu.cellsTagTypeState[section][row].state
     
     if cellState == .Accessory {
       if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
         // prepare to edit minutes or doses of task
-        performSegueWithIdentifier(editShowMinutesDoseSegueId, sender: cell)
+        //performSegueWithIdentifier(editShowMinutesDoseSegueId, sender: cell)
       }
     }
     
@@ -632,18 +622,18 @@ extension TaskMenuViewController: UITableViewDelegate {
     case .TitleSegmentCell, .TitleValueCell:
       
       let pickerCellRow = row + 1 // picker lies under tapped cell
-      let pickerCellState = tbCnfg.cellsTagTypeState[section][pickerCellRow].state
+      let pickerCellState = menu.cellsTagTypeState[section][pickerCellRow].state
       let pickerCellIndPth = NSIndexPath(forRow: pickerCellRow, inSection: section)
       
       if cellType == .TitleSegmentCell {
         
-        if tbCnfg.frequencySegmentFirstOption() { // segmented control with first option selected
+        if menu.frequencySegmentFirstOption() { // segmented control with first option selected
           rowsToReload = closeAllOpenPickerCells()
         } else { // segmented control with second option selected
           if pickerCellState == .Hidden { // underlying picker was hidden and about to be revealed
             rowsToReload = closeAllOpenPickerCells()
           }
-          tbCnfg.toggleCellTagTypeState(atIndexPath: pickerCellIndPth)
+          menu.toggleCellTagTypeState(atIndexPath: pickerCellIndPth)
           rowsToReload.append(pickerCellIndPth)
         }
         
@@ -664,7 +654,7 @@ extension TaskMenuViewController: UITableViewDelegate {
             }
           }
           
-          tbCnfg.toggleCellTagTypeState(atIndexPath: pickerCellIndPth) // change state of picker cell from hidden to open or vice versa
+          menu.toggleCellTagTypeState(atIndexPath: pickerCellIndPth) // change state of picker cell from hidden to open or vice versa
           rowsToReload.append(pickerCellIndPth) // reload cells, which state or appearance was modified
           indexPathToScroll = pickerCellIndPth // cell to be focused on
         }
@@ -687,15 +677,15 @@ extension TaskMenuViewController: UITableViewDelegate {
   func closeAllOpenPickerCells() -> [NSIndexPath] {
     var rowsToReload: [NSIndexPath] = []
     
-    for s in 0..<tbCnfg.cellsTagTypeState.count {
-      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
+    for s in 0..<menu.cellsTagTypeState.count {
+      for r in 0..<menu.cellsTagTypeState[s].count {
         
-        let cell = tbCnfg.cellsTagTypeState[s][r]
+        let cell = menu.cellsTagTypeState[s][r]
         
         if (cell.type == .DataPickerCell || cell.type == .TimePickerCell || cell.type == .DateTimePickerCell || cell.type == .ComplexPickerCell) && cell.state != .Hidden {
           // if cell contains picker and is not hidden
           
-          tbCnfg.cellsTagTypeState[s][r].state = .Hidden // change state to hidden
+          menu.cellsTagTypeState[s][r].state = .Hidden // change state to hidden
           rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
           
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? StgTitleValueCell {
@@ -720,8 +710,8 @@ extension TaskMenuViewController: UITableViewDelegate {
   func updateCells(withTags tags: [Int]) {
     var indexPaths: [NSIndexPath] = []
     for tag in tags {
-      tbCnfg.updateTitleValueValues(ofTag: tag)
-      if let indexPath = tbCnfg.indexPathForTag(tag) {
+      menu.updateTitleValueValues(ofTag: tag)
+      if let indexPath = menu.indexPathForTag(tag) {
         indexPaths.append(indexPath)
       }
     }
@@ -738,23 +728,19 @@ extension TaskMenuViewController: UITextFieldDelegate {
   
   // start text inputing
   func activateVisibleTextField(textField: UITextField) {
-    if let indexPath = tbCnfg.indexPathForTag(textField.tag) {
-      tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state = .Active
+    if let indexPath = menu.indexPathForTag(textField.tag) {
+      menu.cellsTagTypeState[indexPath.section][indexPath.row].state = .Active
     }
     
-    textField.textColor = VisualConfiguration.textBlackColor
-    textField.userInteractionEnabled = true
     textField.becomeFirstResponder()
   }
   
+  
   func textFieldShouldReturn(textField: UITextField) -> Bool {
-    if let indexPath = tbCnfg.indexPathForTag(textField.tag) {
-      tbCnfg.cellsTagTypeState[indexPath.section][indexPath.row].state = .Visible
+    if let indexPath = menu.indexPathForTag(textField.tag) {
+      menu.cellsTagTypeState[indexPath.section][indexPath.row].state = .Visible
     }
-    
-    textField.textColor = VisualConfiguration.textGrayColor
     textField.resignFirstResponder()
-    textField.userInteractionEnabled = false
     return true
   }
   
@@ -763,8 +749,8 @@ extension TaskMenuViewController: UITextFieldDelegate {
     if let oldText = textField.text {
       let newText = (oldText as NSString).stringByReplacingCharactersInRange(range, withString: string) as NSString
       // some text was typed - need to save new text in task
-      tbCnfg.updateTask(byTextFieldWithTag: textField.tag, byString: newText as String)
-      tbCnfg.updateTitleValueValues(ofTag: textField.tag)
+      menu.updateTask(byTextFieldWithTag: textField.tag, byString: newText as String)
+      menu.updateTitleValueValues(ofTag: textField.tag)
     }
     
     return true
@@ -772,18 +758,17 @@ extension TaskMenuViewController: UITextFieldDelegate {
   
   // deactivate all text fields
   func deactivateAllActiveTextFields() {
-    for s in 0..<tbCnfg.cellsTagTypeState.count {
-      for r in 0..<tbCnfg.cellsTagTypeState[s].count {
+    for s in 0..<menu.cellsTagTypeState.count {
+      for r in 0..<menu.cellsTagTypeState[s].count {
         
-        let cellTTS = tbCnfg.cellsTagTypeState[s][r]
+        let cellTTS = menu.cellsTagTypeState[s][r]
         
         if cellTTS.type == .TextFieldCell && cellTTS.state == .Active {
-          tbCnfg.cellsTagTypeState[s][r].state = .Visible
-          
           let indexPath = NSIndexPath(forRow: r, inSection: s)
           if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTextFieldCell {
             textFieldShouldReturn(cell.textField)
           } else {
+            menu.cellsTagTypeState[s][r].state = .Visible
             UIApplication.sharedApplication().sendAction("resignFirstResponder", to: nil, from: nil, forEvent: nil)
           }
         }
@@ -798,15 +783,15 @@ extension TaskMenuViewController: DataPickerViewDelegate {
   
   func dataPicker(picker: DataPickerView, didPickValues values: [String]) {
     // picker picked some values - need to update cell, which is assigned to show it
-    let tagsToUpdate = tbCnfg.updateTask(byPickerViewWithTag: picker.tag, byStrings: values)
+    let tagsToUpdate = menu.updateTask(byPickerViewWithTag: picker.tag, byStrings: values)
     updateCells(withTags: tagsToUpdate)
   }
   
   func dataStillNeeded(fromPicker picker: DataPickerView) -> Bool {
     // when picker chooses some values, after having been hidden - no data is needed from it
-    if let cellIndexPath = tbCnfg.indexPathForTag(picker.tag) {
+    if let cellIndexPath = menu.indexPathForTag(picker.tag) {
       
-      if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
+      if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
         if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? StgComplexPickerCell {
           
           let pickerIsHidden = cell.hidden(forTag: picker.tag)
@@ -817,7 +802,7 @@ extension TaskMenuViewController: DataPickerViewDelegate {
           
           return !cell.hidden(forTag: picker.tag)
         }
-      } else if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
+      } else if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
         return true
       }
     }
@@ -829,24 +814,24 @@ extension TaskMenuViewController: DataPickerViewDelegate {
  // MARK: DatePickerDelegate
 extension TaskMenuViewController: DatePickerDelegate {
   func datePicker(picker: UIDatePicker, didPickDate date: NSDate) {
-    let tagsToUpdate = tbCnfg.updateTask(byPickerViewWithTag: picker.tag, byDateTimeValue: date)
+    let tagsToUpdate = menu.updateTask(byPickerViewWithTag: picker.tag, byDateTimeValue: date)
     updateCells(withTags: tagsToUpdate)
   }
   
   func datePicker(picker: UIDatePicker, didPickMinutes minutes: Int) {
-    let tagsToUpdate = tbCnfg.updateTask(byPickerViewWithTag: picker.tag, byMinutes: minutes)
+    let tagsToUpdate = menu.updateTask(byPickerViewWithTag: picker.tag, byMinutes: minutes)
     updateCells(withTags: tagsToUpdate)
   }
   
   func dateStillNeeded(fromPicker picker: UIDatePicker) -> Bool {
     
-    if let cellIndexPath = tbCnfg.indexPathForTag(picker.tag) {
+    if let cellIndexPath = menu.indexPathForTag(picker.tag) {
       
-      if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
+      if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
         if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? StgComplexPickerCell {
           return !cell.hidden(forTag: picker.tag)
         }
-      } else if tbCnfg.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
+      } else if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
         return true
       }
     }
@@ -860,10 +845,10 @@ extension TaskMenuViewController: DatePickerDelegate {
 extension TaskMenuViewController: DoubleOptionSegmControlDelegate {
   func segmControl(sgCtrl: UISegmentedControl, didSelectSegment segment: Int) {
     // first or second option was chosen
-    let tagsToUpdate = tbCnfg.updateTask(bySegmentedControlWithTag: sgCtrl.tag, andSegment: segment)
+    let tagsToUpdate = menu.updateTask(bySegmentedControlWithTag: sgCtrl.tag, andSegment: segment)
     
     updateCells(withTags: tagsToUpdate)
-    if let indexPath = tbCnfg.indexPathForTag(sgCtrl.tag) {
+    if let indexPath = menu.indexPathForTag(sgCtrl.tag) {
       tableView(tableView, didSelectRowAtIndexPath: indexPath)
     }
   }
@@ -875,8 +860,8 @@ extension TaskMenuViewController: StgComplexPickerCellDelegate {
   func getPickerOptionsAndInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> (options: [[String]], initialValues: [String], delegate: DataPickerViewDelegate) {
     // get options and initial values for a picker, corresponding for specific end type (end-days or end-times)
     let et = Task.EndType(rawValue: index)
-    let endOptions = tbCnfg.endOptions(byNewEndType: et)
-    let initialValues = tbCnfg.initialDataPickerValues(withTag: tag, andNewEndType: et)
+    let endOptions = menu.endOptions(byNewEndType: et)
+    let initialValues = menu.initialDataPickerValues(withTag: tag, andNewEndType: et)
    
     return ([endOptions], initialValues, self)
   }
@@ -884,42 +869,42 @@ extension TaskMenuViewController: StgComplexPickerCellDelegate {
   func getPickerInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> [String] {
     // get initial values for a picker, corresponding for specific end type (end-days or end-times)
     let et = Task.EndType(rawValue: index)
-    let initialValues = tbCnfg.initialDataPickerValues(withTag: tag, andNewEndType: et)
+    let initialValues = menu.initialDataPickerValues(withTag: tag, andNewEndType: et)
     return initialValues
   }
   
   func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> (iDate: NSDate, mDate: NSDate, delegate: DatePickerDelegate) {
     // get initial and minimum dates for picker for end-date
-    let dates = tbCnfg.initialDateTimePickerDate(withTag: tag)
+    let dates = menu.initialDateTimePickerDate(withTag: tag)
     return (dates.initialDate, dates.minimumDate, self)
   }
   
   func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> NSDate {
     // get initial date for picker for end-date
-    let dates = tbCnfg.initialDateTimePickerDate(withTag: tag)
+    let dates = menu.initialDateTimePickerDate(withTag: tag)
     return dates.initialDate
   }
 }
 
 
-extension TaskMenuViewController: EditShowMinutesDoseTaskVCDelegate {
-  func editShowMinutesDoseTaskVC(viewController: EditShowMinutesDoseTaskViewController, didEditMinutesDoseOfTask task: Task, withTblType tblType: ESMinutesDoseTaskTblCnfgType) {
-    
-    if tblType == .Minutes {
-      tbCnfg.savePreviousMinutes()
-      tbCnfg.scheduleWasChanged = true
-    } else if tblType == .Dose {
-      tbCnfg.savePreviousDose()
-    }
-    
-    if editState {
-      saveInitialSettings()
-    }
-    
-    if !edited {
-      edited = true
-    }
-    
-  }
-}
+//extension TaskMenuViewController: EditShowMinutesDoseTaskVCDelegate {
+//  func editShowMinutesDoseTaskVC(viewController: EditShowMinutesDoseTaskViewController, didEditMinutesDoseOfTask task: Task, withTblType tblType: ESMinutesDoseTaskTblCnfgType) {
+//    
+//    if tblType == .Minutes {
+//      menu.savePreviousMinutes()
+//      menu.scheduleWasChanged = true
+//    } else if tblType == .Dose {
+//      menu.savePreviousDose()
+//    }
+//    
+//    if menuMode == .Add || menuMode == .Edit {
+//      saveInitialSettings()
+//    }
+//    
+//    if !taskWasEdited {
+//      taskWasEdited = true
+//    }
+//    
+//  }
+//}
 

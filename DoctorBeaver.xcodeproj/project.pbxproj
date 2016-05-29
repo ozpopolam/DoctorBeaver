@@ -27,6 +27,8 @@
 		621916801CEF96DA00F073C7 /* PetImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6219167F1CEF96DA00F073C7 /* PetImageCell.swift */; };
 		6219B4741CA06605006E4E14 /* JsonParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6219B4731CA06605006E4E14 /* JsonParser.swift */; };
 		6232B06C1C870B38007D7D23 /* StgComplexPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6232B06B1C870B38007D7D23 /* StgComplexPickerCell.swift */; };
+		62386EC71CFB28C8001C0BA0 /* TableSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62386EC61CFB28C8001C0BA0 /* TableSectionHeaderView.swift */; };
+		62386ECB1CFB299F001C0BA0 /* TableSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62386ECA1CFB299F001C0BA0 /* TableSectionHeaderView.xib */; };
 		623B4FF11C7508B80016EC92 /* BasicPetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF01C7508B80016EC92 /* BasicPetCell.swift */; };
 		623B4FF31C7648A50016EC92 /* TaskMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */; };
 		623B4FF71C76619C0016EC92 /* StgTitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */; };
@@ -50,7 +52,7 @@
 		628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */; };
 		628E3CE31C999BF6000C122A /* Realization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E3CE21C999BF6000C122A /* Realization.swift */; };
 		62941C451CAEBBDA001D3182 /* TaskConfigurationByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */; };
-		62A785C51C7F77E9009BE27E /* EditShowTaskTableConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A785C41C7F77E9009BE27E /* EditShowTaskTableConfiguration.swift */; };
+		62A785C51C7F77E9009BE27E /* TaskMenuConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */; };
 		62A83B331C6CE13000A8DE8D /* VisualConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B321C6CE13000A8DE8D /* VisualConfiguration.swift */; };
 		62A83B351C6D052A00A8DE8D /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B341C6D052A00A8DE8D /* FilterViewController.swift */; };
 		62A83B8F1C6D287E00A8DE8D /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B8E1C6D287E00A8DE8D /* UIImage.swift */; };
@@ -74,7 +76,6 @@
 		62C64DA91CE28C39006B4CEF /* PetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64DA81CE28C39006B4CEF /* PetsRepository.swift */; };
 		62C64DAB1CE292E3006B4CEF /* RuBasicValues.json in Resources */ = {isa = PBXBuildFile; fileRef = 62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */; };
 		62DCB0C71C77952C00ABF206 /* MenuTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0C61C77952C00ABF206 /* MenuTextFieldCell.swift */; };
-		62DCB0CC1C78DC1100ABF206 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0CB1C78DC1000ABF206 /* TaskType.swift */; };
 		62F0FEB71CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */; };
 		62F0FEBA1CB557CF00C13132 /* EditShowMinutesDoseTaskTableConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB91CB557CF00C13132 /* EditShowMinutesDoseTaskTableConfiguration.swift */; };
 		62F0FEBC1CB9A3C500C13132 /* MenuTitleSwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEBB1CB9A3C500C13132 /* MenuTitleSwitchCell.swift */; };
@@ -124,6 +125,8 @@
 		6219167F1CEF96DA00F073C7 /* PetImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetImageCell.swift; sourceTree = "<group>"; };
 		6219B4731CA06605006E4E14 /* JsonParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonParser.swift; sourceTree = "<group>"; };
 		6232B06B1C870B38007D7D23 /* StgComplexPickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgComplexPickerCell.swift; sourceTree = "<group>"; };
+		62386EC61CFB28C8001C0BA0 /* TableSectionHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableSectionHeaderView.swift; sourceTree = "<group>"; };
+		62386ECA1CFB299F001C0BA0 /* TableSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableSectionHeaderView.xib; sourceTree = "<group>"; };
 		623B4FF01C7508B80016EC92 /* BasicPetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicPetCell.swift; sourceTree = "<group>"; };
 		623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TaskMenuViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		623B4FF61C76619C0016EC92 /* StgTitleValueCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StgTitleValueCell.swift; sourceTree = "<group>"; };
@@ -147,7 +150,7 @@
 		628E3CC81C975947000C122A /* DoctorBeaver.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DoctorBeaver.xcdatamodel; sourceTree = "<group>"; };
 		628E3CE21C999BF6000C122A /* Realization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Realization.swift; sourceTree = "<group>"; };
 		62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskConfigurationByType.swift; sourceTree = "<group>"; };
-		62A785C41C7F77E9009BE27E /* EditShowTaskTableConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditShowTaskTableConfiguration.swift; sourceTree = "<group>"; };
+		62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskMenuConfiguration.swift; sourceTree = "<group>"; };
 		62A83B321C6CE13000A8DE8D /* VisualConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualConfiguration.swift; sourceTree = "<group>"; };
 		62A83B341C6D052A00A8DE8D /* FilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		62A83B8E1C6D287E00A8DE8D /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -171,7 +174,6 @@
 		62C64DA81CE28C39006B4CEF /* PetsRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsRepository.swift; sourceTree = "<group>"; };
 		62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuBasicValues.json; sourceTree = "<group>"; };
 		62DCB0C61C77952C00ABF206 /* MenuTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTextFieldCell.swift; sourceTree = "<group>"; };
-		62DCB0CB1C78DC1000ABF206 /* TaskType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
 		62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditShowMinutesDoseTaskViewController.swift; sourceTree = "<group>"; };
 		62F0FEB91CB557CF00C13132 /* EditShowMinutesDoseTaskTableConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditShowMinutesDoseTaskTableConfiguration.swift; sourceTree = "<group>"; };
 		62F0FEBB1CB9A3C500C13132 /* MenuTitleSwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTitleSwitchCell.swift; sourceTree = "<group>"; };
@@ -291,11 +293,9 @@
 			isa = PBXGroup;
 			children = (
 				628E3CC31C963A55000C122A /* RuPets.json */,
-				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
 				62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */,
-				62DCB0CB1C78DC1000ABF206 /* TaskType.swift */,
-				62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */,
 				6219B4731CA06605006E4E14 /* JsonParser.swift */,
+				62941C441CAEBBDA001D3182 /* TaskConfigurationByType.swift */,
 				62DCB0CA1C78DBB600ABF206 /* Data Model */,
 			);
 			name = Data;
@@ -322,7 +322,6 @@
 			isa = PBXGroup;
 			children = (
 				62C64D641CD7EF10006B4CEF /* PetsViewController.swift */,
-				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
 				6277BA9D1CEA2C23006E4607 /* PetMenuConfiguration.swift */,
 				6219167D1CEF40EF00F073C7 /* PetImageViewController.swift */,
 			);
@@ -341,6 +340,8 @@
 				621916751CEE3C6B00F073C7 /* RespondingTextField.swift */,
 				620072221CF0936E000F0C2C /* RoundedCornersImageView.swift */,
 				620072251CF0BFBC000F0C2C /* RoundedCornersView.swift */,
+				62386EC61CFB28C8001C0BA0 /* TableSectionHeaderView.swift */,
+				62386ECA1CFB299F001C0BA0 /* TableSectionHeaderView.xib */,
 			);
 			name = "Custom controls";
 			sourceTree = "<group>";
@@ -385,6 +386,7 @@
 		62DCB0CA1C78DBB600ABF206 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
 				628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */,
 				62C64D571CD2D1E2006B4CEF /* Pet+CoreDataProperties.swift */,
 				62C64D561CD2D1E2006B4CEF /* Pet.swift */,
@@ -405,8 +407,9 @@
 		62F0FEB51CB2EA8700C13132 /* Task */ = {
 			isa = PBXGroup;
 			children = (
+				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
 				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
-				62A785C41C7F77E9009BE27E /* EditShowTaskTableConfiguration.swift */,
+				62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */,
 				62F0FEB81CB556EB00C13132 /* MinutesDose */,
 			);
 			name = Task;
@@ -529,6 +532,7 @@
 				62C587BE1C6EA88900FA3968 /* Main.storyboard in Resources */,
 				6203728C1C68137000352617 /* ImageAssets.xcassets in Resources */,
 				627F2C9E1C8842DF00B9ADFF /* DataPickerView.xib in Resources */,
+				62386ECB1CFB299F001C0BA0 /* TableSectionHeaderView.xib in Resources */,
 				62C64DAB1CE292E3006B4CEF /* RuBasicValues.json in Resources */,
 				628E3CC41C963A55000C122A /* RuPets.json in Resources */,
 				6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */,
@@ -572,6 +576,7 @@
 				621916761CEE3C6B00F073C7 /* RespondingTextField.swift in Sources */,
 				628425171C84B1450016E32F /* StgTitleSegmentCell.swift in Sources */,
 				623BCD691CAC701C00784705 /* DateHelper.swift in Sources */,
+				62386EC71CFB28C8001C0BA0 /* TableSectionHeaderView.swift in Sources */,
 				62C64DA11CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift in Sources */,
 				62F0FEBA1CB557CF00C13132 /* EditShowMinutesDoseTaskTableConfiguration.swift in Sources */,
 				62C64D651CD7EF10006B4CEF /* PetsViewController.swift in Sources */,
@@ -581,7 +586,6 @@
 				621916801CEF96DA00F073C7 /* PetImageCell.swift in Sources */,
 				62DCB0C71C77952C00ABF206 /* MenuTextFieldCell.swift in Sources */,
 				628E3CE31C999BF6000C122A /* Realization.swift in Sources */,
-				62DCB0CC1C78DC1100ABF206 /* TaskType.swift in Sources */,
 				6277BA991CE9308B006E4607 /* PetBasicValues+CoreDataProperties.swift in Sources */,
 				6219167B1CEF3DDF00F073C7 /* DecoratedNavigationBarView.swift in Sources */,
 				62C64D601CD2D1E2006B4CEF /* Task.swift in Sources */,
@@ -613,7 +617,7 @@
 				620072231CF0936E000F0C2C /* RoundedCornersImageView.swift in Sources */,
 				6277BA9E1CEA2C23006E4607 /* PetMenuConfiguration.swift in Sources */,
 				620372901C69023900352617 /* TabBarController.swift in Sources */,
-				62A785C51C7F77E9009BE27E /* EditShowTaskTableConfiguration.swift in Sources */,
+				62A785C51C7F77E9009BE27E /* TaskMenuConfiguration.swift in Sources */,
 				620372891C66CE8A00352617 /* ScheduleViewController.swift in Sources */,
 				623B4FF71C76619C0016EC92 /* StgTitleValueCell.swift in Sources */,
 				620373191C6BE98E00352617 /* UIColor.swift in Sources */,

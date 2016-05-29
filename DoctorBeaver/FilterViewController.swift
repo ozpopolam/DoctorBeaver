@@ -75,7 +75,7 @@ class FilterViewController: UIViewController {
   
   func barButton(imageName: String) -> UIButton {
     let bb = UIButton(type: .Custom)
-    bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.buttonIconSize)
+    bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.barButtonSize)
     bb.setImage(withName: imageName, ofSize: VisualConfiguration.barIconSize, withTintColor: UIColor.fogColor())
     return bb
   }

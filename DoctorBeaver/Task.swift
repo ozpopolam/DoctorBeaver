@@ -143,7 +143,12 @@ class Task: NSManagedObject {
     let numberDoses = stringDoses.map{ Double($0) }.flatMap{ $0 }
     
     if numberDoses.count == stringDoses.count {
-      return String(numberDoses.reduce(0, combine: { $0 + $1 }))
+      let sumDoses = numberDoses.reduce(0, combine: { $0 + $1 })
+      if sumDoses % 1 == 0 { // no need to show decimal part, which is zero
+        return String(Int(sumDoses))
+      } else {
+        return String(sumDoses)
+      }
     } else {
       return stringDoses.reduce("", combine: { $0 == "" ? $1 : $0 + whitespace + $1 })
     }

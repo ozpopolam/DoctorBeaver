@@ -15,8 +15,8 @@ protocol CalendarPopoverControllerDelegate: class {
 
 class CalendarPopoverController: UIViewController {
   
-  //@IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var datePicker: UIDatePicker!
+  @IBOutlet weak var todayButton: UIButton!
   @IBOutlet weak var cancelButton: UIButton!
   
   @IBOutlet weak var doneButton: UIButton!
@@ -26,7 +26,6 @@ class CalendarPopoverController: UIViewController {
   
   var activeWidth: CGFloat?
   var activeHeight: CGFloat?
-  let buttonIconSize = CGSize(width: 33, height: 33)
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -34,8 +33,9 @@ class CalendarPopoverController: UIViewController {
     view.backgroundColor = UIColor.whiteColor()
     calculateActiveWidthAndHeight()
     
-    cancelButton.setImage(withName: "cancelOrange", ofSize: buttonIconSize, withTintColor: UIColor.fogColor())
-    doneButton.setImage(withName: "doneOrange", ofSize: buttonIconSize, withTintColor: UIColor.fogColor())
+    cancelButton.setImage(withName: "cancelOrange", ofSize: VisualConfiguration.buttonIconSize, withTintColor: UIColor.fogColor())
+    todayButton.setImage(withName: "today", ofSize: VisualConfiguration.buttonIconSize, withTintColor: UIColor.fogColor())
+    doneButton.setImage(withName: "doneOrange", ofSize: VisualConfiguration.buttonIconSize, withTintColor: UIColor.fogColor())
     
     datePicker.calendar = DateHelper.calendar
     datePicker.datePickerMode = .Date

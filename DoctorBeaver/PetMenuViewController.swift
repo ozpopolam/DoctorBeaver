@@ -13,7 +13,7 @@ protocol PetMenuViewControllerDelegate: class {
   func petMenuViewController(viewController: PetMenuViewController, didEditPet pet: Pet)
 }
 
-enum PetMenuMode {
+enum MenuMode {
   case Add
   case Edit
   case Show
@@ -35,11 +35,10 @@ class PetMenuViewController: UIViewController {
   var tasksSorted: [Task]!
   
   var menu = PetMenuConfiguration()
-  
-  var menuMode: PetMenuMode = .Add
+  var menuMode: MenuMode = .Add
   
   // types of cells in table
-  let headerCellId = "headerCell"
+  let headerId = "headerView"
   let titleCellId = "menuTitleCell"
   let textFieldCellId = "menuTextFieldCell"
   let titleImageCellId = "menuTitleImageCell"
@@ -61,9 +60,6 @@ class PetMenuViewController: UIViewController {
   
   let animationDuration: NSTimeInterval = 0.5 // to animate change of button's icon
   
-  var editState = false // adding or editing a task
-  var edited = false // task was edited
-  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
@@ -74,7 +70,7 @@ class PetMenuViewController: UIViewController {
     decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
     decoratedNavigationBar.titleLabel.text = "Питомец".uppercaseString
     
-    // button "Delete" (will be hiden or shown depending on editState)
+    // button "Delete" (will be hiden or shown depending on menuMode)
     decoratedNavigationBar.setButtonImage("trash", forButton: .CenterRight, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
     decoratedNavigationBar.centerRightButton.addTarget(self, action: "trash:", forControlEvents: .TouchUpInside)
     
@@ -83,6 +79,9 @@ class PetMenuViewController: UIViewController {
     
     addIcon = UIImage(named: "addAccessory")
     addIcon = addIcon?.ofSize(VisualConfiguration.accessoryIconSize)
+    
+    let tableSectionHeaderNib = UINib(nibName: "TableSectionHeaderView", bundle: nil)
+    tableView.registerNib(tableSectionHeaderNib, forHeaderFooterViewReuseIdentifier: headerId)
 
     //menuMode = .Edit
     configureForMenuMode()
@@ -92,8 +91,6 @@ class PetMenuViewController: UIViewController {
     menu.configure(withPet: pet, forMenuMode: menuMode)
     tasksSorted = pet.tasksSorted()
     tableView.reloadData()
-    
-    //reloadMenuTable()
   }
   
   // configuring user's possibility of interaction, selection style of cells, showing or hiding necessary buttons
@@ -506,11 +503,10 @@ extension PetMenuViewController: UITableViewDelegate {
     if menu.sectionTitles[section].isVoid { // don't need header for section without title
       return nil
     } else {
-      if let headerCell = tableView.dequeueReusableCellWithIdentifier(headerCellId) as? HeaderCell {
-        headerCell.titleLabel.text = menu.sectionTitles[section].lowercaseString
-        let view = UIView(frame: headerCell.frame) // wrap cell into view
-        view.addSubview(headerCell)
-        return view
+      if let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(headerId) as? TableSectionHeaderView {
+        header.titleLabel.text = menu.sectionTitles[section].lowercaseString
+        header.view.backgroundColor = VisualConfiguration.lightOrangeColor
+        return header
       } else {
         return nil
       }

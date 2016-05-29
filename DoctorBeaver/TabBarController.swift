@@ -28,7 +28,7 @@
     }
     
     // начинаем со вкладки расписания
-    self.selectedIndex = 0
+    self.selectedIndex = 1
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }

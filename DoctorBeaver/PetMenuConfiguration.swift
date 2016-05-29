@@ -47,7 +47,7 @@ class PetMenuConfiguration {
   var taskAddTag = 0 // calculated based on amount of tasks
   
   // configuration of menu
-  func configure(withPet pet: Pet, forMenuMode menuMode: PetMenuMode) {
+  func configure(withPet pet: Pet, forMenuMode menuMode: MenuMode) {
     self.pet = pet
     
     sectionTitles = pet.sectionTitles
@@ -69,7 +69,7 @@ class PetMenuConfiguration {
   }
   
   // forimg the structure of cells, forming the menu
-  func configureCellTagTypeState(forMenuMode menuMode: PetMenuMode) {
+  func configureCellTagTypeState(forMenuMode menuMode: MenuMode) {
     
     guard sectionTitles.count == 2 else { return }
     cellsTagTypeState = []

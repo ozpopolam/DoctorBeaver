@@ -1,5 +1,5 @@
 //
-//  SettingConfiguration.swift
+//  TaskMenuConfiguration.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 25.02.16.
@@ -9,7 +9,7 @@
 import Foundation
 
 // type of cells
-enum SettingCellType {
+enum TaskMenuCellType {
   case TextFieldCell
   case TitleValueCell
   case TitleSwitchCell
@@ -21,7 +21,7 @@ enum SettingCellType {
 }
 
 // states of cells
-enum CellState {
+enum TaskMenuCellState {
   case Visible
   case Active
   case Accessory
@@ -33,12 +33,12 @@ enum ESMinutesDoseTaskTblCnfgType {
   case Dose
 }
 
-class EditShowTaskTableConfiguration {
+class TaskMenuConfiguration {
   var task: Task!
   
   // structure of menu, consisting of cell
   // each cell is presented by its tag, type and state
-  var cellsTagTypeState: [[(tag: Int, type: SettingCellType, state: CellState)]] = []
+  var cellsTagTypeState: [[(tag: Int, type: TaskMenuCellType, state: TaskMenuCellState)]] = []
   
   var sectionTitles: [String] = []
   
