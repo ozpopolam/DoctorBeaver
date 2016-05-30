@@ -28,12 +28,6 @@ enum TaskMenuCellState {
   case Hidden
 }
 
-// type of menu, which is about to be shown when user select corresponding cell
-enum MinutesDoseMenuType {
-  case Minutes
-  case Dose
-}
-
 class TaskMenuConfiguration {
   var task: Task!
   
@@ -238,16 +232,14 @@ class TaskMenuConfiguration {
     }
   }
   
-  
-/////
-  func getESMinutesDoseTaskTblCnfgType(ofTag tag: Int) -> ESMinutesDoseTaskTblCnfgType {
+  // get type for sub menu, which can configure minutes or dose
+  func getMinutesDoseMenuType(ofTag tag: Int) -> MinutesDoseMenuType {
     if tag == minutesForTimesTitleTag {
       return .Minutes
     } else {
       return .Dose
     }
   }
-////
   
   func tagForIndexPath(indexPath: NSIndexPath) -> Int {
     return cellsTagTypeState[indexPath.section][indexPath.row].tag

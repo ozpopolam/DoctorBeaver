@@ -980,7 +980,7 @@
                     <connections>
                         <outlet property="decoratedNavigationBar" destination="wRJ-B1-Pv4" id="3eI-SY-xGe"/>
                         <outlet property="tableView" destination="ycV-F0-j7M" id="Jkb-bH-k4e"/>
-                        <segue destination="qrB-JS-MqI" kind="show" identifier="editShowMinutesDoseSegue" id="44K-ah-wJA"/>
+                        <segue destination="qrB-JS-MqI" kind="show" identifier="minutesDoseMenuSegue" id="44K-ah-wJA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bis-7a-Rgs" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1214,10 +1214,10 @@
             </objects>
             <point key="canvasLocation" x="863" y="-2154"/>
         </scene>
-        <!--Edit Show Minutes Dose Task View Controller-->
+        <!--Minutes Dose Menu View Controller-->
         <scene sceneID="4pC-96-90v">
             <objects>
-                <viewController id="qrB-JS-MqI" customClass="EditShowMinutesDoseTaskViewController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="qrB-JS-MqI" customClass="MinutesDoseMenuViewController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WjB-aE-vU4"/>
                         <viewControllerLayoutGuide type="bottom" id="6Qb-pz-31c"/>

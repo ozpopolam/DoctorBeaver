@@ -61,17 +61,4 @@ class TaskTypeItem: NSManagedObject {
     }
   }
   
-  
-  
-//    func sectionTitles() -> [String] {
-//      switch task.type {
-//      case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
-//        return ["", "Способ применения", "Длительность приема", "Особые указания"]
-//      case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming:
-//        return ["", "", "Длительность приема", "Особые указания"]
-//      case .Error:
-//        return []
-//      }
-//    }
-  
 }

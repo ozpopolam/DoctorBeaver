@@ -40,6 +40,8 @@ class MinutesDoseMenuConfiguration {
   
   var pickerOptions: [Int: [[String]]] = [:]
   
+  var doseForTimesEqualTitle = "" // title for equal dose
+  
   // положение equal switch
   var equalDoseSwitchOn = false
   
@@ -57,16 +59,18 @@ class MinutesDoseMenuConfiguration {
     if menuType == .Dose {
       pickerOptions = [doseStartTag: task.doseForTimesOptions]
     }
+    
+    doseForTimesEqualTitle = task.typeItem.doseForTimesEqualTitle
   }
   
   // forimg the structure of cells, forming the menu
   func configureCellTagTypeState() {
-    var valueCellType: MinutesDoseMenuCellType
-    var titleCellState: MinutesDoseMenuCellState
+    var valueCellType = MinutesDoseMenuCellType.TitleValueCell
+    var titleCellState = MinutesDoseMenuCellState.Hidden
     
     var startIndForCellPairs = 0 // (titleValue and picker cells)
     
-    var tag: Int
+    var tag = 0
     cellsTagTypeState.append([])
     
     if menuType == .Minutes {
@@ -105,8 +109,8 @@ class MinutesDoseMenuConfiguration {
   
   // set all titles-part of TitleValueCell
   func configureTitleValueTitles() {
-    var titles: [String]
-    var tag: Int
+    var titles = [String]()
+    var tag = 0
     
     if menuType == .Minutes {
       titles = task.minutesForTimesOrderTitles // "First time", "Second time", ...

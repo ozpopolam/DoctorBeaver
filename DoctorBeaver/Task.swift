@@ -134,6 +134,11 @@ class Task: NSManagedObject {
       return typeItem.doseForTimesForInitialization
     }
   }
+  var doseForTimesEqualTitle: String {
+    get {
+      return typeItem.doseForTimesEqualTitle
+    }
+  }
   
   func dosePrintable(forTime time: Int) -> String {
     guard time < doseForTimes.count else { return "" }

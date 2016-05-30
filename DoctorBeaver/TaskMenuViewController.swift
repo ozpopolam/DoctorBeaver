@@ -29,7 +29,7 @@ class TaskMenuViewController: UIViewController {
   var minutesDoseInitialSettings: (minutes: [Int], dose: [String]) = ([], [])
   
   var menu = TaskMenuConfiguration()
-  var menuMode: MenuMode = .Add
+  var menuMode = MenuMode.Show
   
   // types of cells in table
   let headerId = "headerView"
@@ -48,7 +48,8 @@ class TaskMenuViewController: UIViewController {
   
   var keyboardHeight: CGFloat!
   
-  let editShowMinutesDoseSegueId = "editShowMinutesDoseSegue"
+  // segue to sub-menu
+  let minutesDoseMenuSegueId = "minutesDoseMenuSegue"
   
   let animationDuration: NSTimeInterval = 0.5 // to animate change of button's icon
   
@@ -75,7 +76,7 @@ class TaskMenuViewController: UIViewController {
     configureForMenuMode()
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
-    reloadEditShowTaskTable()
+    reloadTaskMenuTable()
   }
   
   // configuring user's possibility of interaction, selection style of cells, showing or hiding necessary buttons
@@ -115,7 +116,7 @@ class TaskMenuViewController: UIViewController {
   }
   
   // fully reload table with data of task
-  func reloadEditShowTaskTable() {
+  func reloadTaskMenuTable() {
     menu.configure(withTask: task)
     tableView.reloadData()
   }
@@ -230,7 +231,7 @@ class TaskMenuViewController: UIViewController {
     if taskDidChange() {
       // settings were changed - need to restore them
       loadInitailSettings()
-      reloadEditShowTaskTable()
+      reloadTaskMenuTable()
     } else {
       closePickerCellsForShowState() // close all open picker cells
     }
@@ -264,22 +265,21 @@ class TaskMenuViewController: UIViewController {
     taskWasEdited = taskDidChange()
   }
   
-  //////////////////////// //////////////////////// //////////////////////// ///////////////////////
-//  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//    if segue.identifier == editShowMinutesDoseSegueId {
-//      if let destinationVC = segue.destinationViewController as? EditShowMinutesDoseTaskViewController {
-//        if let cell = sender as? StgTitleValueCell {
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == minutesDoseMenuSegueId {
+      if let destinationViewController = segue.destinationViewController as? MinutesDoseMenuViewController {
+        if let cell = sender as? StgTitleValueCell {
 //          destinationVC.task = task
 //          destinationVC.delegate = self
 //          
 //          let tblType = menu.getESMinutesDoseTaskTblCnfgType(ofTag: cell.tag)
 //          destinationVC.minutesDoseTblType = tblType
-//          //destinationVC.editState = editState
-//        }
-//      }
-//      
-//    }
-//  }
+//          destinationVC.editState = editState
+        }
+      }
+      
+    }
+  }
   
 }
 
@@ -391,7 +391,6 @@ extension TaskMenuViewController: UITableViewDataSource {
     
     textField.tag = tag
     textField.delegate = self
-    
     
     textField.autocapitalizationType = .Words
     textField.keyboardAppearance = .Dark
@@ -601,7 +600,7 @@ extension TaskMenuViewController: UITableViewDelegate {
     if cellState == .Accessory {
       if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
         // prepare to edit minutes or doses of task
-        //performSegueWithIdentifier(editShowMinutesDoseSegueId, sender: cell)
+        performSegueWithIdentifier(minutesDoseMenuSegueId, sender: cell)
       }
     }
     

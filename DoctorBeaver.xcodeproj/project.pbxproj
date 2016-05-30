@@ -76,7 +76,7 @@
 		62C64DA91CE28C39006B4CEF /* PetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64DA81CE28C39006B4CEF /* PetsRepository.swift */; };
 		62C64DAB1CE292E3006B4CEF /* RuBasicValues.json in Resources */ = {isa = PBXBuildFile; fileRef = 62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */; };
 		62DCB0C71C77952C00ABF206 /* MenuTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0C61C77952C00ABF206 /* MenuTextFieldCell.swift */; };
-		62F0FEB71CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */; };
+		62F0FEB71CB5136600C13132 /* MinutesDoseMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB61CB5136600C13132 /* MinutesDoseMenuViewController.swift */; };
 		62F0FEBA1CB557CF00C13132 /* MinutesDoseMenuConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEB91CB557CF00C13132 /* MinutesDoseMenuConfiguration.swift */; };
 		62F0FEBC1CB9A3C500C13132 /* MenuTitleSwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEBB1CB9A3C500C13132 /* MenuTitleSwitchCell.swift */; };
 /* End PBXBuildFile section */
@@ -174,7 +174,7 @@
 		62C64DA81CE28C39006B4CEF /* PetsRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsRepository.swift; sourceTree = "<group>"; };
 		62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuBasicValues.json; sourceTree = "<group>"; };
 		62DCB0C61C77952C00ABF206 /* MenuTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTextFieldCell.swift; sourceTree = "<group>"; };
-		62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditShowMinutesDoseTaskViewController.swift; sourceTree = "<group>"; };
+		62F0FEB61CB5136600C13132 /* MinutesDoseMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinutesDoseMenuViewController.swift; sourceTree = "<group>"; };
 		62F0FEB91CB557CF00C13132 /* MinutesDoseMenuConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinutesDoseMenuConfiguration.swift; sourceTree = "<group>"; };
 		62F0FEBB1CB9A3C500C13132 /* MenuTitleSwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTitleSwitchCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -408,7 +408,6 @@
 			isa = PBXGroup;
 			children = (
 				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
-				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */,
 				62F0FEB81CB556EB00C13132 /* MinutesDose */,
 			);
@@ -418,7 +417,8 @@
 		62F0FEB81CB556EB00C13132 /* MinutesDose */ = {
 			isa = PBXGroup;
 			children = (
-				62F0FEB61CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift */,
+				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
+				62F0FEB61CB5136600C13132 /* MinutesDoseMenuViewController.swift */,
 				62F0FEB91CB557CF00C13132 /* MinutesDoseMenuConfiguration.swift */,
 			);
 			name = MinutesDose;
@@ -611,7 +611,7 @@
 				62A83B331C6CE13000A8DE8D /* VisualConfiguration.swift in Sources */,
 				628425191C85BA5C0016E32F /* HideShowSegmentedControl.swift in Sources */,
 				62941C451CAEBBDA001D3182 /* TaskConfigurationByType.swift in Sources */,
-				62F0FEB71CB5136600C13132 /* EditShowMinutesDoseTaskViewController.swift in Sources */,
+				62F0FEB71CB5136600C13132 /* MinutesDoseMenuViewController.swift in Sources */,
 				624678461CE5163D000F2D05 /* String.swift in Sources */,
 				6232B06C1C870B38007D7D23 /* StgComplexPickerCell.swift in Sources */,
 				620072231CF0936E000F0C2C /* RoundedCornersImageView.swift in Sources */,
