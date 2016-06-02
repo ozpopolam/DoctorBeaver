@@ -18,7 +18,7 @@
     
     configureView()
     
-    if false {
+    if true {
       _helperDeleteAllData()
       let firstLaunch = true
       if firstLaunch {
@@ -28,7 +28,7 @@
     }
     
     // начинаем со вкладки расписания
-    self.selectedIndex = 1
+    self.selectedIndex = 0
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }

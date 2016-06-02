@@ -9,14 +9,16 @@
 import UIKit
 import CoreData
 
-protocol EditShowMinutesDoseTaskVCDelegate: class {
-  func editShowMinutesDoseTaskVC(viewController: MinutesDoseMenuViewController, didEditMinutesDoseOfTask task: Task, withTblType tblType: MinutesDoseMenuViewController)
-}
-
 // type of menu, which is about to be shown when user select corresponding cell
 enum MinutesDoseMenuType {
   case Minutes
   case Dose
+}
+
+// mode of menu
+enum MinutesDoseMenuMode {
+  case Edit
+  case Show
 }
 
 class MinutesDoseMenuViewController: UIViewController {
@@ -24,19 +26,20 @@ class MinutesDoseMenuViewController: UIViewController {
   @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var tableView: UITableView!
   
-  weak var delegate: EditShowMinutesDoseTaskVCDelegate?
   var petsRepository: PetsRepository!
   
   var task: Task! // task's minutes or dose to show or edit
-  var minutesDoseInitialSettings: (minutes: [Int], dose: [String]) = ([], [])
+  typealias MinutesDose = (minutes: [Int], dose: [String])
+  var minutesDosePreviousSettings: MinutesDose? // needed to store first, second, third... version of values
+  var switchWithPreviousSetting: Bool? // needed to store previous position of an equal switch
   
   var menu = MinutesDoseMenuConfiguration()
-  var menuType = MinutesDoseMenuType.Minutes
-  var menuMode = MenuMode.Show
+  var menuType: MinutesDoseMenuType!
+  var menuMode: MinutesDoseMenuMode!
   
   // types of cells in table
   let menuTitleValueCellId = "stgTitleValueCell"
-  let menuTitleSwitchCellId = "stgTitleSwitchCell"
+  let menuTitleSwitchCellId = "menuTitleSwitchCell"
   let menuDataPickerCellId = "stgDataPickerCell"
   let menuDatePickerCellId = "stgDatePickerCell"
   
@@ -45,7 +48,6 @@ class MinutesDoseMenuViewController: UIViewController {
   let pickerCellHeight: CGFloat = 216.0
   
   let animationDuration = VisualConfiguration.animationDuration
-  
   var settingsWereEdited = false // settings were edited
   
   override func didReceiveMemoryWarning() {
@@ -56,20 +58,19 @@ class MinutesDoseMenuViewController: UIViewController {
     super.viewDidLoad()
     
     decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
-    
     if menuType == .Minutes {
-      decoratedNavigationBar.titleLabel.text = menu.minutesForTimesTitle().uppercaseString
+      decoratedNavigationBar.titleLabel.text = task.minutesForTimesTitle.uppercaseString
     } else if menuType == .Dose {
-      decoratedNavigationBar.titleLabel.text = menu.doseForTimesTitle().uppercaseString
+      decoratedNavigationBar.titleLabel.text = task.doseForTimesTitle.uppercaseString
+    }
+    
+    if menuMode == .Edit { //after editing task, user chose to edit minutes or dose
+      savePreviousSettings()
     }
     
     configureForMenuMode()
     tableView.tableFooterView = UIView(frame: .zero)
     reloadMinutesDoseMenuTable()
-    
-//    if editState {
-//      saveInitialSettings()
-//    }
   }
   
   func reloadMinutesDoseMenuTable() {
@@ -125,7 +126,7 @@ class MinutesDoseMenuViewController: UIViewController {
         if cellTTS.type == .TitleSwitchCell && cellTTS.state != .Hidden {
           
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? MenuTitleSwitchCell {
-            cell.stateSwitch.userInteractionEnabled = true
+            cell.stateSwitch.userInteractionEnabled = menuMode == .Edit
             configureSwitchTintColor(cell.stateSwitch)
           }
         }
@@ -140,8 +141,9 @@ class MinutesDoseMenuViewController: UIViewController {
         let cellTTS = menu.cellsTagTypeState[s][r]
         
         if cellTTS.state != .Hidden {
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) {
-            configureCellSelectionStyleForMenuMode(cell)
+          let indexPath = NSIndexPath(forRow: r, inSection: s)
+          if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            configureCellSelectionStyleForMenuMode(cell, atIndexPath: indexPath)
           }
         }
       }
@@ -151,25 +153,27 @@ class MinutesDoseMenuViewController: UIViewController {
 // MARK: Actions for buttons
   // Back-button
   func back(sender: UIButton) {
-    if settingsWereEdited {
-      //delegate?.editShowMinutesDoseTaskVC(<#T##viewController: MinutesDoseMenuViewController##MinutesDoseMenuViewController#>, didEditMinutesDoseOfTask: <#T##Task#>, withTblType: <#T##MinutesDoseMenuViewController#>)
-    }
     navigationController?.popViewControllerAnimated(true)
   }
   
   // Edit-button
   func edit(sender: UIButton) {
     menuMode = .Edit
-    saveInitialSettings()
+    savePreviousSettings()
     configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
-  // save initial setting of task
-  func saveInitialSettings() {
+  // save another version of settings
+  func savePreviousSettings() {
+    if minutesDosePreviousSettings == nil {
+      minutesDosePreviousSettings = ([], [])
+    }
+    
     if menuType == .Minutes {
-      minutesDoseInitialSettings.minutes = task.minutesForTimes
+      minutesDosePreviousSettings?.minutes = task.minutesForTimes
     } else if menuType == .Dose {
-      minutesDoseInitialSettings.dose = task.doseForTimes
+      minutesDosePreviousSettings?.dose = task.doseForTimes
+      switchWithPreviousSetting = menu.equalDoseSwitchOn // for Dose-type we need to store previous position of all-equal-switch
     }
   }
  
@@ -177,57 +181,61 @@ class MinutesDoseMenuViewController: UIViewController {
   func cancel(sender: UIButton) {
     menuMode = .Show // stop editing settings
     
-    if minutesDoseDidChange() {
-      loadInitailSettings()
+    if minutesDoseIsDifferent(fromMinutesDose: minutesDosePreviousSettings) || switchPositionIsDifferent(fromOldPosition: switchWithPreviousSetting) {
+      loadPreviousSettings()
       reloadMinutesDoseMenuTable()
     } else {
-      closePickerCellsForShowState() // close all open picker cells
+      closePickerCellsForShowMenuMode()
     }
     
     configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
-  // check whether settings of task did change
-  func minutesDoseDidChange() -> Bool {
-    if menuType == .Minutes && task.minutesForTimes == minutesDoseInitialSettings.minutes {
-      return false
-    } else if menuType == .Dose && task.doseForTimes == minutesDoseInitialSettings.dose {
-      return false
+  // check whether minutes or dose of task did change
+  func minutesDoseIsDifferent(fromMinutesDose minutesDoseOldSettings: MinutesDose?) -> Bool {
+    // compare new settings to the other version
+    if let minutesDoseOldSettings = minutesDoseOldSettings {
+      if menuType == .Minutes {
+        return task.minutesForTimes != minutesDoseOldSettings.minutes
+      } else if menuType == .Dose {
+        return task.doseForTimes != minutesDoseOldSettings.dose
+      }
     }
-    return true
+    
+    return false
   }
   
-  // restore initial settings
-  func loadInitailSettings() {
-    if menuType == .Minutes {
-      task.minutesForTimes = minutesDoseInitialSettings.minutes
-    } else if menuType == .Dose {
-      task.doseForTimes = minutesDoseInitialSettings.dose
+  // check whether switch did change its position
+  func switchPositionIsDifferent(fromOldPosition oldPosition: Bool?) -> Bool {
+    if let switchWithPreviousSetting = switchWithPreviousSetting {
+      return switchWithPreviousSetting != menu.equalDoseSwitchOn
     }
+    return false
+  }
+  
+  // restore initial settings of task
+  func loadPreviousSettings() {
+    
+    if let minutesDosePreviousSettings = minutesDosePreviousSettings {
+      if menuType == .Minutes {
+        task.minutesForTimes = minutesDosePreviousSettings.minutes
+      } else if menuType == .Dose {
+        task.doseForTimes = minutesDosePreviousSettings.dose
+      }
+    }
+    
   }
   
   // Done-button
   func done(sender: UIButton) {
     menuMode = .Show
-    closePickerCellsForShowState()
-    
-    // check, whether the equal dose was chosen
-    if menuType == .Dose && menu.equalDoseSwitchOn {
-      task.setAllDosesEqual()
-      menu.configureTitleValueValues()
-    }
-    
-    if minutesDoseDidChange() && !settingsWereEdited {
-      settingsWereEdited = true
-    }
-    
+    closePickerCellsForShowMenuMode()
     configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
 }
 
-
-
+// MARK: UITableViewDataSource
 extension MinutesDoseMenuViewController: UITableViewDataSource {
   
   func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -267,21 +275,20 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
         configureDatePickerCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
-    default:
-      break
     }
     
-    configureCellSelectionStyleForMenuMode(generalCell)
+    configureCellSelectionStyleForMenuMode(generalCell, atIndexPath: indexPath)
     return generalCell
   }
   
-  func configureCellSelectionStyleForMenuMode(cell: UITableViewCell) {
-    if !(cell is MenuTitleSwitchCell) {
-      if menuMode == .Edit {
-        cell.selectionStyle = VisualConfiguration.graySelection
-      } else if menuMode == .Show {
-        cell.selectionStyle = .None
-      }
+  // selection style of a cell depending on menuMode
+  func configureCellSelectionStyleForMenuMode(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
+    
+    if menuMode == .Edit && cellType == .TitleValueCell {
+      cell.selectionStyle = VisualConfiguration.graySelection
+    } else {
+      cell.selectionStyle = .None
     }
   }
 
@@ -364,196 +371,171 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
       cell.datePicker.configure(withDelegate: self, selectedMinutes: minutes.selectedMinutes, minimumMinutes: minutes.minimumMinutes, maximumMinutes: minutes.maximumMinutes)
     }
   }
+  
 }
 
+// MARK: UITableViewDelegate
 extension MinutesDoseMenuViewController: UITableViewDelegate {
   
-  // высота ячейки
   func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     let section = indexPath.section
     let row = indexPath.row
     
     var height: CGFloat = CGFloat.min
     
-    if tbCnfg.cellTagTypeState[section][row].state == CellState.Hidden {
-      // ячейка спрятана - ее высота равна нулю
+    if menu.cellsTagTypeState[section][row].state == .Hidden {
+      // if cell is hidden, it's height = ~ 0
       return height
     } else {
-      // ячейка будет показана - высота вычисляется на основании ее типа
-      let cellType = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].type
+      // in other cases cell's height depends on its type
+      let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
       switch cellType {
       case .TitleValueCell, .TitleSwitchCell:
         height = regularCellHeight
       case .DataPickerCell, .TimePickerCell:
         height = pickerCellHeight
-      default:
-        break
       }
       return height
     }
   }
   
   func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-    if editState {
-      let cellType = tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].type
-      if cellType == .TitleValueCell {
-        return indexPath
-      } else {
-        return nil
-      }
+    if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+      return cell.selectionStyle == VisualConfiguration.graySelection ? indexPath : nil
     } else {
       return nil
     }
   }
   
-//  // закрываем все picker после завершения редактирования
-//  func closePickerCellsForShowState() {
-//    let rowsToReload = closeAllOpenPickerCells()
-//    tableView.beginUpdates()
-//    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
-//    tableView.endUpdates()
-//  }
-//  
-//  
-//  
-//  
-//  
-//  // изменяем видимость ячеек на основании switch
-//  func toggleCellsState(forSwitchState newSwitchState: Bool) -> [NSIndexPath] {
-//    tbCnfg.equalDoseSwitchOn = newSwitchState
-//    
-//    var oldCellState: CellState
-//    var newCellState: CellState
-//    
-//    if newSwitchState == true {
-//      oldCellState = .Visible
-//      newCellState = .Hidden
-//    } else {
-//      oldCellState = .Hidden
-//      newCellState = .Visible
-//    }
-//    
-//    var firstTVCellPath = NSIndexPath(forRow: -1, inSection: -1)
-//    
-//    var rowsToReload: [NSIndexPath] = []
-//    for s in 0..<tbCnfg.cellTagTypeState.count {
-//      for r in 0..<tbCnfg.cellTagTypeState[s].count {
-//        
-//        let cell = tbCnfg.cellTagTypeState[s][r]
-//        if cell.type == .TitleValueCell || cell.type == .DataPickerCell {
-//          if cell.type == .TitleValueCell && firstTVCellPath == NSIndexPath(forRow: -1, inSection: -1)
-//           {
-//            // первая встретившаяся TitleValueCell
-//            firstTVCellPath = NSIndexPath(forRow: r, inSection: s)
-//          } else if !((cell.type == .DataPickerCell && s == firstTVCellPath.section && r == firstTVCellPath.row + 1) || (cell.type == .DataPickerCell && !newSwitchState)) {
-//            if cell.state == oldCellState {
-//              tbCnfg.cellTagTypeState[s][r].state = newCellState
-//              rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
-//            }
-//          }
-//        }
-//      }
-//    }
-//    return rowsToReload
-//  }
-//  
-//  // закрываем все открытые picker
-//  func closeAllOpenPickerCells() -> [NSIndexPath] {
-//    
-//    var rowsToReload: [NSIndexPath] = []
-//    
-//    for s in 0..<tbCnfg.cellTagTypeState.count {
-//      for r in 0..<tbCnfg.cellTagTypeState[s].count {
-//        
-//        let cell = tbCnfg.cellTagTypeState[s][r]
-//        
-//        if (cell.type == .DataPickerCell || cell.type == .TimePickerCell) && cell.state != .Hidden {
-//          tbCnfg.cellTagTypeState[s][r].state = .Hidden
-//          
-//          rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
-//          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? StgTitleValueCell {
-//            // сменить цвет на серый обратно
-//            cell.valueLabel.textColor = UIColor.lightGrayColor()
-//          }
-//        }
-//      }
-//    }
-//    return rowsToReload
-//  }
-//  
-//  // выбрана ячейка
-//  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//    
-//    let section = indexPath.section
-//    let row = indexPath.row
-//    let cellType = tbCnfg.cellTagTypeState[section][row].type
-//    let cellState = tbCnfg.cellTagTypeState[section][row].state
-//    
-//    // номер ряда находящегося под ячейкой Picker Cell
-//    let pickerCellRow = row + 1
-//    let pickerCellState = tbCnfg.cellTagTypeState[section][pickerCellRow].state
-//    let pickerCellIndPth = NSIndexPath(forRow: pickerCellRow, inSection: section)
-//    
-//    var rowsToReload: [NSIndexPath] = []
-//    
-//    if cellType == .TitleValueCell {
-//      // выбрана ячейка TitleValueCell
-//      
-//      if pickerCellState == .Hidden {
-//        rowsToReload = closeAllOpenPickerCells()
-//      }
-//      
-//      if cellState != .Accessory {
-//        // ячейка не имеет типа Accessory, значит, нужно показать находящийся под ней PickerCell
-//        
-//        // проверяем, какой цвет изменяемого значения нужен выбранной TitleValueCell
-//        if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
-//          if pickerCellState == .Hidden {
-//            cell.valueLabel.textColor = UIColor.lightOrangeColor()
-//          } else {
-//            cell.valueLabel.textColor = UIColor.lightGrayColor()
-//          }
-//        }
-//        
-//        // переводи pickerView в новое состояние скрытости
-//        tbCnfg.toggleCellTagTypeState(atIndexPath: pickerCellIndPth)
-//        rowsToReload.append(pickerCellIndPth)
-//      }
-//    }
-//    
-//    tableView.beginUpdates()
-//    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
-//    tableView.endUpdates()
-//    
-//    tableView.deselectRowAtIndexPath(indexPath, animated: false)
-//    // проматываем на только что нажатую ячейку
-//    tableView.scrollToRowAtIndexPath(pickerCellIndPth, atScrollPosition: .Middle, animated: true)
-//  }
-  
-}
-
-extension MinutesDoseMenuViewController: DataPickerViewDelegate {
-  
-  func dataPicker(picker: DataPickerView, didPickValues values: [String]) {
-    let tagsToUpdate = tbCnfg.updateTask(byPickerViewWithTag: picker.tag, byStrings: values)
-    updateCells(withTags: tagsToUpdate)
+  // выбрана ячейка
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    // TextFieldCell, TitleValueCell, TitleSegmentCell or Accessory-cell was selected
+    // tapping on the first three leads to opening/closing underlying cells with picker view for value selectio
+    
+    let section = indexPath.section
+    let row = indexPath.row
+    let cellType = menu.cellsTagTypeState[section][row].type
+    
+    var rowsToReload: [NSIndexPath] = [] // after opening new picker cell, the old ones must be closed
+    var indexPathToScroll = indexPath
+    
+    // after tapping on these cell, cell with picker must be revealed or hidden
+    if cellType == .TitleValueCell {
+      
+      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
+        let pickerCellRow = row + 1 // picker lies under tapped cell
+        let pickerCellState = menu.cellsTagTypeState[section][pickerCellRow].state
+        let pickerCellIndPth = NSIndexPath(forRow: pickerCellRow, inSection: section)
+        
+        if pickerCellState == .Hidden { // if picker is hiiden - it is about to be opened and all open ones must be closed
+          rowsToReload = closeAllOpenPickerCells()
+          // if cell with picker is about to be revealed, text color of selected cell will become orange (active)
+          cell.valueLabel.textColor = VisualConfiguration.lightOrangeColor
+        } else {
+          // if cell with picker is about to be hidden, text color of selected cell will become grey (inactive)
+          cell.valueLabel.textColor = VisualConfiguration.lightGrayColor
+        }
+        
+        menu.toggleCellTagTypeState(atIndexPath: pickerCellIndPth) // change state of picker cell from hidden to open or vice versa
+        rowsToReload.append(pickerCellIndPth)
+        indexPathToScroll = pickerCellIndPth // cell to be focused on
+      }
+      
+    }
+    
+    // reload cells, which state or appearance were modified
+    tableView.beginUpdates()
+    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
+    tableView.endUpdates()
+    
+    tableView.deselectRowAtIndexPath(indexPath, animated: false)
+    tableView.scrollToRowAtIndexPath(indexPathToScroll, atScrollPosition: .Middle, animated: true)
   }
   
-  func dataStillNeeded(fromPicker picker: DataPickerView) -> Bool {
-    if let indexPath = tbCnfg.indexPathForTag(picker.tag) {
-      if tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].state != .Hidden {
-        return true
+  
+// MARK: additional methods to control cells' state
+  // change state of open picker cells and return its index paths
+  func closeAllOpenPickerCells() -> [NSIndexPath] {
+    var rowsToReload: [NSIndexPath] = []
+    
+    for s in 0..<menu.cellsTagTypeState.count {
+      for r in 0..<menu.cellsTagTypeState[s].count {
+        let cellTTS = menu.cellsTagTypeState[s][r]
+        
+        if (cellTTS.type == .DataPickerCell || cellTTS.type == .TimePickerCell) && cellTTS.state != .Hidden {
+          // if cell is a visible picker
+          menu.cellsTagTypeState[s][r].state = .Hidden
+          
+          rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? StgTitleValueCell {
+            // if cell, lying above the picker is TitleValueCell, which displays its content
+            cell.valueLabel.textColor = VisualConfiguration.lightGrayColor
+          }
+        }
       }
     }
     
-    return false
+    return rowsToReload
+  }
+  
+  // close all open picker cells after finishing with editing
+  func closePickerCellsForShowMenuMode() {
+    let rowsToReload = closeAllOpenPickerCells()
+    tableView.beginUpdates()
+    tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
+    tableView.endUpdates()
+  }
+  
+  // toggle cell's visibility
+  func toggleCellsState(forSwitchState newSwitchState: Bool) -> [NSIndexPath] {
+    menu.equalDoseSwitchOn = newSwitchState
+    
+    var oldCellState: MinutesDoseMenuCellState
+    var newCellState: MinutesDoseMenuCellState
+    
+    let equalDoses = newSwitchState
+    
+    if equalDoses == true { // new position on a switch
+      // if it is on - all doses are equal -> need to hide all pairs of (TitleValue, DataPicker) cells except for the first
+      oldCellState = .Visible
+      newCellState = .Hidden
+    } else {
+      // need to show hidden pairs
+      oldCellState = .Hidden
+      newCellState = .Visible
+    }
+    
+    // path for first TitleValue cell with placeholder value (-1, -1)
+    var firstTitleValueCellPath = NSIndexPath(forRow: -1, inSection: -1)
+    
+    var rowsToReload: [NSIndexPath] = []
+    rowsToReload = closeAllOpenPickerCells()
+    
+    for s in 0..<menu.cellsTagTypeState.count {
+      for r in 0..<menu.cellsTagTypeState[s].count {
+        
+        if menu.cellsTagTypeState[s][r].type == .TitleValueCell {
+          if firstTitleValueCellPath == NSIndexPath(forRow: -1, inSection: -1) {
+            // cell - is the first TitleValue cell -> update indexPath
+            firstTitleValueCellPath = NSIndexPath(forRow: r, inSection: s)
+          } else if menu.cellsTagTypeState[s][r].state == oldCellState {
+            // change state of cell and prepare to reload it
+            menu.cellsTagTypeState[s][r].state = newCellState
+            rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
+          }
+        }
+      
+      }
+    }
+    return rowsToReload
   }
   
   func updateCells(withTags tags: [Int]) {
     var indexPaths: [NSIndexPath] = []
     for tag in tags {
-      tbCnfg.updateTitleValueValues(ofTag: tag)
-      if let indexPath = tbCnfg.indexPathForTag(tag) {
+      // need to update TitleValue cells, which hold value of changed cells
+      menu.updateTitleValueValues(ofTag: tag)
+      if let indexPath = menu.indexPathForTag(tag) {
         indexPaths.append(indexPath)
       }
     }
@@ -565,12 +547,16 @@ extension MinutesDoseMenuViewController: DataPickerViewDelegate {
   
 }
 
-
-
 extension MinutesDoseMenuViewController: StateSwitchDelegate {
   func stateSwitch(stateSwitch: UISwitch, didSetOn setOn: Bool) {
-    
+    // need to update visibility of cells to reflect state of "equal dose"-switch
     let rowsToReload = toggleCellsState(forSwitchState: setOn)
+    
+    // check, whether the equal dose was chosen
+    if menuType == .Dose && menu.equalDoseSwitchOn {
+      task.setAllDosesEqual()
+      menu.configureTitleValueValues()
+    }
     
     tableView.beginUpdates()
     tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
@@ -578,25 +564,41 @@ extension MinutesDoseMenuViewController: StateSwitchDelegate {
   }
 }
 
-
-extension MinutesDoseMenuViewController: DatePickerDelegate {
-  func datePicker(picker: UIDatePicker, didPickDate date: NSDate) { }
+extension MinutesDoseMenuViewController: DataPickerViewDelegate {
   
-  func datePicker(picker: UIDatePicker, didPickMinutes minutes: Int) {
-    let tagsToUpdate = tbCnfg.updateTask(byPickerViewWithTag: picker.tag, byMinutes: minutes)
+  func dataPicker(picker: DataPickerView, didPickValues values: [String]) {
+    // picker picked some values - need to update cell, which is assigned to show it
+    let tagsToUpdate = menu.updateTask(byPickerViewWithTag: picker.tag, byStrings: values)
     updateCells(withTags: tagsToUpdate)
   }
   
-  func dateStillNeeded(fromPicker picker: UIDatePicker) -> Bool {
-    if let indexPath = tbCnfg.indexPathForTag(picker.tag) {
-      if tbCnfg.cellTagTypeState[indexPath.section][indexPath.row].state != .Hidden {
+  func dataStillNeeded(fromPicker picker: DataPickerView) -> Bool {
+    // when picker chooses some values, after having been hidden - no data is needed from it
+    if let cellIndexPath = menu.indexPathForTag(picker.tag) {
+      if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
         return true
       }
     }
     return false
   }
-  
 }
 
+extension MinutesDoseMenuViewController: DatePickerDelegate {
+  func datePicker(picker: UIDatePicker, didPickDate date: NSDate) { }
+  
+  func datePicker(picker: UIDatePicker, didPickMinutes minutes: Int) {
+    let tagsToUpdate = menu.updateTask(byPickerViewWithTag: picker.tag, byMinutes: minutes)
+    updateCells(withTags: tagsToUpdate)
+  }
+  
+  func dateStillNeeded(fromPicker picker: UIDatePicker) -> Bool {
+    if let cellIndexPath = menu.indexPathForTag(picker.tag) {
+      if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
+        return true
+      }
+    }
+    return false
+  }
+}
   
 

@@ -15,6 +15,12 @@ protocol TaskMenuViewControllerDelegate: class {
   func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task)
 }
 
+enum TaskMenuMode {
+  case Add
+  case Edit
+  case Show
+}
+
 class TaskMenuViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
@@ -25,11 +31,11 @@ class TaskMenuViewController: UIViewController {
   var petsRepository: PetsRepository!
   
   var task: Task! // task to show or edit
-  var taskWithInitialSettings: Task? // needed to store initial values
-  var minutesDoseInitialSettings: (minutes: [Int], dose: [String]) = ([], [])
+  var taskWithInitialSettings: Task? // needed to store initial (first) values
+  var taskWithPreviousSettings: Task? // needed to store second, third... version of values
   
   var menu = TaskMenuConfiguration()
-  var menuMode = MenuMode.Show
+  var menuMode: TaskMenuMode!
   
   // types of cells in table
   let headerId = "headerView"
@@ -52,9 +58,9 @@ class TaskMenuViewController: UIViewController {
   let minutesDoseMenuSegueId = "minutesDoseMenuSegue"
   
   let animationDuration: NSTimeInterval = 0.5 // to animate change of button's icon
-  
-//  var editState = false // adding or editing a task
+
   var taskWasEdited = false // task was edited
+  var scheduleWasChanged = false // time-related parts of settings were changed
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -164,18 +170,25 @@ class TaskMenuViewController: UIViewController {
   }
   
  // MARK: Actions for buttons
-  
   // Back-button
   func back(sender: UIButton) {
-    
     // if task for storing initial setting was created, need to delete it
     if let taskWithInitialSettings = taskWithInitialSettings {
+      
+      taskWasEdited = taskIsDifferent(fromTask: taskWithInitialSettings) // task was edited
+      scheduleWasChanged = taskScheduleIsDifferent(fromTask: taskWithInitialSettings) // schedule was edited in that or some previous iteration
       petsRepository.deleteObject(taskWithInitialSettings)
     }
+    // if task for storing version of setting was created, need to delete it
+    if let taskWithPreviousSettings = taskWithPreviousSettings {
+      petsRepository.deleteObject(taskWithPreviousSettings)
+    }
+    
+    petsRepository.saveOrRollback()
     
     if taskWasEdited {
       // task was edited
-      if menu.scheduleWasChanged {
+      if scheduleWasChanged {
         // time frame of task changed
         task.countEndDate()
         delegate?.taskMenuViewController(self, didFullyEditScheduleOfTask: task)
@@ -183,8 +196,6 @@ class TaskMenuViewController: UIViewController {
         delegate?.taskMenuViewController(self, didSlightlyEditScheduleOfTask: task)
       }
     }
-    
-    navigationController?.popViewControllerAnimated(true)
   }
   
   // Delete-button
@@ -210,10 +221,11 @@ class TaskMenuViewController: UIViewController {
   func edit(sender: UIButton) {
     menuMode = .Edit
     saveInitialSettings()
+    savePreviousSettings()
     configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
-  // save initial setting of task
+  // save initial settings of task
   func saveInitialSettings() {
     if taskWithInitialSettings == nil {
       taskWithInitialSettings = petsRepository.insertTask()
@@ -223,14 +235,24 @@ class TaskMenuViewController: UIViewController {
     }
   }
   
+  // save another version of settings
+  func savePreviousSettings() {
+    if taskWithPreviousSettings == nil {
+      taskWithPreviousSettings = petsRepository.insertTask()
+    }
+    if let taskWithPreviousSettings = taskWithPreviousSettings {
+      taskWithPreviousSettings.copySettings(fromTask: task, withPet: true)
+    }
+  }
+  
   // Cancel-button
   func cancel(sender: UIButton) {
     menuMode = .Show // stop editing task
     deactivateAllActiveTextFields() // close all text fields
     
-    if taskDidChange() {
-      // settings were changed - need to restore them
-      loadInitailSettings()
+    if taskIsDifferent(fromTask: taskWithPreviousSettings) {
+      // settings were changed in that iteration - need to restore them
+      loadPreviousSettings()
       reloadTaskMenuTable()
     } else {
       closePickerCellsForShowState() // close all open picker cells
@@ -240,19 +262,29 @@ class TaskMenuViewController: UIViewController {
   }
   
   // check whether some settings of task did change
-  func taskDidChange() -> Bool {
-    // compare new settings to stored ones
-    if let taskWithInitialSettings = taskWithInitialSettings {
-      return !task.settingsAreEqual(toTask: taskWithInitialSettings)
+  func taskIsDifferent(fromTask taskWithOldSettings: Task?) -> Bool {
+    // compare new settings to the other version
+    if let taskWithOldSettings = taskWithOldSettings {
+      return !task.allSettingsAreEqual(toTask: taskWithOldSettings)
+    } else {
+      return false
+    }
+  }
+  
+  // check whether some schedule settings of task did change
+  func taskScheduleIsDifferent(fromTask taskWithOldSettings: Task?) -> Bool {
+    // compare new settings to the other version
+    if let taskWithOldSettings = taskWithOldSettings {
+      return !task.scheduleSettingsAreEqual(toTask: taskWithOldSettings)
     } else {
       return false
     }
   }
   
   // restore initial settings of task
-  func loadInitailSettings() {
-    if let taskWithInitialSettings = taskWithInitialSettings {
-      task.copySettings(fromTask: taskWithInitialSettings)
+  func loadPreviousSettings() {
+    if let taskWithPreviousSettings = taskWithPreviousSettings {
+      task.copySettings(fromTask: taskWithPreviousSettings)
     }
   }
   
@@ -262,22 +294,24 @@ class TaskMenuViewController: UIViewController {
     closePickerCellsForShowState()
     deactivateAllActiveTextFields()
     configureForMenuMode(withAnimationDuration: animationDuration)
-    taskWasEdited = taskDidChange()
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == minutesDoseMenuSegueId {
       if let destinationViewController = segue.destinationViewController as? MinutesDoseMenuViewController {
         if let cell = sender as? StgTitleValueCell {
-//          destinationVC.task = task
-//          destinationVC.delegate = self
-//          
-//          let tblType = menu.getESMinutesDoseTaskTblCnfgType(ofTag: cell.tag)
-//          destinationVC.minutesDoseTblType = tblType
-//          destinationVC.editState = editState
+          destinationViewController.task = task
+          //destinationViewController.delegate = self
+          destinationViewController.menuType = menu.getMinutesDoseMenuType(ofTag: cell.tag)
+          destinationViewController.menuMode = menuMode == .Show ? .Show : .Edit
+          
+          if menuMode == .Show { // need to make snapshot of task' settings explicitly as TaskMenuViewController does it only in Edit-mode
+            saveInitialSettings()
+            savePreviousSettings()
+          }
+          
         }
       }
-      
     }
   }
   
@@ -318,7 +352,9 @@ extension TaskMenuViewController: UITableViewDataSource {
   // selection style of a cell depending on menuMode
   func configureCellSelectionStyleForMenuMode(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
     let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
-    if menuMode != .Show && cellType != .ComplexPickerCell
+    let cellState = menu.cellsTagTypeState[indexPath.section][indexPath.row].state
+    
+    if (menuMode != .Show && cellType != .ComplexPickerCell) || cellState == .Accessory
     {
       cell.selectionStyle = VisualConfiguration.graySelection
     } else {
@@ -654,7 +690,7 @@ extension TaskMenuViewController: UITableViewDelegate {
           }
           
           menu.toggleCellTagTypeState(atIndexPath: pickerCellIndPth) // change state of picker cell from hidden to open or vice versa
-          rowsToReload.append(pickerCellIndPth) // reload cells, which state or appearance was modified
+          rowsToReload.append(pickerCellIndPth)
           indexPathToScroll = pickerCellIndPth // cell to be focused on
         }
       }
@@ -663,6 +699,7 @@ extension TaskMenuViewController: UITableViewDelegate {
       break
     }
     
+    // reload cells, which state or appearance were modified
     tableView.beginUpdates()
     tableView.reloadRowsAtIndexPaths(rowsToReload, withRowAnimation: .Automatic)
     tableView.endUpdates()
@@ -884,26 +921,4 @@ extension TaskMenuViewController: StgComplexPickerCellDelegate {
     return dates.initialDate
   }
 }
-
-
-//extension TaskMenuViewController: EditShowMinutesDoseTaskVCDelegate {
-//  func editShowMinutesDoseTaskVC(viewController: EditShowMinutesDoseTaskViewController, didEditMinutesDoseOfTask task: Task, withTblType tblType: ESMinutesDoseTaskTblCnfgType) {
-//    
-//    if tblType == .Minutes {
-//      menu.savePreviousMinutes()
-//      menu.scheduleWasChanged = true
-//    } else if tblType == .Dose {
-//      menu.savePreviousDose()
-//    }
-//    
-//    if menuMode == .Add || menuMode == .Edit {
-//      saveInitialSettings()
-//    }
-//    
-//    if !taskWasEdited {
-//      taskWasEdited = true
-//    }
-//    
-//  }
-//}
 

@@ -532,21 +532,23 @@ class Task: NSManagedObject {
   }
   
   // эквавалентны ли настройки двух заданий
-  func settingsAreEqual(toTask task: Task) -> Bool {
+  func allSettingsAreEqual(toTask task: Task) -> Bool {
     guard name == task.name else { return false }
     guard typeId == task.typeId else { return false }
+    guard specialFeature == task.specialFeature else { return false }
+    guard doseForTimes == task.doseForTimes else { return false }
+    guard comment == task.comment else { return false }
     
+    return scheduleSettingsAreEqual(toTask: task)
+  }
+  
+  func scheduleSettingsAreEqual(toTask task: Task) -> Bool {
     guard timesPerDay == task.timesPerDay else { return false }
     guard minutesForTimes == task.minutesForTimes else { return false }
-    guard doseForTimes == task.doseForTimes else { return false }
-    guard specialFeature == task.specialFeature else { return false }
-    
     guard startDate == task.startDate else { return false }
     guard frequency == task.frequency else { return false }
-    
     guard endDaysOrTimes == task.endDaysOrTimes else { return false }
     guard endDate == task.endDate else { return false }
-    guard comment == task.comment else { return false }
     
     return true
   }

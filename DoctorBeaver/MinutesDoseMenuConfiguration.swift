@@ -65,12 +65,14 @@ class MinutesDoseMenuConfiguration {
   
   // forimg the structure of cells, forming the menu
   func configureCellTagTypeState() {
+    cellsTagTypeState = []
+    
     var valueCellType = MinutesDoseMenuCellType.TitleValueCell
     var titleCellState = MinutesDoseMenuCellState.Hidden
     
     var startIndForCellPairs = 0 // (titleValue and picker cells)
-    
     var tag = 0
+    
     cellsTagTypeState.append([])
     
     if menuType == .Minutes {
@@ -190,13 +192,13 @@ class MinutesDoseMenuConfiguration {
     return nil
   }
   
-  func minutesForTimesTitle() -> String {
-    return task.minutesForTimesTitle
-  }
-  
-  func doseForTimesTitle() -> String {
-    return task.doseForTimesTitle
-  }
+//  func minutesForTimesTitle() -> String {
+//    return task.minutesForTimesTitle
+//  }
+//  
+//  func doseForTimesTitle() -> String {
+//    return task.doseForTimesTitle
+//  }
   
   func indexPathForTag(tag: Int) -> NSIndexPath? {
     for s in 0..<cellsTagTypeState.count {
@@ -275,8 +277,18 @@ class MinutesDoseMenuConfiguration {
     let tagsToUpdate = [tag - 1]
     
     if tagIsInDoseTags(tag) {
-      let indInDoseForTimes = ( tag - doseStartTag ) / 2
-      task.doseForTimes[indInDoseForTimes] = task.doseFromArrayOfStrings(strings)
+      
+      let dose = task.doseFromArrayOfStrings(strings)
+      
+      if equalDoseSwitchOn { // all doses must be equal - set selected dose to all doses of task
+        for ind in 0..<task.doseForTimes.count {
+          task.doseForTimes[ind] = dose
+        }
+      } else { // set selected dose to only one dose of task
+        let indInDoseForTimes = ( tag - doseStartTag ) / 2
+        task.doseForTimes[indInDoseForTimes] = dose
+      }
+      
       return tagsToUpdate
     } else {
       return []

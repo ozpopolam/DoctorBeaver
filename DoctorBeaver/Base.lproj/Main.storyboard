@@ -700,7 +700,7 @@
                         <viewControllerLayoutGuide type="bottom" id="ax6-fy-vhq"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="djM-W8-kOg">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="399"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wRJ-B1-Pv4" customClass="DecoratedNavigationBarView" customModule="DoctorBeaver" customModuleProvider="target">
@@ -711,7 +711,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ycV-F0-j7M">
-                                <rect key="frame" x="0.0" y="64" width="600" height="335"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuTextFieldCell" id="jSH-ps-fuD" customClass="MenuTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
@@ -790,7 +790,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="3Kr-aD-lbl" customClass="HideShowSegmentedControl" customModule="DoctorBeaver" customModuleProvider="target">
-                                                    <rect key="frame" x="545" y="8.5" width="47" height="29"/>
+                                                    <rect key="frame" x="545" y="8" width="47" height="29"/>
                                                     <segments>
                                                         <segment title="0"/>
                                                         <segment title="1"/>
@@ -985,7 +985,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bis-7a-Rgs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2397" y="-1475.5"/>
+            <point key="canvasLocation" x="3050" y="-1475.5"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="1f8-kz-WuU">
@@ -1174,7 +1174,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OhR-Ev-h1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2382" y="-3729"/>
+            <point key="canvasLocation" x="2350" y="-2927"/>
         </scene>
         <!--Search-->
         <scene sceneID="2Vg-Sp-pQw">
@@ -1223,7 +1223,7 @@
                         <viewControllerLayoutGuide type="bottom" id="6Qb-pz-31c"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="wec-VA-oJM">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="399"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NY4-bb-dVy" customClass="DecoratedNavigationBarView" customModule="DoctorBeaver" customModuleProvider="target">
@@ -1234,35 +1234,11 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mtC-0l-zy0">
-                                <rect key="frame" x="0.0" y="64" width="600" height="335"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="menuTextFieldCell" id="iD9-aO-Oo1" customClass="MenuTextFieldCell" customModule="DoctorBeaver" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iD9-aO-Oo1" id="QSG-rb-cuj">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Название" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7t3-Am-a1Z">
-                                                    <rect key="frame" x="16" y="7" width="576" height="30"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits"/>
-                                                </textField>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="7t3-Am-a1Z" secondAttribute="trailing" id="i4L-IU-K9p"/>
-                                                <constraint firstItem="7t3-Am-a1Z" firstAttribute="leading" secondItem="QSG-rb-cuj" secondAttribute="leadingMargin" constant="8" id="oQJ-Li-3TJ"/>
-                                                <constraint firstItem="7t3-Am-a1Z" firstAttribute="centerY" secondItem="QSG-rb-cuj" secondAttribute="centerY" id="ptZ-68-4Jc"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="textField" destination="7t3-Am-a1Z" id="7Cu-OR-R7n"/>
-                                        </connections>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgTitleValueCell" id="lEn-Oe-MOX" customClass="StgTitleValueCell" customModule="DoctorBeaver" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="72" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lEn-Oe-MOX" id="Ucp-1O-zAO">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1299,8 +1275,8 @@
                                             <outlet property="valueLabel" destination="VsH-He-yyY" id="fag-73-tgq"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgTitleSwitchCell" id="Ukg-rJ-cv4" userLabel="stgTitleSwitchCell" customClass="StgTitleSwitchCell" customModule="DoctorBeaver" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="116" width="600" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuTitleSwitchCell" id="Ukg-rJ-cv4" customClass="MenuTitleSwitchCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ukg-rJ-cv4" id="u0b-NK-Zom">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1313,7 +1289,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T7U-qD-Siw">
-                                                    <rect key="frame" x="543" y="6.5" width="51" height="31"/>
+                                                    <rect key="frame" x="543" y="6" width="51" height="31"/>
                                                     <color key="tintColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
                                                     <connections>
                                                         <action selector="toggleEqualSwitch:" destination="Ukg-rJ-cv4" eventType="touchUpInside" id="Dqc-xs-eHi"/>
@@ -1336,12 +1312,12 @@
                                             </variation>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="equalSwitch" destination="T7U-qD-Siw" id="qJu-a5-niW"/>
-                                            <outlet property="titleLabel" destination="Lxj-3q-csk" id="huT-Ue-jxU"/>
+                                            <outlet property="stateSwitch" destination="T7U-qD-Siw" id="5vg-Xw-wSh"/>
+                                            <outlet property="titleLabel" destination="Lxj-3q-csk" id="sww-ol-iJm"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgDataPickerCell" rowHeight="216" id="g6b-Vx-bH7" customClass="StgDataPickerCell" customModule="DoctorBeaver" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="160" width="600" height="216"/>
+                                        <rect key="frame" x="0.0" y="116" width="600" height="216"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="g6b-Vx-bH7" id="yXo-f4-aQH">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="215.5"/>
@@ -1366,7 +1342,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgDatePickerCell" rowHeight="216" id="PLP-d8-nFg" customClass="StgDatePickerCell" customModule="DoctorBeaver" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="376" width="600" height="216"/>
+                                        <rect key="frame" x="0.0" y="332" width="600" height="216"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PLP-d8-nFg" id="Wtr-Jz-36z">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="215.5"/>
@@ -1419,13 +1395,13 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="fakeNavigationBar" destination="NY4-bb-dVy" id="JTc-I1-VQE"/>
+                        <outlet property="decoratedNavigationBar" destination="NY4-bb-dVy" id="ax9-yR-US6"/>
                         <outlet property="tableView" destination="mtC-0l-zy0" id="s7R-v1-abN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5qp-8T-hbY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3096" y="-1475.5"/>
+            <point key="canvasLocation" x="3743" y="-1475.5"/>
         </scene>
         <!--Calendar Popover Controller-->
         <scene sceneID="WWW-XO-BKa">
@@ -1733,11 +1709,11 @@
                                             <outlet property="taskNameLabel" destination="xk0-Iq-q4O" id="bI0-da-RXL"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuTitleCell" id="DZi-EC-f8W" customClass="MenuTitleCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="menuTitleCell" id="DZi-EC-f8W" customClass="MenuTitleCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="204" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DZi-EC-f8W" id="KVq-WK-Cum">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="533" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Свойство" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wfb-DD-8n1">
@@ -1754,6 +1730,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="titleLabel" destination="wfb-DD-8n1" id="W3w-Va-UMD"/>
+                                            <segue destination="skV-Mj-83R" kind="show" identifier="editShowTaskSegue" id="Dm2-9e-i7R"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1782,7 +1759,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XIf-Mj-nZC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3130" y="-3729"/>
+            <point key="canvasLocation" x="3050" y="-2927"/>
         </scene>
         <!--Pet Image View Controller-->
         <scene sceneID="zZY-E2-RST">
@@ -1882,7 +1859,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tsa-FI-2D4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3863" y="-3729"/>
+            <point key="canvasLocation" x="3743" y="-2927"/>
         </scene>
         <!--Pets-->
         <scene sceneID="owC-2K-Zse">
@@ -1901,7 +1878,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Wc-Re-7SG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1675" y="-3729"/>
+            <point key="canvasLocation" x="1643" y="-2927"/>
         </scene>
     </scenes>
     <resources>
@@ -1909,5 +1886,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="CbL-MS-VxT"/>
+        <segue reference="Dm2-9e-i7R"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -322,6 +322,7 @@
 			isa = PBXGroup;
 			children = (
 				62C64D641CD7EF10006B4CEF /* PetsViewController.swift */,
+				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
 				6277BA9D1CEA2C23006E4607 /* PetMenuConfiguration.swift */,
 				6219167D1CEF40EF00F073C7 /* PetImageViewController.swift */,
 			);
@@ -407,7 +408,7 @@
 		62F0FEB51CB2EA8700C13132 /* Task */ = {
 			isa = PBXGroup;
 			children = (
-				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
+				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */,
 				62F0FEB81CB556EB00C13132 /* MinutesDose */,
 			);
@@ -417,7 +418,6 @@
 		62F0FEB81CB556EB00C13132 /* MinutesDose */ = {
 			isa = PBXGroup;
 			children = (
-				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				62F0FEB61CB5136600C13132 /* MinutesDoseMenuViewController.swift */,
 				62F0FEB91CB557CF00C13132 /* MinutesDoseMenuConfiguration.swift */,
 			);

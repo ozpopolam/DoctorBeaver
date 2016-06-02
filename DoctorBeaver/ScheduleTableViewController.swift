@@ -64,7 +64,6 @@ class ScheduleTableViewController: UIViewController {
     if viewIsReadyToBeLoadedWithSchedule() {
       reloadScheduleTable()
     }
-    
   }
   
   override func didReceiveMemoryWarning() {
@@ -95,7 +94,6 @@ class ScheduleTableViewController: UIViewController {
         }
       }
     }
-    
   }
   
   func prepareDataSourceAndReloadTable() {
@@ -532,6 +530,8 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
   }
   
   func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task) {
+    
+    print("didSlightlyEditScheduleOfTask")
 
     let indexPaths = indexPathsForTask(task) // get indices for rows of edited task
     tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)

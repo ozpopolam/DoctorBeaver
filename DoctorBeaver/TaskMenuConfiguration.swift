@@ -79,9 +79,6 @@ class TaskMenuConfiguration {
   var previousFrequency: [Int] = []
   var previousDaysTimesDate: (days: Int, times: Int, date: NSDate) = (days: 1, times: 1, date: NSDate())
   
-  // some part of schedule (timesPerDay, minutesForTimes, startDate, frequency, endDaysOrTimes or endDate) was changed
-  var scheduleWasChanged = false
-  
   // configuration of menu
   func configure(withTask task: Task) {
     self.task = task
@@ -469,8 +466,6 @@ class TaskMenuConfiguration {
           task.correctDose()
           savePreviousDose()
         }
-        
-        scheduleWasChanged = true
       }
 
       tagsToUpdate.append(minutesForTimesTitleTag)
@@ -497,8 +492,6 @@ class TaskMenuConfiguration {
       }
       savePreviousFrequency()
       
-      scheduleWasChanged = true
-      
     case endDaysPickerTag, endTimesPickerTag:
       tagsToUpdate = [endDateTitleTag]
       
@@ -519,8 +512,6 @@ class TaskMenuConfiguration {
         }
         
         savePreviousDaysTimesDate()
-        
-        scheduleWasChanged = true
       }
       
     default:
@@ -533,8 +524,6 @@ class TaskMenuConfiguration {
     let tagsToUpdate = [tag - 1]
     if tag == minutesForTimesPickerTag {
       task.minutesForTimes = [minutes]
-      
-      scheduleWasChanged = true
     }
     return tagsToUpdate
   }
@@ -557,8 +546,6 @@ class TaskMenuConfiguration {
         }
       }
       
-      scheduleWasChanged = true
-      
     } else {
 
       if tag == endDatePickerTag {
@@ -566,8 +553,6 @@ class TaskMenuConfiguration {
         task.endDaysOrTimes = 0
         task.endDate = value
         savePreviousDaysTimesDate()
-        
-        scheduleWasChanged = true
       }
     }
     return tagsToUpdate
@@ -584,17 +569,12 @@ class TaskMenuConfiguration {
           tagsToUpdate = [tag]
         }
         
-        scheduleWasChanged = true
-        
       } else {
         if segment == 1 { // second option - periodically
           if task.frequency == [] {
             task.frequency = previousFrequency
             tagsToUpdate = [tag]
-          }
-          
-          scheduleWasChanged = true
-          
+          }          
         }
       }
     }

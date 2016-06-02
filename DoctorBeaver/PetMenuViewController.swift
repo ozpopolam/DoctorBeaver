@@ -13,7 +13,7 @@ protocol PetMenuViewControllerDelegate: class {
   func petMenuViewController(viewController: PetMenuViewController, didEditPet pet: Pet)
 }
 
-enum MenuMode {
+enum PetMenuMode {
   case Add
   case Edit
   case Show
@@ -34,7 +34,7 @@ class PetMenuViewController: UIViewController {
   var tasksSortedByActiveness: (active: [Task], completed: [Task]) = ([], [])
   
   var menu = PetMenuConfiguration()
-  var menuMode: MenuMode = .Add
+  var menuMode: PetMenuMode!
   
   // types of cells in table
   let headerId = "headerView"
@@ -45,6 +45,7 @@ class PetMenuViewController: UIViewController {
   let iconTitleCellId = "menuIconTitleCell"
   
   let editPetImageSegueId = "editPetImageSegue"
+  let editShowTaskSegueId = "editShowTaskSegue"
   
   // heights of cells
   let headerHeight: CGFloat = 22.0
@@ -262,6 +263,7 @@ class PetMenuViewController: UIViewController {
   }
  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
     if segue.identifier == editPetImageSegueId {
       
       if let destinationViewController = segue.destinationViewController as? PetImageViewController {
@@ -269,9 +271,18 @@ class PetMenuViewController: UIViewController {
         destinationViewController.petCurrentImageName = pet.imageName
       }
       
+    } else if segue.identifier == editShowTaskSegueId {
+      
+      if let destinationViewController = segue.destinationViewController as? TaskMenuViewController, let task = sender as? Task {
+        destinationViewController.delegate = self
+        destinationViewController.petsRepository = petsRepository
+        destinationViewController.task = task
+        destinationViewController.menuMode = .Show
+      }
+      
     }
+    
   }
-  
 }
 
 // MARK: UITableViewDataSource
@@ -445,7 +456,24 @@ extension PetMenuViewController: UITableViewDataSource {
   }
   
   func configureIconTitleCell(cell: MenuIconTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    let row = indexPath.row
+    
+    let (task, taskIsActive) = getTaskAndActiveness(forIndexPathRow: indexPath.row)
+    
+    if let task = task {
+      cell.iconImageView.image = UIImage(named: task.typeItem.iconName)
+      cell.taskNameLabel.text = task.name
+      cell.accessoryView = getAccessoryImageView(withIcon: infoIcon)
+      
+      if taskIsActive {
+        cell.taskLastRealization.text = "заканчивается: " + DateHelper.dateToString(task.endDate, withDateFormat: DateFormatterFormat.DateTime.rawValue)
+      } else {
+        cell.taskLastRealization.text = "закончилось"
+      }
+    }
+    
+  }
+  
+  func getTaskAndActiveness(forIndexPathRow row: Int) -> (task: Task?, isActive: Bool) {
     
     var taskInActiveTasks: Bool?
     if row < tasksSortedByActiveness.active.count {
@@ -456,24 +484,16 @@ extension PetMenuViewController: UITableViewDataSource {
     
     if let taskInActiveTasks = taskInActiveTasks {
       var task: Task
-      
       if taskInActiveTasks {
         task = tasksSortedByActiveness.active[row]
+        return (task, true)
       } else {
         task = tasksSortedByActiveness.completed[row - tasksSortedByActiveness.active.count]
+        return (task, false)
       }
-      
-      cell.iconImageView.image = UIImage(named: task.typeItem.iconName)
-      cell.taskNameLabel.text = task.name
-      cell.accessoryView = getAccessoryImageView(withIcon: infoIcon)
-      
-      if taskInActiveTasks {
-        cell.taskLastRealization.text = "заканчивается: " + DateHelper.dateToString(task.endDate, withDateFormat: DateFormatterFormat.DateTime.rawValue)
-      } else {
-        cell.taskLastRealization.text = "закончилось"
-      }
-      
     }
+    
+    return (nil, false)
   }
   
   func configureTitleCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -496,24 +516,7 @@ extension PetMenuViewController: UITableViewDataSource {
     } else {
       return nil
     }
-    
   }
-  
-//  // determine index path for cell, which accessory-button was tapped and call accessoryButtonTappedForRowWithIndexPath
-//  func detailButtonTapped(sender: UIButton) {
-//    let senderPoint = sender.convertPoint(CGPointZero, toView: tableView)
-//    if let indexPath = tableView.indexPathForRowAtPoint(senderPoint) {
-//      
-//      let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
-//      
-//      if cellType == .IconTitleCell {
-//        print(tasksSorted[indexPath.row].name)
-//      } else if cellType == .AddCell {
-//        print("Add new task!")
-//      }
-//    
-//    }
-//  }
   
 }
 
@@ -571,7 +574,6 @@ extension PetMenuViewController: UITableViewDelegate {
     let section = indexPath.section
     let row = indexPath.row
     let cellType = menu.cellsTagTypeState[section][row].type
-    //let cellState = menu.cellsTagTypeState[section][row].state
     
     switch cellType {
     case .TextFieldCell: // cell for pet's name
@@ -583,8 +585,9 @@ extension PetMenuViewController: UITableViewDelegate {
       performSegueWithIdentifier(editPetImageSegueId, sender: self)
       
     case .IconTitleCell: // cell for pet's task
-      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuIconTitleCell {
-        print(cell.taskNameLabel.text)
+      let (task, _) = getTaskAndActiveness(forIndexPathRow: indexPath.row)
+      if let task = task {
+        performSegueWithIdentifier(editShowTaskSegueId, sender: task)
       }
       
     case .AddCell: // cell for adding pet's task
@@ -595,9 +598,6 @@ extension PetMenuViewController: UITableViewDelegate {
     default:
       break
     }
-    
-    editPetImageSegueId
-
     
     tableView.deselectRowAtIndexPath(indexPath, animated: false)
     // focus on selected cell
@@ -688,4 +688,74 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
     
   }
   
+}
+
+extension PetMenuViewController: TaskMenuViewControllerDelegate {
+  func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
+    
+    navigationController?.popViewControllerAnimated(true)
+    
+    let (row, taskIsActive) = getRowAndActiveness(forTask: task)
+    if let row = row, let taskIsActive = taskIsActive {
+      if taskIsActive {
+        tasksSortedByActiveness.active.removeAtIndex(row)
+      } else {
+        tasksSortedByActiveness.completed.removeAtIndex(row)
+      }
+      
+      menu.deleteOneCellForTask()
+      
+      // delete task and save it
+      petsRepository.deleteObject(task)
+      petsRepository.saveOrRollback()
+      
+      tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: row, inSection: menu.taskSection)], withRowAnimation: .Automatic)
+      
+      if pet.tasks.isEmpty {
+        if let header = tableView.headerViewForSection(menu.taskSection) as? TableSectionHeaderView {
+          header.titleLabel.text = "нет ни одного задания"
+        }
+      }
+      
+    }
+  }
+  
+  func getRowAndActiveness(forTask task: Task) -> (row: Int?, isActive: Bool?) {
+    if let index = tasksSortedByActiveness.active.indexOf(task) {
+      return (index, true)
+    } else if let index = tasksSortedByActiveness.completed.indexOf(task) {
+      return (index, false)
+    }
+    return (nil, nil)
+  }
+  
+  func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task) {
+    if let indexPathRow = getIndexPathRow(forTask: task) {
+      let indexPath = NSIndexPath(forRow: indexPathRow, inSection: menu.taskSection)
+      tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+    }
+  }
+  
+  func getIndexPathRow(forTask task: Task) -> Int? {
+    if let index = tasksSortedByActiveness.active.indexOf(task) {
+      return index
+    } else if let index = tasksSortedByActiveness.completed.indexOf(task) {
+      return tasksSortedByActiveness.active.count + index
+    }
+    return nil
+  }
+  
+  func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task) {
+    navigationController?.popViewControllerAnimated(true)
+    tasksSortedByActiveness = pet.tasksSortedByActiveness(forDate: NSDate())
+    tableView.reloadSections(NSIndexSet(index: menu.taskSection), withRowAnimation: .Automatic)
+  }
+}
+
+extension NSSet {
+  var isEmpty: Bool {
+    get {
+      return self.count == 0
+    }
+  }
 }
