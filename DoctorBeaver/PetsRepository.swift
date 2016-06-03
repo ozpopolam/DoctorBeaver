@@ -209,8 +209,20 @@ class PetsRepository {
     return nil
   }
   
-  // deletion
+  func fetchAllTaskTypeItems() -> [TaskTypeItem] {
+    let managedObjects = fetchAllObjects(forEntityName: TaskTypeItem.entityName)
+    
+    var taskTypeItems = [TaskTypeItem]()
+    for managedObject in managedObjects {
+      if let taskTypeItem = managedObject as? TaskTypeItem {
+        taskTypeItems.append(taskTypeItem)
+      }
+    }
+    
+    return taskTypeItems
+  }
   
+  // deletion
   func deleteObject(object: NSManagedObject) {
     context.deleteObject(object)
   }

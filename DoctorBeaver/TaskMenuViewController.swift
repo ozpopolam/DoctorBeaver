@@ -195,6 +195,8 @@ class TaskMenuViewController: UIViewController {
       } else {
         delegate?.taskMenuViewController(self, didSlightlyEditScheduleOfTask: task)
       }
+    } else {
+      navigationController?.popViewControllerAnimated(true)
     }
   }
   

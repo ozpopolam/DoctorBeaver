@@ -50,6 +50,11 @@ struct VisualConfiguration {
     else { return UIFont.systemFontOfSize(systemFontSize) }
   }()
   
+  static let iconNameFont: UIFont = {
+    if let font = UIFont(name: "GillSans-Light", size: 20.0) { return font }
+    else { return UIFont.systemFontOfSize(systemFontSize) }
+  }()
+  
   static let textSemiBoldFont: UIFont = {
     if let font = UIFont(name: "GillSans-SemiBold", size: 15.0) { return font }
     else { return UIFont.systemFontOfSize(systemFontSize) }

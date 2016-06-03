@@ -46,6 +46,7 @@ class PetMenuViewController: UIViewController {
   
   let editPetImageSegueId = "editPetImageSegue"
   let editShowTaskSegueId = "editShowTaskSegue"
+  let addTaskSegueId = "addTaskSegue"
   
   // heights of cells
   let headerHeight: CGFloat = 22.0
@@ -280,6 +281,12 @@ class PetMenuViewController: UIViewController {
         destinationViewController.menuMode = .Show
       }
       
+    } else if segue.identifier == addTaskSegueId {
+      if let destinationViewController = segue.destinationViewController as? TaskTypeViewController {
+        destinationViewController.petsRepository = petsRepository
+        
+        
+      }
     }
     
   }
@@ -459,7 +466,7 @@ extension PetMenuViewController: UITableViewDataSource {
     
     let (task, taskIsActive) = getTaskAndActiveness(forIndexPathRow: indexPath.row)
     
-    if let task = task {
+    if let task = task, let taskIsActive = taskIsActive {
       cell.iconImageView.image = UIImage(named: task.typeItem.iconName)
       cell.taskNameLabel.text = task.name
       cell.accessoryView = getAccessoryImageView(withIcon: infoIcon)
@@ -473,7 +480,7 @@ extension PetMenuViewController: UITableViewDataSource {
     
   }
   
-  func getTaskAndActiveness(forIndexPathRow row: Int) -> (task: Task?, isActive: Bool) {
+  func getTaskAndActiveness(forIndexPathRow row: Int) -> (task: Task?, isActive: Bool?) {
     
     var taskInActiveTasks: Bool?
     if row < tasksSortedByActiveness.active.count {
@@ -493,7 +500,7 @@ extension PetMenuViewController: UITableViewDataSource {
       }
     }
     
-    return (nil, false)
+    return (nil, nil)
   }
   
   func configureTitleCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -591,9 +598,7 @@ extension PetMenuViewController: UITableViewDelegate {
       }
       
     case .AddCell: // cell for adding pet's task
-      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleCell {
-        print(cell.titleLabel.text)
-      }
+      performSegueWithIdentifier(addTaskSegueId, sender: self)
     
     default:
       break
@@ -692,15 +697,15 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
 
 extension PetMenuViewController: TaskMenuViewControllerDelegate {
   func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
-    
     navigationController?.popViewControllerAnimated(true)
     
-    let (row, taskIsActive) = getRowAndActiveness(forTask: task)
-    if let row = row, let taskIsActive = taskIsActive {
+    let (ind, taskIsActive) = getIndexAndActiveness(forTask: task)
+    let row = getIndexPathRow(forTask: task)
+    if let ind = ind, let taskIsActive = taskIsActive, let row = row {
       if taskIsActive {
-        tasksSortedByActiveness.active.removeAtIndex(row)
+        tasksSortedByActiveness.active.removeAtIndex(ind)
       } else {
-        tasksSortedByActiveness.completed.removeAtIndex(row)
+        tasksSortedByActiveness.completed.removeAtIndex(ind)
       }
       
       menu.deleteOneCellForTask()
@@ -720,7 +725,7 @@ extension PetMenuViewController: TaskMenuViewControllerDelegate {
     }
   }
   
-  func getRowAndActiveness(forTask task: Task) -> (row: Int?, isActive: Bool?) {
+  func getIndexAndActiveness(forTask task: Task) -> (index: Int?, isActive: Bool?) {
     if let index = tasksSortedByActiveness.active.indexOf(task) {
       return (index, true)
     } else if let index = tasksSortedByActiveness.completed.indexOf(task) {
@@ -730,6 +735,8 @@ extension PetMenuViewController: TaskMenuViewControllerDelegate {
   }
   
   func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task) {
+    navigationController?.popViewControllerAnimated(true)
+    
     if let indexPathRow = getIndexPathRow(forTask: task) {
       let indexPath = NSIndexPath(forRow: indexPathRow, inSection: menu.taskSection)
       tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)

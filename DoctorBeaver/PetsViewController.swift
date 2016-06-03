@@ -139,6 +139,8 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
       }
       
       collectionView.reloadData()
+      
+      performSegueWithIdentifier(editShowPetSegueId, sender: pets[0])
     }
     
   }
@@ -160,6 +162,8 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
         destinationViewController.petsRepository = petsRepository
         destinationViewController.delegate = self
         destinationViewController.hidesBottomBarWhenPushed = true
+        
+        
         
         if segue.identifier == addPetSegueId {
           destinationViewController.menuMode = .Add
