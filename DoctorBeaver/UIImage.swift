@@ -9,6 +9,19 @@
 import UIKit
 
 extension UIImage {
+  
+  convenience init?(unsafelyNamed name: String?) {
+    if let name = name {
+      if !name.isEmpty {
+        self.init(named: name)
+      } else {
+        return nil
+      }
+    } else {
+      return nil
+    }
+  }
+  
   func ofSize(size: CGSize) -> UIImage {
     if self.size == size {
       return self

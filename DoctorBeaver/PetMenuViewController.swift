@@ -9,8 +9,10 @@
 import UIKit
 
 protocol PetMenuViewControllerDelegate: class {
+  func petMenuViewController(viewController: PetMenuViewController, didAddPet pet: Pet)
+  func petMenuViewController(viewController: PetMenuViewController, didEditNameOfPet pet: Pet)
+  func petMenuViewController(viewController: PetMenuViewController, didEditImageOfPet pet: Pet)
   func petMenuViewController(viewController: PetMenuViewController, didDeletePet pet: Pet)
-  func petMenuViewController(viewController: PetMenuViewController, didEditPet pet: Pet)
 }
 
 enum PetMenuMode {
@@ -30,11 +32,16 @@ class PetMenuViewController: UIViewController {
   
   var pet: Pet! // pet to show or edit
   var petWithInitialSettings: Pet? // needed to store initial values
-  var petWasEdited = false // some settings of pet were edited
+  var petWithPreviousSettings: Pet? // needed to store second, third... version of values
+  
+  var petNameWasEdited = false
+  var petImageWasEdited = false
+  
   var tasksSortedByActiveness: (active: [Task], completed: [Task]) = ([], [])
   
   var menu = PetMenuConfiguration()
   var menuMode: PetMenuMode!
+  var initialMenuMode: PetMenuMode!
   
   // types of cells in table
   let headerId = "headerView"
@@ -46,7 +53,9 @@ class PetMenuViewController: UIViewController {
   
   let editPetImageSegueId = "editPetImageSegue"
   let editShowTaskSegueId = "editShowTaskSegue"
-  let addTaskSegueId = "addTaskSegue"
+  let selectTypeItemSegueId = "selectTypeItemSegue"
+  
+  let unwindSegueId = "petMenuUnwindSegue" // unwind segue to come back to self
   
   // heights of cells
   let headerHeight: CGFloat = 22.0
@@ -83,8 +92,13 @@ class PetMenuViewController: UIViewController {
     
     let tableSectionHeaderNib = UINib(nibName: "TableSectionHeaderView", bundle: nil)
     tableView.registerNib(tableSectionHeaderNib, forHeaderFooterViewReuseIdentifier: headerId)
-
-    //menuMode = .Edit
+    
+    if menuMode == .Add { // controller has been loaded in add-mode -> need to save initial values
+      saveInitialSettings()
+      savePreviousSettings()
+    }
+    
+    initialMenuMode = menuMode
     configureForMenuMode()
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
@@ -180,13 +194,28 @@ class PetMenuViewController: UIViewController {
   func back(sender: UIButton) {
     // if pet for storing initial setting was created, need to delete it
     if let petWithInitialSettings = petWithInitialSettings {
+      
+      petNameWasEdited = petNameIsDifferent(fromPet: petWithInitialSettings)
+      petImageWasEdited = petImageIsDifferent(fromPet: petWithInitialSettings)
+      
       petsRepository.deleteObject(petWithInitialSettings)
     }
     
-    if petWasEdited {
-      delegate?.petMenuViewController(self, didEditPet: pet)
+    // if task for storing version of setting was created, need to delete it
+    if let petWithPreviousSettings = petWithPreviousSettings {
+      petsRepository.deleteObject(petWithPreviousSettings)
     }
     
+    petsRepository.saveOrRollback()
+    
+    if initialMenuMode == .Add {
+      delegate?.petMenuViewController(self, didAddPet: pet)
+    } else if petNameWasEdited {
+      delegate?.petMenuViewController(self, didEditNameOfPet: pet)
+    } else if petImageWasEdited {
+      delegate?.petMenuViewController(self, didEditImageOfPet: pet)
+    }
+
     navigationController?.popViewControllerAnimated(true)
   }
   
@@ -197,6 +226,7 @@ class PetMenuViewController: UIViewController {
     let confirmAction = UIAlertAction(title: "Да, давайте удалим", style: .Destructive) {
       (action) -> Void in
       self.delegate?.petMenuViewController(self, didDeletePet: self.pet)
+      self.navigationController?.popViewControllerAnimated(true)
     }
     
     let cancelAction = UIAlertAction(title: "Нет, я передумал", style: .Cancel) {
@@ -213,16 +243,27 @@ class PetMenuViewController: UIViewController {
   func edit(sender: UIButton) {
     menuMode = .Edit
     saveInitialSettings()
+    savePreviousSettings()
     configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
-  // save initial setting of pet
+  // save initial settings of pet
   func saveInitialSettings() {
     if petWithInitialSettings == nil {
-      petWithInitialSettings = petsRepository.insertPet()
+      petWithInitialSettings = petsRepository.insertProxyPet()
       if let petWithInitialSettings = petWithInitialSettings {
-        petWithInitialSettings.copySettings(fromPet: pet)
+        petWithInitialSettings.copySettingsWithoutTasks(fromPet: pet)
       }
+    }
+  }
+  
+  // save another version of settings
+  func savePreviousSettings() {
+    if petWithPreviousSettings == nil {
+      petWithPreviousSettings = petsRepository.insertProxyPet()
+    }
+    if let petWithPreviousSettings = petWithPreviousSettings {
+      petWithPreviousSettings.copySettingsWithoutTasks(fromPet: pet)
     }
   }
   
@@ -231,27 +272,42 @@ class PetMenuViewController: UIViewController {
     menuMode = .Show
     deactivateAllActiveTextFields()
     
-    if petDidChange() {
+    if petIsDifferent(fromPet: petWithPreviousSettings) {
       // settings were changed - need to restore them
-      loadInitailSettings()
+      loadPreviousSettings()
       tableView.reloadData()
     }
     configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
   // check whether some settings of pet did change
-  func petDidChange() -> Bool {
-    if let petWithInitialSettings = petWithInitialSettings {
-      return !pet.settingsAreEqual(toPet: petWithInitialSettings)
+  func petIsDifferent(fromPet petWithOldSettings: Pet?) -> Bool {
+    // compare new settings to the other version
+    if let petWithOldSettings = petWithOldSettings {
+      return !pet.settingsAreEqual(toPet: petWithOldSettings)
+    } else {
+      return false
+    }
+  }
+  func petNameIsDifferent(fromPet petWithOldSettings: Pet?) -> Bool {
+    if let petWithOldSettings = petWithOldSettings {
+      return pet.name != petWithOldSettings.name
+    } else {
+      return false
+    }
+  }
+  func petImageIsDifferent(fromPet petWithOldSettings: Pet?) -> Bool {
+    if let petWithOldSettings = petWithOldSettings {
+      return pet.imageName != petWithOldSettings.imageName
     } else {
       return false
     }
   }
   
-  // restore initial settings of pet
-  func loadInitailSettings() {
-    if let petWithInitialSettings = petWithInitialSettings {
-      pet.copySettings(fromPet: petWithInitialSettings)
+  // restore previous settings of task
+  func loadPreviousSettings() {
+    if let petWithPreviousSettings = petWithPreviousSettings {
+      pet.copySettingsWithoutTasks(fromPet: petWithPreviousSettings)
     }
   }
   
@@ -260,36 +316,54 @@ class PetMenuViewController: UIViewController {
     menuMode = .Show
     deactivateAllActiveTextFields()
     configureForMenuMode(withAnimationDuration: animationDuration)
-    petWasEdited = petDidChange()
   }
  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    var segueIdIsCorrect = true
     
-    if segue.identifier == editPetImageSegueId {
-      
-      if let destinationViewController = segue.destinationViewController as? PetImageViewController {
-        destinationViewController.delegate = self
-        destinationViewController.petCurrentImageName = pet.imageName
-      }
-      
-    } else if segue.identifier == editShowTaskSegueId {
-      
-      if let destinationViewController = segue.destinationViewController as? TaskMenuViewController, let task = sender as? Task {
-        destinationViewController.delegate = self
-        destinationViewController.petsRepository = petsRepository
-        destinationViewController.task = task
-        destinationViewController.menuMode = .Show
-      }
-      
-    } else if segue.identifier == addTaskSegueId {
-      if let destinationViewController = segue.destinationViewController as? TaskTypeViewController {
-        destinationViewController.petsRepository = petsRepository
+    if let identifier = segue.identifier {
+      switch identifier {
         
+      case editPetImageSegueId:
+        if let destinationViewController = segue.destinationViewController as? PetImageViewController {
+          destinationViewController.delegate = self
+          destinationViewController.petCurrentImageName = pet.imageName
+        }
         
+      case editShowTaskSegueId:
+        if let destinationViewController = segue.destinationViewController as? TaskMenuViewController, let task = sender as? Task {
+          destinationViewController.delegate = self
+          destinationViewController.petsRepository = petsRepository
+          destinationViewController.task = task
+          destinationViewController.menuMode = .Show
+        }
+        
+      case selectTypeItemSegueId:
+        if let destinationViewController = segue.destinationViewController as? TaskTypeViewController {
+          destinationViewController.pet = pet
+          destinationViewController.petsRepository = petsRepository
+          destinationViewController.unwindSegueId = unwindSegueId
+          destinationViewController.delegateForTaskMenu = self
+        }
+
+      default:
+        segueIdIsCorrect = false
       }
+    } else {
+      segueIdIsCorrect = false
     }
     
+    if segueIdIsCorrect {
+      petsRepository.saveOrRollback()
+    }
   }
+  
+  @IBAction func unwindToPetMenu(segue: UIStoryboardSegue) {
+    if segue.identifier == unwindSegueId {
+      
+    }
+  }
+  
 }
 
 // MARK: UITableViewDataSource
@@ -335,7 +409,7 @@ extension PetMenuViewController: UITableViewDataSource {
       
     case .AddCell:
       if let cell = tableView.dequeueReusableCellWithIdentifier(titleCellId) as? MenuTitleCell {
-        configureTitleCell(cell, forRowAtIndexPath: indexPath)
+        configureAddCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
     }
@@ -377,32 +451,14 @@ extension PetMenuViewController: UITableViewDataSource {
   func configureCellSelectionStyleForMenuMode(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
     
     let cellType = menu.cellsTagTypeState[indexPath.section][indexPath.row].type
-    if cellType == .IconTitleCell ||
-      menuMode != .Show && (cellType == .TextFieldCell || cellType == .TitleImageCell || cellType == .AddCell)
+    if cellType == .IconTitleCell || cellType == .AddCell ||
+      menuMode != .Show && (cellType == .TextFieldCell || cellType == .TitleImageCell)
     {
       cell.selectionStyle = VisualConfiguration.graySelection
     } else {
       cell.selectionStyle = .None
     }
     
-  }
-  
-  // selection style for all cells
-  func configureAddCellForMenuMode() {
-    //menu.configureCellTagTypeStateAddCell(forMenuMode: menuMode)
-    
-    for section in 0..<menu.cellsTagTypeState.count {
-      for row in 0..<menu.cellsTagTypeState[section].count {
-        
-        if menu.cellsTagTypeState[section][row].type == .AddCell {
-          menu.cellsTagTypeState[section][row].state = (menuMode == .Show ? .Hidden : .Disclosure)
-          let indexPath = NSIndexPath(forRow: row, inSection: section)
-          if let _ = tableView.cellForRowAtIndexPath(indexPath) {
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-          }
-        }
-      }
-    }
   }
   
   // MARK: Configuration of cells of different types
@@ -430,7 +486,11 @@ extension PetMenuViewController: UITableViewDataSource {
   func configureTitleImageCell(cell: MenuTitleImageCell, forRowAtIndexPath indexPath: NSIndexPath) {
     cell.tag = menu.tagForIndexPath(indexPath)
     cell.titleLabel.text = "Изображение питомца"
-    cell.imageImageView.image = UIImage(named: pet.imageName)
+    
+    if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+      cell.imageImageView.image = petImage
+    }
+    
     configureTitleImageCellAccessoryForMenuMode(cell)
   }
   
@@ -503,10 +563,29 @@ extension PetMenuViewController: UITableViewDataSource {
     return (nil, nil)
   }
   
-  func configureTitleCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureAddCell(cell: MenuTitleCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    configureAddCellForMenuMode()
     if menu.cellsTagTypeState[indexPath.section][indexPath.row].state != .Hidden {
       cell.titleLabel.text = "Добавить задание"
       cell.accessoryView = getAccessoryImageView(withIcon: addIcon)
+    }
+  }
+  
+  // selection style for all cells
+  func configureAddCellForMenuMode() {
+    //menu.configureCellTagTypeStateAddCell(forMenuMode: menuMode)
+    
+    for section in 0..<menu.cellsTagTypeState.count {
+      for row in 0..<menu.cellsTagTypeState[section].count {
+        
+        if menu.cellsTagTypeState[section][row].type == .AddCell {
+          menu.cellsTagTypeState[section][row].state = (menuMode == .Show ? .Disclosure : .Hidden)
+          let indexPath = NSIndexPath(forRow: row, inSection: section)
+          if let _ = tableView.cellForRowAtIndexPath(indexPath) {
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+          }
+        }
+      }
     }
   }
   
@@ -598,7 +677,7 @@ extension PetMenuViewController: UITableViewDelegate {
       }
       
     case .AddCell: // cell for adding pet's task
-      performSegueWithIdentifier(addTaskSegueId, sender: self)
+      performSegueWithIdentifier(selectTypeItemSegueId, sender: self)
     
     default:
       break
@@ -674,18 +753,18 @@ extension PetMenuViewController: StateSwitchDelegate {
 
 extension PetMenuViewController: PetImageViewControllerDelegate {
   func petImageViewControllerDidCancel(viewController: PetImageViewController) {
-    navigationController?.popViewControllerAnimated(true)
+    
   }
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String) {
-    navigationController?.popViewControllerAnimated(true)
+    
     pet.imageName = imageName
     
     for section in 0..<menu.cellsTagTypeState.count {
       for row in 0..<menu.cellsTagTypeState[section].count {
         if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
-            cell.imageImageView.image = UIImage(named: pet.imageName)
+            cell.imageImageView.image = UIImage(unsafelyNamed: pet.imageName)
           }
         }
       }
@@ -696,9 +775,17 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
 }
 
 extension PetMenuViewController: TaskMenuViewControllerDelegate {
-  func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
-    navigationController?.popViewControllerAnimated(true)
+  
+  func taskMenuViewController(viewController: TaskMenuViewController, didAddTask task: Task) {
+    tasksSortedByActiveness = pet.tasksSortedByActiveness(forDate: NSDate())
+    menu.addOneCellForTask()
     
+    menu.configureTasksSectionTitle()
+    tableView.reloadSections(NSIndexSet(index: menu.taskSection), withRowAnimation: .Automatic)
+    
+  }
+  
+  func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
     let (ind, taskIsActive) = getIndexAndActiveness(forTask: task)
     let row = getIndexPathRow(forTask: task)
     if let ind = ind, let taskIsActive = taskIsActive, let row = row {
@@ -716,10 +803,9 @@ extension PetMenuViewController: TaskMenuViewControllerDelegate {
       
       tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: row, inSection: menu.taskSection)], withRowAnimation: .Automatic)
       
-      if pet.tasks.isEmpty {
-        if let header = tableView.headerViewForSection(menu.taskSection) as? TableSectionHeaderView {
-          header.titleLabel.text = "нет ни одного задания"
-        }
+      menu.configureTasksSectionTitle()
+      if let header = tableView.headerViewForSection(menu.taskSection) as? TableSectionHeaderView {
+        header.titleLabel.text = menu.sectionTitles[menu.taskSection].lowercaseString
       }
       
     }
@@ -735,8 +821,6 @@ extension PetMenuViewController: TaskMenuViewControllerDelegate {
   }
   
   func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task) {
-    navigationController?.popViewControllerAnimated(true)
-    
     if let indexPathRow = getIndexPathRow(forTask: task) {
       let indexPath = NSIndexPath(forRow: indexPathRow, inSection: menu.taskSection)
       tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
@@ -753,16 +837,8 @@ extension PetMenuViewController: TaskMenuViewControllerDelegate {
   }
   
   func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task) {
-    navigationController?.popViewControllerAnimated(true)
     tasksSortedByActiveness = pet.tasksSortedByActiveness(forDate: NSDate())
     tableView.reloadSections(NSIndexSet(index: menu.taskSection), withRowAnimation: .Automatic)
   }
-}
-
-extension NSSet {
-  var isEmpty: Bool {
-    get {
-      return self.count == 0
-    }
-  }
+  
 }

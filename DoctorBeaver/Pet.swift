@@ -23,20 +23,28 @@ class Pet: NSManagedObject {
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
     if let entity = NSEntityDescription.entityForName(Pet.entityName, inManagedObjectContext: managedContext) {
       self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      
-      id = NSDate().timeIntervalSince1970
-      
       tasks = []
-      
     } else {
       return nil
     }
   }
   
-  func configure(withTypeItem typeItem: TaskTypeItem) {
-    name = ""
-    selected = false
-    imageName = ""
+  func configureWithBasicValues() {
+    name = basicValues.basicName
+    selected = true
+    imageName = VisualConfiguration.errorImageName
+  }
+  
+  func addTask(task: Task) {
+    let mutableTasks = NSMutableSet(set: self.tasks)
+    mutableTasks.addObject(task)
+    self.tasks = mutableTasks
+  }
+  
+  var hasNoTasks: Bool {
+    get {
+      return tasks.count == 0
+    }
   }
   
   var separator: Character {
@@ -86,16 +94,15 @@ class Pet: NSManagedObject {
   }
   
   // copy settings without tasks
-  func copySettings(fromPet pet: Pet) {
-    self.id = pet.id
+  func copySettingsWithoutTasks(fromPet pet: Pet) {
     self.name = pet.name
+    self.basicValues = pet.basicValues
     self.selected = pet.selected
     self.imageName = pet.imageName
   }
   
   // check whether settings of two pets are equal
   func settingsAreEqual(toPet pet: Pet) -> Bool {
-    guard id == pet.id else { return false }
     guard name == pet.name else { return false }
     guard selected == pet.selected else { return false }
     guard imageName == pet.imageName else { return false }
@@ -103,7 +110,6 @@ class Pet: NSManagedObject {
   }
   
   func tasksSortedByActiveness(forDate date: NSDate) -> (active: [Task], completed: [Task]) {
-    
     var tasks = [Task]()
     for task in self.tasks {
       if let task = task as? Task {

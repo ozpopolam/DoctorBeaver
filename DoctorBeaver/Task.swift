@@ -50,7 +50,7 @@ class Task: NSManagedObject {
   func configure(withTypeItem typeItem: TaskTypeItem) {
     self.typeItem = typeItem
     
-    name = ""
+    name = typeItem.name
     typeId = typeItem.id
     
     timesPerDay = typeItem.timesPerDayForInitialization
@@ -61,7 +61,12 @@ class Task: NSManagedObject {
     startDate = NSDate()
     frequency = []
     endDaysOrTimes = 0
-    endDate = startDate
+    
+    if let nextDay = DateHelper.calendar.dateByAddingUnit(.Day, value: 1, toDate: startDate, options: []) {
+      endDate = nextDay
+    } else {
+      endDate = startDate
+    }
     
     comment = ""
   }
@@ -731,7 +736,7 @@ class Task: NSManagedObject {
   }
   
   func getOneDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [String] {
-    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: false).map{String($0)}
+    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: true).map{String($0)}
     return oneDimArray
   }
   

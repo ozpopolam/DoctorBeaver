@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 
 protocol TaskMenuViewControllerDelegate: class {
+  func taskMenuViewController(viewController: TaskMenuViewController, didAddTask task: Task)
   func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task)
   func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task)
   func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task)
@@ -36,6 +37,7 @@ class TaskMenuViewController: UIViewController {
   
   var menu = TaskMenuConfiguration()
   var menuMode: TaskMenuMode!
+  var initialMenuMode: TaskMenuMode!
   
   // types of cells in table
   let headerId = "headerView"
@@ -54,8 +56,8 @@ class TaskMenuViewController: UIViewController {
   
   var keyboardHeight: CGFloat!
   
-  // segue to sub-menu
-  let minutesDoseMenuSegueId = "minutesDoseMenuSegue"
+  let minutesDoseMenuSegueId = "minutesDoseMenuSegue" // segue to sub-menu
+  var unwindSegueId: String? // id of a possible unwind segue
   
   let animationDuration: NSTimeInterval = 0.5 // to animate change of button's icon
 
@@ -79,6 +81,12 @@ class TaskMenuViewController: UIViewController {
     let tableSectionHeaderNib = UINib(nibName: "TableSectionHeaderView", bundle: nil)
     tableView.registerNib(tableSectionHeaderNib, forHeaderFooterViewReuseIdentifier: headerId)
     
+    if menuMode == .Add { // controller has been loaded in add-mode -> need to save initial values
+      saveInitialSettings()
+      savePreviousSettings()
+    }
+    
+    initialMenuMode = menuMode
     configureForMenuMode()
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
@@ -186,7 +194,9 @@ class TaskMenuViewController: UIViewController {
     
     petsRepository.saveOrRollback()
     
-    if taskWasEdited {
+    if initialMenuMode == .Add {
+      delegate?.taskMenuViewController(self, didAddTask: task)
+    } else if taskWasEdited {
       // task was edited
       if scheduleWasChanged {
         // time frame of task changed
@@ -195,9 +205,14 @@ class TaskMenuViewController: UIViewController {
       } else {
         delegate?.taskMenuViewController(self, didSlightlyEditScheduleOfTask: task)
       }
-    } else {
-      navigationController?.popViewControllerAnimated(true)
     }
+    
+    if let unwindSegueId = unwindSegueId { // we have id for unwind segue -> use it
+      performSegueWithIdentifier(unwindSegueId, sender: self)
+    } else {
+      navigationController?.popViewControllerAnimated(true) // just close VC
+    }
+    
   }
   
   // Delete-button
@@ -207,6 +222,7 @@ class TaskMenuViewController: UIViewController {
     let confirmAction = UIAlertAction(title: "Да, давайте удалим", style: .Destructive) {
       (action) -> Void in
       self.delegate?.taskMenuViewController(self, didDeleteTask: self.task)
+      self.navigationController?.popViewControllerAnimated(true)
     }
     
     let cancelAction = UIAlertAction(title: "Нет, я передумал", style: .Cancel) {
@@ -283,7 +299,7 @@ class TaskMenuViewController: UIViewController {
     }
   }
   
-  // restore initial settings of task
+  // restore previous settings of task
   func loadPreviousSettings() {
     if let taskWithPreviousSettings = taskWithPreviousSettings {
       task.copySettings(fromTask: taskWithPreviousSettings)

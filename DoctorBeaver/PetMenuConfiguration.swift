@@ -41,14 +41,19 @@ class PetMenuConfiguration {
   let selectedTitleTag = 04
   
   let taskSection = 1
-  let taskStartTag = 10
+  let taskTag = 10
   var taskAddTag = 0 // calculated based on amount of tasks
+  
+  var petHasTasksSectionTitle = ""
+  var petHasNoTasksSectionTitle = ""
   
   // configuration of menu
   func configure(withPet pet: Pet, forMenuMode menuMode: PetMenuMode) {
     self.pet = pet
     
     sectionTitles = pet.sectionTitles
+    petHasTasksSectionTitle = pet.sectionTitles[taskSection]
+    petHasNoTasksSectionTitle = "нет ни одного задания"
     
     // structure of cells, forming the menu
     configureCellTagTypeState(forMenuMode: menuMode)
@@ -66,22 +71,30 @@ class PetMenuConfiguration {
     cellsTagTypeState[menuSection].append((selectedTitleTag, .TitleSwitchCell, .Visible))
     
     cellsTagTypeState.append([])
-    configureCellTagTypeStateForTasks()
+    for _ in 0..<pet.tasks.count {
+      cellsTagTypeState[taskSection].append((taskTag, .IconTitleCell, .Detail))
+    }
+    cellsTagTypeState[taskSection].append((taskTag, .AddCell, .Hidden)) // add-task cell
+    
+    configureTasksSectionTitle()
   }
   
-  func configureCellTagTypeStateForTasks() {
-    cellsTagTypeState[taskSection] = []
-    
-    for ind in 0..<pet.tasks.count {
-      cellsTagTypeState[taskSection].append((taskStartTag + ind, .IconTitleCell, .Detail))
+  func configureTasksSectionTitle() {
+    if pet.hasNoTasks {
+      sectionTitles[taskSection] = petHasNoTasksSectionTitle
+    } else {
+      sectionTitles[taskSection] = petHasTasksSectionTitle
     }
-    
-    taskAddTag = taskStartTag + pet.tasks.count
-    cellsTagTypeState[taskSection].append((taskAddTag, .AddCell, .Hidden))
+  }
+  
+  func addOneCellForTask() {
+    if !pet.hasNoTasks {
+      cellsTagTypeState[taskSection].insert((taskTag, .IconTitleCell, .Detail), atIndex: 0)
+    }
   }
   
   func deleteOneCellForTask() {
-    if !pet.tasks.isEmpty {
+    if !pet.hasNoTasks {
       cellsTagTypeState[taskSection].removeFirst()
     }
   }

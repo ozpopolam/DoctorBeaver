@@ -25,7 +25,8 @@ class ScheduleViewController: UIViewController {
   @IBOutlet weak var tableContainerView: UIView!
   
   var petsRepository: PetsRepository!
-  var viewWasLoadedWithPetsRepository = false
+  var viewWasLoadedWithUpToDatePetsRepository = false
+  
   
   var calendarButton: UIButton!
   // дата для отображения расписания
@@ -57,11 +58,12 @@ class ScheduleViewController: UIViewController {
     // поначалу прячем все кнопки
     fakeNavigationBar.hideAllButtons()
     
-    // проверяем, загружен ли контекст
-    if viewIsReadyToBeLoadedWithPetsRepository() {
-      // настраиваем view
-      fullyReloadSchedule()
-    }
+//    // проверяем, загружен ли контекст
+//    if viewIsReadyToBeLoadedWithPetsRepository() {
+//      fullyReloadSchedule()
+////      // register ScheduleViewController as PetsRepository'observer
+////      petsRepository.addObserver(self)
+//    }
     
   }
   
@@ -69,6 +71,10 @@ class ScheduleViewController: UIViewController {
     super.viewWillAppear(animated)
     // прячем navigation bar
     navigationController?.navigationBarHidden = true
+    
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      fullyReloadSchedule()
+    }
   }
   
   // textView указывает на первую строку
@@ -80,10 +86,33 @@ class ScheduleViewController: UIViewController {
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
+  
+  deinit {
+    petsRepository.removeObserver(self) // remove observer before deinitialization
+  }
+  
+  func setPetsRepository(petsRepository: PetsRepository) {
+    self.petsRepository = petsRepository
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      fullyReloadSchedule()
+    }
+  }
+  
+  // проверяем, можно ли обновить view данными из managedContext
+  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
+    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithUpToDatePetsRepository {
+      viewWasLoadedWithUpToDatePetsRepository = true
+      return true
+    } else {
+      return false
+    }
+  }
 
   // заполняем таблицу с нуля
   // настраиваем внешний вид по инфо питомца и инициируем отображение расписания
   func fullyReloadSchedule() {
+    
+    print("fullyReloadSchedule")
     
     // настраиваем расположение кнопок и по необходимости выводим предупреждающие надписи
     if petsRepository.countAll(Pet.entityName) == 0 {
@@ -303,25 +332,10 @@ class ScheduleViewController: UIViewController {
   
 }
 
-extension ScheduleViewController: PetsRepositorySettable {
-  
-  func setPetsRepository(petsRepository: PetsRepository) {
-    self.petsRepository = petsRepository
-    if viewIsReadyToBeLoadedWithPetsRepository() {
-      fullyReloadSchedule()
-    }
+extension ScheduleViewController: PetsRepositoryStateObserver {
+  func petsRepositoryDidChange(repository: PetsRepositoryStateSubject) {
+    viewWasLoadedWithUpToDatePetsRepository = false
   }
-  
-  // проверяем, можно ли обновить view данными из managedContext
-  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
-    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
-      viewWasLoadedWithPetsRepository = true
-      return true
-    } else {
-      return false
-    }
-  }
-  
 }
 
 // высплывающий календарь

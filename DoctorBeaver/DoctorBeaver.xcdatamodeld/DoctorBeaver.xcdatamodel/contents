@@ -9,6 +9,7 @@
         <relationship name="tasks" toMany="YES" deletionRule="Cascade" destinationEntity="Task" inverseName="pet" inverseEntity="Task" syncable="YES"/>
     </entity>
     <entity name="PetBasicValues" representedClassName=".PetBasicValues" syncable="YES">
+        <attribute name="basicName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="namePlaceholder" attributeType="String" syncable="YES"/>
         <attribute name="sectionTitles" attributeType="String" syncable="YES"/>
         <attribute name="selectedForInitialization" attributeType="Boolean" syncable="YES"/>
@@ -77,7 +78,7 @@
     </entity>
     <elements>
         <element name="Pet" positionX="-297" positionY="-144" width="128" height="135"/>
-        <element name="PetBasicValues" positionX="-99" positionY="-90" width="128" height="135"/>
+        <element name="PetBasicValues" positionX="-99" positionY="-90" width="128" height="150"/>
         <element name="Realization" positionX="106" positionY="-108" width="128" height="90"/>
         <element name="Task" positionX="-90" positionY="-243" width="128" height="253"/>
         <element name="TaskTypeItem" positionX="-99" positionY="108" width="128" height="405"/>

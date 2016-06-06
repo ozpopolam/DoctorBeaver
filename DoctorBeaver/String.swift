@@ -16,7 +16,8 @@ extension String {
   }
   var isFilledWithSomething: Bool {
     get {
-      return !isVoid
+      return !isEmpty
+      //return !isVoid
     }
   }
 }

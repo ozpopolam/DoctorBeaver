@@ -9,13 +9,31 @@
 import Foundation
 import CoreData
 
-protocol PetsRepositorySettable: class {
-  // устанавливаем ManagedObjectContext
+protocol PetsRepositorySettable: class { // can get and set PetsRepository
   var petsRepository: PetsRepository! { get set }
-  //func setPetsRepository(petsRepository: PetsRepository)
 }
 
-class PetsRepository {
+// Obverver-subject protocol
+protocol PetsRepositoryStateSubject: class {
+  var observers: [WeakPetsRepositoryStateObserver] { get set }
+  func addObserver(observer: PetsRepositoryStateObserver)
+  func removeObserver(observer: PetsRepositoryStateObserver)
+  func notifyObservers()
+}
+
+// weak-wrapper for PetsRepositoryStateObserver
+class WeakPetsRepositoryStateObserver {
+  weak var observer: PetsRepositoryStateObserver?
+  init (_ observer: PetsRepositoryStateObserver) {
+    self.observer = observer
+  }
+}
+// Obverver protocol
+protocol PetsRepositoryStateObserver: class {
+  func petsRepositoryDidChange(repository: PetsRepositoryStateSubject)
+}
+
+class PetsRepository: PetsRepositoryStateSubject {
   let modelName: String
   
   private lazy var appDocDirectory: NSURL = {
@@ -59,6 +77,7 @@ class PetsRepository {
     if context.hasChanges {
       do {
         try context.save()
+        notifyObservers() // notify all observers that some changes have happened in repository
         return true
       } catch {
         print("Error! Context cannot be saved!")
@@ -70,7 +89,7 @@ class PetsRepository {
     }
   }
   
-  // insertion
+// MARK: Insertion
   func insertTaskTypeItemBasicValues() -> TaskTypeItemBasicValues? {
     if let taskTypeItemBasicValues = TaskTypeItemBasicValues(insertIntoManagedObjectContext: context) {
       return taskTypeItemBasicValues
@@ -112,14 +131,24 @@ class PetsRepository {
   }
   
   func insertPet() -> Pet? {
-    if let pet = Pet(insertIntoManagedObjectContext: context) {
+    if let pet = Pet(insertIntoManagedObjectContext: context), let basicValues = fetchPetBasicValues() {
+      pet.id = NSDate().timeIntervalSince1970
+      pet.basicValues = basicValues
       return pet
     } else {
       return nil
     }
   }
   
-  // counting
+  func insertProxyPet() -> Pet? {
+    if let pet = Pet(insertIntoManagedObjectContext: context) {
+      pet.id = -1
+      return pet
+    }
+    return nil
+  }
+  
+// MARK: Counting
   func countAll(entityName: String) -> Int {
     let fetchRequest = NSFetchRequest(entityName: entityName)
     fetchRequest.resultType = .CountResultType
@@ -136,7 +165,7 @@ class PetsRepository {
     return 0
   }
   
-  // fetching
+// MARK: Fetching
   func fetchAllObjects(forEntityName entityName: String) -> [NSManagedObject] {
     let fetchRequest = NSFetchRequest(entityName: entityName)
     
@@ -222,7 +251,7 @@ class PetsRepository {
     return taskTypeItems
   }
   
-  // deletion
+// MARK: Deletion
   func deleteObject(object: NSManagedObject) {
     context.deleteObject(object)
   }
@@ -242,7 +271,29 @@ class PetsRepository {
     }
   }
   
+// MARK: PetsRepositoryStateSubject
+  var observers = [WeakPetsRepositoryStateObserver]() // observers for PetsRepository's state change
   
+  func addObserver(observer: PetsRepositoryStateObserver) {
+    observers.append(WeakPetsRepositoryStateObserver(observer))
+  }
+  
+  func removeObserver(observerToRemove: PetsRepositoryStateObserver) {
+    for ind in 0..<observers.count {
+      if let observer = observers[ind].observer {
+        if observerToRemove === observer {
+          observers.removeAtIndex(ind)
+          break
+        }
+      }
+    }
+  }
+  
+  func notifyObservers() {
+    for weakObserver in observers {
+      weakObserver.observer?.petsRepositoryDidChange(self)
+    }
+  }
   
 }
 

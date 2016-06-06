@@ -9,12 +9,15 @@
 import UIKit
 import CoreData
 
-class TaskTypeViewController: UIViewController, PetsRepositorySettable {
+class TaskTypeViewController: UIViewController {
   
   @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var collectionView: UICollectionView!
   
-  let addPetSegueId = "addPetSegue"
+  weak var delegateForTaskMenu: TaskMenuViewControllerDelegate?
+  
+  let addTaskSegueId = "addTaskSegue"
+  var unwindSegueId: String? // id of a possible unwind segue
   
   // settings for layout of UICollectionView
   let iconTitleCollectionCellId = "menuIconTitleCollectionCell"
@@ -26,6 +29,7 @@ class TaskTypeViewController: UIViewController, PetsRepositorySettable {
   
   let animationDuration = VisualConfiguration.animationDuration // to animate change of button's icon
   
+  var pet: Pet! // pet to add task
   var petsRepository: PetsRepository! {
     didSet {
       if viewIsReadyToBeLoadedWithPetsRepository() {
@@ -35,13 +39,20 @@ class TaskTypeViewController: UIViewController, PetsRepositorySettable {
   }
   var viewWasLoadedWithPetsRepository = false
   var typeItems = [TaskTypeItem]()
-  var selectedTypeItemsInd: Int?
+  var selectedTypeItemsInd = 0 // always must select some cell
+  var task: Task? // task which is about to be created
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
     decoratedNavigationBar.titleLabel.text = "Вид задания".uppercaseString
+    
+    decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
+    
+    decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
     
     collectionView.backgroundColor = UIColor.whiteColor()
     
@@ -77,10 +88,36 @@ class TaskTypeViewController: UIViewController, PetsRepositorySettable {
     if !typeItems.isEmpty {
       typeItems.sortInPlace { $0.id < $1.id }
       collectionView.reloadData()
+      collectionView.selectItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0), animated: false, scrollPosition: .None)
+    }
+  }
+  
+  // Cancel-button
+  func cancel(sender: UIButton) {
+    navigationController?.popViewControllerAnimated(true)
+  }
+  
+  // Done-button
+  func done(sender: UIButton) {
+    if let task = petsRepository.insertTask() {
+      task.pet = pet
+      task.configure(withTypeItem: typeItems[selectedTypeItemsInd])
+      self.task = task // save in a variable
+      performSegueWithIdentifier(addTaskSegueId, sender: task)
     }
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == addTaskSegueId {
+      
+      if let task = sender as? Task, let destinationViewController = segue.destinationViewController as? TaskMenuViewController {
+        destinationViewController.delegate = delegateForTaskMenu
+        destinationViewController.petsRepository = petsRepository
+        destinationViewController.task = task
+        destinationViewController.menuMode = .Add
+        destinationViewController.unwindSegueId = unwindSegueId
+      }
+    }
   }
   
 }
@@ -97,21 +134,15 @@ extension TaskTypeViewController: UICollectionViewDataSource {
       let typeItem = typeItems[indexPath.row]
       
       cell.selectedView.layer.cornerRadius = cellCornerRadius
+      cell.selectedView.backgroundColor = VisualConfiguration.lightOrangeColor
       
-      if let selectedTypeItemsInd = selectedTypeItemsInd {
-        if indexPath.row == selectedTypeItemsInd {
-          cell.selectedView.backgroundColor = VisualConfiguration.lightOrangeColor
-        } else {
-          cell.selectedView.backgroundColor = UIColor.clearColor()
-        }
-      } else {
-        cell.selectedView.backgroundColor = UIColor.clearColor()
-      }
+      cell.selectionColor = VisualConfiguration.lightOrangeColor
+      cell.unSelectionColor = UIColor.clearColor()
+      cell.selected = indexPath.row == selectedTypeItemsInd ? true : false
       
       cell.containerView.layer.cornerRadius = cellCornerRadius
       
       cell.iconView.image = UIImage(named: typeItem.iconName)
-      
       
       cell.iconTitle.font = VisualConfiguration.iconNameFont
       cell.iconTitle.text = typeItem.name
@@ -130,16 +161,15 @@ extension TaskTypeViewController: UICollectionViewDataSource {
 extension TaskTypeViewController: UICollectionViewDelegate {
   
   func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-    if let selectedTypeItemsInd = selectedTypeItemsInd {
-      if indexPath.row == selectedTypeItemsInd {
-        return true
-      }
+    if indexPath.row != selectedTypeItemsInd {
+      return true
+    } else {
+      return false
     }
-    return false
   }
   
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    
+    selectedTypeItemsInd = indexPath.row
   }
   
 }

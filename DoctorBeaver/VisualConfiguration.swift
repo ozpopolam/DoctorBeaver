@@ -12,12 +12,13 @@ import Foundation
 // оформление приложения
 struct VisualConfiguration {
   
+  static let errorImageName = "error"
+  
   static let barButtonSize = CGSize(width: 44.0, height: 44.0)
   static let barIconSize = CGSize(width: 25, height: 25)
   static let buttonIconSize = CGSize(width: 33, height: 33)
   static let accessoryIconSize = CGSize(width: 22, height: 22)
   static let infoIconSize = CGSize(width: 22, height: 22)
-  
   
   let buttonIconSize = CGSize(width: 33, height: 33)
   

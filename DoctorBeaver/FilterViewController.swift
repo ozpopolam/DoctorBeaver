@@ -73,6 +73,8 @@ class FilterViewController: UIViewController {
     }
   }
   
+  
+  
   func barButton(imageName: String) -> UIButton {
     let bb = UIButton(type: .Custom)
     bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.barButtonSize)
@@ -143,6 +145,13 @@ class FilterViewController: UIViewController {
     }
   }
   
+  func setPetsRepository(petsRepository: PetsRepository) {
+    self.petsRepository = petsRepository
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      reloadFilterTable()
+    }
+  }
+  
   // перегружаем всю таблицу с питомцами
   func reloadFilterTable() {
     pets = petsRepository.fetchAllPets()
@@ -169,7 +178,7 @@ extension FilterViewController: UITableViewDataSource {
     if let cell = tableView.dequeueReusableCellWithIdentifier("filterCell", forIndexPath: indexPath) as? FilterCell {
       let pet = pets[indexPath.row]
       
-      cell.petImageView.image = UIImage(named: pet.imageName)
+      cell.petImageView.image = UIImage(unsafelyNamed: pet.imageName)
       cell.petNameLabel.text = pet.name
       
       // считаем, сколько неоконченных заданий у питомца
@@ -266,13 +275,4 @@ extension FilterViewController: UITableViewDelegate {
     }
   }
   
-}
-
-extension FilterViewController: PetsRepositorySettable {
-  func setPetsRepository(petsRepository: PetsRepository) {
-    self.petsRepository = petsRepository
-    if viewIsReadyToBeLoadedWithPetsRepository() {
-      reloadFilterTable()
-    }
-  }
 }

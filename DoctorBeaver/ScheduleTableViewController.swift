@@ -406,7 +406,7 @@ extension ScheduleTableViewController: UITableViewDataSource {
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
     cell.petNameLabel.text = tr.realization.task.pet.name
-    cell.petImageView.image = UIImage(named: tr.realization.task.pet.imageName)
+    cell.petImageView.image = UIImage(unsafelyNamed: tr.realization.task.pet.imageName)
   }
   
   // конфигурируем состояние выполненности задания
@@ -516,8 +516,8 @@ extension ScheduleTableViewController: UITableViewDelegate {
 }
 
 extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
+  
   func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
-    navigationController?.popViewControllerAnimated(true)
     
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
     
@@ -530,9 +530,6 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
   }
   
   func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task) {
-    
-    print("didSlightlyEditScheduleOfTask")
-
     let indexPaths = indexPathsForTask(task) // get indices for rows of edited task
     tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
     
@@ -540,9 +537,6 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
   }
   
   func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task) {
-    
-    print("didFullyEditScheduleOfTask")
-    
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete outdated timeRealizations
     
     let _ = task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
@@ -560,5 +554,7 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
     
     updateScheduleTable(withTask: task)
   }
+  
+  func taskMenuViewController(viewController: TaskMenuViewController, didAddTask task: Task) { }
   
 }

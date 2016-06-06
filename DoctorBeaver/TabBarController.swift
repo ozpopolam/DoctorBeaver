@@ -12,13 +12,15 @@
  class TabBarController: UITabBarController {
   
   var petsRepository: PetsRepository!
+  let petsTabInd = 0 // tab with PetsViewController
+  let scheduleTabInd = 1 // tab with ScheduleViewController
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    configureView()
+    configureView() // set images for tab bar buttons
     
-    if false {
+    if true {
       _helperDeleteAllData()
       let firstLaunch = true
       if firstLaunch {
@@ -27,8 +29,7 @@
       populateManagedObjectContextWithJsonPetData()
     }
     
-    // начинаем со вкладки расписания
-    self.selectedIndex = 0
+    self.selectedIndex = scheduleTabInd // begin with schedule tab
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
@@ -114,20 +115,45 @@
     return true
   }
   
+  
+  
   func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
     
-    
-    if let viewController = viewController as? UINavigationController {
-      if let destinationVC = viewController.viewControllers.first as? PetsRepositorySettable {
-        destinationVC.petsRepository = petsRepository
+    if let viewControllers = tabBarController.viewControllers {
+      
+      if viewController == viewControllers[petsTabInd] {
+        // pets are about to be shown -> schedule should start observing repository's changing that can be made in pets
+        
+        if let navController = viewControllers[scheduleTabInd] as? UINavigationController, let destinationViewController = navController.viewControllers.first as? ScheduleViewController {
+            destinationViewController.setPetsRepository(petsRepository)
+            petsRepository.addObserver(destinationViewController)
+        }
+      } else if viewController == viewControllers[scheduleTabInd] {
+        // pets are about to be hidden -> schedule should stop observing repository's changing
+        
+        if let navController = viewControllers[scheduleTabInd] as? UINavigationController, let destinationViewController = navController.viewControllers.first as? ScheduleViewController {
+          destinationViewController.setPetsRepository(petsRepository)
+          petsRepository.removeObserver(destinationViewController)
+        }
       }
+      
+    }
+    
+    
+    
+    
+    
+    
+    
+    if let viewController = viewController as? UINavigationController, let destinationVC = viewController.viewControllers.first as? PetsRepositorySettable {
+      destinationVC.petsRepository = petsRepository
+      
     }
     
     
     
     // ScheduleViewController is inside UINavigationController
     if let viewController = viewController as? UINavigationController {
-      
       if let destinationVC = viewController.viewControllers.first as? ScheduleViewController {
         destinationVC.setPetsRepository(petsRepository)
       }

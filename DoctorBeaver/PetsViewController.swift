@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class PetsViewController: UIViewController, PetsRepositorySettable {
+class PetsViewController: UIViewController {
   
   @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var collectionView: UICollectionView!
@@ -20,7 +20,7 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   
   // settings for layout of UICollectionView
   let petCellId = "petCell"
-  var cellWidth: CGFloat = 0.0 //////////////???????????
+  
   var cellSize = CGSize(width: 0.0, height: 0.0)
   var cellCornerRadius: CGFloat = 0.0
   var sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
@@ -110,47 +110,49 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   
   // Add-button
   func add(sender: UIButton) {
-    performSegueWithIdentifier(addPetSegueId, sender: self)
+    if let pet = petsRepository.insertPet() {
+      pet.configureWithBasicValues()
+      performSegueWithIdentifier(addPetSegueId, sender: pet)
+    }
   }
   
   // fetch data, show warning or reload collection view
   func reloadPetsCollection(withFetchRequest withFetchRequest: Bool = false) {
     
-    if petsRepository.countAll(Pet.entityName) == 0 {
-      decoratedNavigationBar.hideButton(.Left)
-      showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
-    } else {
-      decoratedNavigationBar.showButton(.Left)
-      hideWarningMessage()
-      
-      if withFetchRequest {
+    if withFetchRequest {
+      if petsRepository.countAll(Pet.entityName) == 0 {
+        pets = []
+      } else {
         pets = petsRepository.fetchAllPets()
-      }
-      
-      sortedAZ = !sortedAZ // after reloading, collection actually hasn't been sorted as sortedAZ shows -> need to reset it
-      sortPetsByName()
-      
-      // get cropped version of all pets' icons
-      croppedPetImages = [ : ]
-      for pet in pets {
-        if let petImage = UIImage(named: pet.imageName) {
-          croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+        // get cropped version of all pets' icons
+        croppedPetImages = [ : ]
+        for pet in pets {
+          if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+            croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+          }
         }
       }
-      
-      collectionView.reloadData()
-      
-      performSegueWithIdentifier(editShowPetSegueId, sender: pets[0])
     }
     
+    if pets.isEmpty {
+      showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
+    } else {
+      hideWarningMessage()
+      sortedAZ = !sortedAZ // after reloading, collection actually hasn't been sorted as sortedAZ shows -> need to reset it
+      sortPetsByName()
+    }
+    
+    collectionView.reloadData()
   }
   
   func showWarningMessage(message: String) {
+    decoratedNavigationBar.hideButton(.Left)
     collectionView.hidden = true
     warningLabel.text = message
   }
   
   func hideWarningMessage() {
+    decoratedNavigationBar.showButton(.Left)
     collectionView.hidden = false
     warningLabel.text = ""
   }
@@ -162,8 +164,6 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
         destinationViewController.petsRepository = petsRepository
         destinationViewController.delegate = self
         destinationViewController.hidesBottomBarWhenPushed = true
-        
-        
         
         if segue.identifier == addPetSegueId {
           destinationViewController.menuMode = .Add
@@ -188,8 +188,20 @@ extension PetsViewController: UICollectionViewDataSource {
       let pet = pets[indexPath.row]
       cell.layer.cornerRadius = cellCornerRadius
       
-      cell.petImageView.image = UIImage(named: pet.imageName)
-      cell.borderImageView.image = croppedPetImages[pet.id]
+      if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+        
+        if petImage.size.width < cellSize.width && petImage.size.height < cellSize.height {
+          cell.petImageView.contentMode = .Center
+        } else {
+          cell.petImageView.contentMode = .ScaleAspectFit
+        }
+        
+        cell.petImageView.image = petImage
+        cell.borderImageView.image = croppedPetImages[pet.id]
+      } else {
+        cell.petImageView.image = nil
+        cell.borderImageView.image = nil
+      }
       
       cell.petName.font = VisualConfiguration.smallPetNameFont
       cell.petName.numberOfLines = 1
@@ -260,22 +272,53 @@ extension PetsViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension PetsViewController: PetMenuViewControllerDelegate {
-  func petMenuViewController(viewController: PetMenuViewController, didDeletePet pet: Pet) {
-    navigationController?.popViewControllerAnimated(true)
+  
+  func petMenuViewController(viewController: PetMenuViewController, didAddPet pet: Pet) {
+    pets.append(pet)
+    if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+      croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+    }
     
-    // delete pet from list of pets
-    pets = pets.filter{ pet.id != $0.id }
+    reloadPetsCollection()
+  }
+  
+  func petMenuViewController(viewController: PetMenuViewController, didEditNameOfPet pet: Pet) {
+    reloadPetsCollection()
+  }
+  
+  func petMenuViewController(viewController: PetMenuViewController, didEditImageOfPet pet: Pet) {
+    // get cropped version of a pet' icon
+    if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+      croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+    }
+    
+    if let item = pets.indexOf(pet) {
+      if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: item, inSection: 0)) as? PetCVCell {
+        cell.petImageView.image = UIImage(unsafelyNamed: pet.imageName)
+        cell.borderImageView.image = croppedPetImages[pet.id]
+      }
+    }
+    
+  }
+  
+  func petMenuViewController(viewController: PetMenuViewController, didDeletePet pet: Pet) {
+    if let item = pets.indexOf(pet) {
+      // delete pet from list of pets
+      pets = pets.filter{ pet.id != $0.id }
+      
+      // delete cropped image of this pet
+      croppedPetImages.removeValueForKey(pet.id)
+      
+      // delete cell of pet
+      collectionView.deleteItemsAtIndexPaths([NSIndexPath(forItem: item, inSection: 0)])
+    }
     
     // delete pet and save it
     petsRepository.deleteObject(pet)
     petsRepository.saveOrRollback()
     
-    // reload collection
-    reloadPetsCollection()
-  }
-  
-  func petMenuViewController(viewController: PetMenuViewController, didEditPet pet: Pet) {
-    // reload collection
-    reloadPetsCollection()
+    if pets.isEmpty {
+      showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
+    }
   }
 }

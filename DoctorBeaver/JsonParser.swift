@@ -171,7 +171,8 @@ class JsonTaskPrimaryValuesParser {
   }
   
   func populateRepositoryWithPetBasicValues(fromJSONDictionary dict: [String: AnyObject]) -> PetBasicValues? {
-    guard let namePlaceholder = dict["namePlaceholder"] as? String,
+    guard let basicName = dict["basicName"] as? String,
+      let namePlaceholder = dict["namePlaceholder"] as? String,
       let separator = dict["separator"] as? String,
       let sectionTitles = dict["sectionTitles"] as? String,
       let selectedTitle = dict["selectedTitle"] as? String,
@@ -179,6 +180,7 @@ class JsonTaskPrimaryValuesParser {
       else { return nil}
     
     if let petBasicValues = petsRepository.insertPetBasicValues() {
+      petBasicValues.basicName = basicName
       petBasicValues.namePlaceholder = namePlaceholder
       petBasicValues.separator = separator
       petBasicValues.sectionTitles = sectionTitles

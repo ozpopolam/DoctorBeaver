@@ -20,16 +20,7 @@ class PetImageViewController: UIViewController {
   
   weak var delegate: PetImageViewControllerDelegate?
   var petCurrentImageName: String = ""
-  
-//  var petsRepository: PetsRepository! {
-//    didSet {
-//      if viewIsReadyToBeLoadedWithPetsRepository() {
-//        reloadImagesCollection()
-//      }
-//    }
-//  }
-//  var viewWasLoadedWithPetsRepository = false
-  
+
   // settings for layout of UICollectionView
   let petImageCellId = "petImageCell"
   var cellSize = CGSize(width: 0.0, height: 0.0)
@@ -81,15 +72,6 @@ class PetImageViewController: UIViewController {
     super.didReceiveMemoryWarning()
   }
   
-//  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
-//    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
-//      viewWasLoadedWithPetsRepository = true
-//      return true
-//    } else {
-//      return false
-//    }
-//  }
-  
   func reloadImagesCollection() {
     collectionView.reloadData()
   }
@@ -117,6 +99,7 @@ class PetImageViewController: UIViewController {
   // Cancel-button
   func cancel(sender: UIButton) {
     delegate?.petImageViewControllerDidCancel(self)
+    navigationController?.popViewControllerAnimated(true)
   }
   
   // Done-button
@@ -140,7 +123,8 @@ class PetImageViewController: UIViewController {
     } else { // no image was selected
       delegate?.petImageViewControllerDidCancel(self)
     }
-
+    
+    navigationController?.popViewControllerAnimated(true)
   }
   
   // Camera-button
@@ -168,7 +152,7 @@ extension PetImageViewController: UICollectionViewDataSource {
       cell.selectedView.cornerProportion = VisualConfiguration.cornerProportion
       cell.selectedView.hidden = !imagesSelection[indexPath.row]
       
-      cell.petImageView.image = UIImage(named: imagesNames[indexPath.row])
+      cell.petImageView.image = UIImage(unsafelyNamed: imagesNames[indexPath.row])
       cell.petImageView.cornerProportion = VisualConfiguration.cornerProportion
       
       return cell

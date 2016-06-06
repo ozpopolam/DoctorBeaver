@@ -83,7 +83,7 @@ class TaskMenuConfiguration {
   func configure(withTask task: Task) {
     self.task = task
     
-    sectionTitles = task.sectionTitles
+    sectionTitles = task.sectionTitles // start with the whole pack pf titles (even empty)
     
     // structure of cells, forming the menu
     configureCellTagTypeState()
@@ -131,7 +131,7 @@ class TaskMenuConfiguration {
     
     guard sectionTitles.count == 4 else { return }
     
-    //  basic structure of menu
+  //  basic structure of menu
     //    cellTagTypeState = [
     //      [(00, .TextFieldCell, .Visible)],
     //      [
@@ -150,55 +150,61 @@ class TaskMenuConfiguration {
     //      [(30, .TextFieldCell, .Visible)]
     //    ]
     
+    var sectionInd = 0
     cellsTagTypeState = [[(nameTag, .TextFieldCell, .Visible)]]
     
     if sectionTitles[1].isFilledWithSomething {
+      sectionInd += 1
       cellsTagTypeState.append([])
       
       if task.timesPerDayTitle.isFilledWithSomething {
-        cellsTagTypeState[1].append((timesPerDayTitleTag, .TitleValueCell, .Visible))
-        cellsTagTypeState[1].append((timesPerDayPickerTag, .DataPickerCell, .Hidden))
+        cellsTagTypeState[sectionInd].append((timesPerDayTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[sectionInd].append((timesPerDayPickerTag, .DataPickerCell, .Hidden))
       }
       
       if task.minutesForTimesTitle.isFilledWithSomething {
-        cellsTagTypeState[1].append((minutesForTimesTitleTag, .TitleValueCell, .Visible))
-        cellsTagTypeState[1].append((minutesForTimesPickerTag, .TimePickerCell, .Hidden))
+        cellsTagTypeState[sectionInd].append((minutesForTimesTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[sectionInd].append((minutesForTimesPickerTag, .TimePickerCell, .Hidden))
       }
       
       if task.doseForTimesTitle.isFilledWithSomething {
-        cellsTagTypeState[1].append((doseForTimesTitleTag, .TitleValueCell, .Visible))
-        cellsTagTypeState[1].append((doseForTimesPickerTag, .DataPickerCell, .Hidden))
+        cellsTagTypeState[sectionInd].append((doseForTimesTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[sectionInd].append((doseForTimesPickerTag, .DataPickerCell, .Hidden))
       }
       
       if task.specialFeatureTitle.isFilledWithSomething {
-        cellsTagTypeState[1].append((specialFeatureTitleTag, .TitleValueCell, .Visible))
-        cellsTagTypeState[1].append((specialFeaturePickerTag, .DataPickerCell, .Hidden))
+        cellsTagTypeState[sectionInd].append((specialFeatureTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[sectionInd].append((specialFeaturePickerTag, .DataPickerCell, .Hidden))
       }
       
     }
     
     if sectionTitles[2].isFilledWithSomething {
+      sectionInd += 1
       cellsTagTypeState.append([])
       
       if task.startDateTitle.isFilledWithSomething {
-        cellsTagTypeState[2].append((startDateTitleTag, .TitleValueCell, .Visible))
-        cellsTagTypeState[2].append((startDatePickerTag, .DateTimePickerCell, .Hidden))
+        cellsTagTypeState[sectionInd].append((startDateTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[sectionInd].append((startDatePickerTag, .DateTimePickerCell, .Hidden))
       }
       
       if task.frequencyTitle.isFilledWithSomething {
-        cellsTagTypeState[2].append((frequencyTitleTag, .TitleSegmentCell, .Visible))
-        cellsTagTypeState[2].append((frequencyPickerTag, .DataPickerCell, .Hidden))
+        cellsTagTypeState[sectionInd].append((frequencyTitleTag, .TitleSegmentCell, .Visible))
+        cellsTagTypeState[sectionInd].append((frequencyPickerTag, .DataPickerCell, .Hidden))
       }
       
       if task.endDaysOrTimesTitle.isFilledWithSomething {
-        cellsTagTypeState[2].append((endDateTitleTag, .TitleValueCell, .Visible))
-        cellsTagTypeState[2].append((endDateAllPickersTag, .ComplexPickerCell, .Hidden))
+        cellsTagTypeState[sectionInd].append((endDateTitleTag, .TitleValueCell, .Visible))
+        cellsTagTypeState[sectionInd].append((endDateAllPickersTag, .ComplexPickerCell, .Hidden))
       }
       
     }
     
+    sectionInd += 1
     cellsTagTypeState.append([])
-    cellsTagTypeState[3].append((commentTag, .TextFieldCell, .Visible))
+    cellsTagTypeState[sectionInd].append((commentTag, .TextFieldCell, .Visible))
+    
+    sectionTitles = sectionTitles.filter { $0.isFilledWithSomething }
   }
   
   func savePreviousMinutes() {
