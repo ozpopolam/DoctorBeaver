@@ -92,7 +92,9 @@ class ScheduleViewController: UIViewController {
   }
   
   func setPetsRepository(petsRepository: PetsRepository) {
-    self.petsRepository = petsRepository
+    if self.petsRepository == nil {
+      self.petsRepository = petsRepository
+    }
     if viewIsReadyToBeLoadedWithPetsRepository() {
       fullyReloadSchedule()
     }

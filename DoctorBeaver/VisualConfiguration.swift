@@ -26,6 +26,11 @@ struct VisualConfiguration {
   
   static let systemFontSize: CGFloat = 17.0
   
+  static let tabBarFont: UIFont = {
+    if let font = UIFont(name: "GillSans", size: 10.0) { return font }
+    else { return UIFont.systemFontOfSize(systemFontSize) }
+  }()
+  
   static let navigationBarFont: UIFont = {
     if let font = UIFont(name: "GillSans-SemiBold", size: 15.0) { return font }
     else { return UIFont.systemFontOfSize(systemFontSize) }

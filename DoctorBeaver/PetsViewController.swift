@@ -64,6 +64,15 @@ class PetsViewController: UIViewController {
     }
   }
   
+  func setPetsRepository(petsRepository: PetsRepository) {
+    if self.petsRepository == nil {
+      self.petsRepository = petsRepository
+    }
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      reloadPetsCollection(withFetchRequest: true)
+    }
+  }
+  
   func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
     if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
       viewWasLoadedWithPetsRepository = true
@@ -81,6 +90,8 @@ class PetsViewController: UIViewController {
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
+  
+  
   
   //Sorting-button
   func sort(sender: UIButton) {

@@ -711,18 +711,9 @@ class Task: NSManagedObject {
   
   // проверяем, все ли дозы одинаковые
   func allDosesAreEqual() -> Bool {
-    guard doseForTimes.count != 0 else { return true }
-    
-    if doseForTimes.count == 1 {
-      return true
-    } else {
-      for ind in 0..<doseForTimes.count - 1 {
-        if doseForTimes[ind] != doseForTimes[ind + 1] {
-          return false
-        }
-      }
-    }
-    return true
+    let firstDose = doseForTimes[0]
+    let unEqualDoses = doseForTimes.filter { $0 != firstDose }
+    return unEqualDoses.isEmpty
   }
   
   // детали выполнения задания в читабельном виде

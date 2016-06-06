@@ -140,7 +140,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     }
   }
   
-  func insertProxyPet() -> Pet? {
+  func insertProxyPet() -> Pet? { // is used to store copy of settings of already existing pet
     if let pet = Pet(insertIntoManagedObjectContext: context) {
       pet.id = -1
       return pet
