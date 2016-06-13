@@ -29,7 +29,9 @@ class PetImageViewController: UIViewController {
   var minimumSpacing: CGFloat = 0.0
   
   let folderName = "DefaultPetImages/"
-  var imagesNames = ["dog0", "cat0", "dog1", "cat1", "dog2", "cat2", "dog3", "cat3"]
+  
+  var imagesNames = ["aquarium", "bird", "bunny", "cat0", "cat1", "cat2", "dog0", "dog1", "dog2", "fish", "snake"]
+  
   var imagesSelection = [Bool]()
   
   override func viewDidLoad() {
@@ -40,19 +42,28 @@ class PetImageViewController: UIViewController {
     
     // button "Cancel"
     decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: VisualConfiguration.darkGrayColor)
-    decoratedNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.leftButton.addTarget(self, action: #selector(cancel(_:)), forControlEvents: .TouchUpInside)
     
     // button "Add photo"
     decoratedNavigationBar.setButtonImage("camera", forButton: .CenterRight, withTintColor: UIColor.fogColor())
-    decoratedNavigationBar.centerRightButton.addTarget(self, action: "addPhoto:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.centerRightButton.addTarget(self, action: #selector(addPhoto(_:)), forControlEvents: .TouchUpInside)
     decoratedNavigationBar.centerRightButton.hidden = true
     
     // button "Done"
     decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: VisualConfiguration.darkGrayColor)
-    decoratedNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
     
+    // prepare list of images names
     imagesNames = imagesNames.map{ folderName + $0 } // update all names to full form
     imagesSelection = [Bool](count: imagesNames.count, repeatedValue: false) // at first, all images are not selected
+    
+    // set names in random order
+    var randomOrderImagesNames: [String] = []
+    for _ in 0..<imagesNames.count {
+      let ind = Int(arc4random_uniform(UInt32(imagesNames.count)))
+      randomOrderImagesNames.append(imagesNames.removeAtIndex(ind))
+    }
+    imagesNames = randomOrderImagesNames
     
     if let indexOfCurrentImageName = imagesNames.indexOf(petCurrentImageName) { // if current pet's image name is already in list, set selected state in imagesSelection array
       imagesSelection[indexOfCurrentImageName] = true

@@ -50,11 +50,11 @@ class PetsViewController: UIViewController {
     
     // button "Sorting"
     decoratedNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
-    decoratedNavigationBar.leftButton.addTarget(self, action: "sort:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.leftButton.addTarget(self, action: #selector(sort(_:)), forControlEvents: .TouchUpInside)
     
     // button "Add pet"
     decoratedNavigationBar.setButtonImage("add", forButton: .Right, withTintColor: UIColor.fogColor())
-    decoratedNavigationBar.rightButton.addTarget(self, action: "add:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.rightButton.addTarget(self, action: #selector(add(_:)), forControlEvents: .TouchUpInside)
     
     let numberOfCellsInALine: CGFloat = 2
     countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine) // count size and insets of cells

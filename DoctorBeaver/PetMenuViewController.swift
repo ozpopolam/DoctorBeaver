@@ -82,7 +82,7 @@ class PetMenuViewController: UIViewController {
     
     // button "Delete" (will be hiden or shown depending on menuMode)
     decoratedNavigationBar.setButtonImage("trash", forButton: .CenterRight, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-    decoratedNavigationBar.centerRightButton.addTarget(self, action: "trash:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.centerRightButton.addTarget(self, action: #selector(trash(_:)), forControlEvents: .TouchUpInside)
     
     infoIcon = UIImage(named: "info")
     infoIcon = infoIcon?.ofSize(VisualConfiguration.accessoryIconSize)
@@ -117,28 +117,28 @@ class PetMenuViewController: UIViewController {
       // button "Cancel"
       decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       decoratedNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      decoratedNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.leftButton.addTarget(self, action: #selector(cancel(_:)), forControlEvents: .TouchUpInside)
       
       decoratedNavigationBar.hideButton(.CenterRight) // hide Delete-button
       
       // button "Done"
       decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       decoratedNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      decoratedNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
     } else { // menuMode == .Show
       // browsing settings of pet or deleting it
       
       // button "Back"
       decoratedNavigationBar.setButtonImage("back", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       decoratedNavigationBar.leftButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      decoratedNavigationBar.leftButton.addTarget(self, action: "back:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.leftButton.addTarget(self, action: #selector(back(_:)), forControlEvents: .TouchUpInside)
       
       decoratedNavigationBar.showButton(.CenterRight, withAnimationDuration: animationDuration) // show Delete-button
       
       // button "Edit"
       decoratedNavigationBar.setButtonImage("edit", forButton: .Right, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
       decoratedNavigationBar.rightButton.removeTarget(nil, action: nil, forControlEvents: .TouchUpInside)
-      decoratedNavigationBar.rightButton.addTarget(self, action: "edit:", forControlEvents: .TouchUpInside)
+      decoratedNavigationBar.rightButton.addTarget(self, action: #selector(edit(_:)), forControlEvents: .TouchUpInside)
     }
     
     configureInteractionAccessoriesForMenuMode()
@@ -152,8 +152,8 @@ class PetMenuViewController: UIViewController {
     
     // start observing notifications from keyboard to update height of table
     let notificationCenter = NSNotificationCenter.defaultCenter()
-    notificationCenter.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-    notificationCenter.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+    notificationCenter.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+    notificationCenter.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     
   }
   
@@ -734,7 +734,7 @@ extension PetMenuViewController: UITextFieldDelegate {
             textFieldShouldReturn(cell.textField)
           } else {
             menu.cellsTagTypeState[s][r].state = .Visible
-            UIApplication.sharedApplication().sendAction("resignFirstResponder", to: nil, from: nil, forEvent: nil)
+            UIApplication.sharedApplication().sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, forEvent: nil)
           }
         }
       }

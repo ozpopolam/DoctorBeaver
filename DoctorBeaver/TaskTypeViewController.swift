@@ -49,10 +49,10 @@ class TaskTypeViewController: UIViewController {
     decoratedNavigationBar.titleLabel.text = "Вид задания".uppercaseString
     
     decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: UIColor.fogColor())
-    decoratedNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.leftButton.addTarget(self, action: #selector(cancel(_:)), forControlEvents: .TouchUpInside)
     
     decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor())
-    decoratedNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
     
     collectionView.backgroundColor = UIColor.whiteColor()
     

@@ -383,7 +383,7 @@ extension ScheduleTableViewController: UITableViewDataSource {
       let detailButton = UIButton(type: .Custom)
       detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.infoIconSize)
       detailButton.setImage(withImage: infoIcon, ofSize: VisualConfiguration.infoIconSize, withTintColor: UIColor.blackColor())
-      detailButton.addTarget(self, action: "detailButtonTapped:", forControlEvents: .TouchUpInside)
+      detailButton.addTarget(self, action: #selector(detailButtonTapped(_:)), forControlEvents: .TouchUpInside)
       
       cell.accessoryView = detailButton
     }

@@ -45,15 +45,15 @@ class ScheduleViewController: UIViewController {
     
     // два варианта расположения кнопки календаря - слева
     fakeNavigationBar.setButtonImage("calendar", forButton: .Left, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.leftButton.addTarget(self, action: "showCalendar:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.leftButton.addTarget(self, action: #selector(showCalendar(_:)), forControlEvents: .TouchUpInside)
     
     // справа от центра
     fakeNavigationBar.setButtonImage("calendar", forButton: .CenterRight, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.centerRightButton.addTarget(self, action: "showCalendar:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.centerRightButton.addTarget(self, action: #selector(showCalendar(_:)), forControlEvents: .TouchUpInside)
     
     // кнопка фильтра
     fakeNavigationBar.setButtonImage("filter", forButton: .Right, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.rightButton.addTarget(self, action: "showFilter:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.rightButton.addTarget(self, action: #selector(showFilter(_:)), forControlEvents: .TouchUpInside)
     
     // поначалу прячем все кнопки
     fakeNavigationBar.hideAllButtons()
@@ -113,8 +113,6 @@ class ScheduleViewController: UIViewController {
   // заполняем таблицу с нуля
   // настраиваем внешний вид по инфо питомца и инициируем отображение расписания
   func fullyReloadSchedule() {
-    
-    print("fullyReloadSchedule")
     
     // настраиваем расположение кнопок и по необходимости выводим предупреждающие надписи
     if petsRepository.countAll(Pet.entityName) == 0 {
