@@ -11,8 +11,6 @@ import UIKit
 protocol PetImageViewControllerDelegate: class {
   func petImageViewControllerDidCancel(viewController: PetImageViewController)
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String)
-  func petImageViewController(viewController: PetImageViewController, didSelectNewImage image: UIImage)
-  
 }
 
 class PetImageViewController: UIViewController {
@@ -31,12 +29,7 @@ class PetImageViewController: UIViewController {
   var minimumSpacing: CGFloat = 0.0
   
   let folderName = "DefaultPetImages/"
-  var imagesNames = ["aquarium", "bird", "bunny", "cat0", "cat1", "cat2", "dog0", "dog1", "dog2", "fish", "snake"]
-  
-  lazy var imagePicker = UIImagePickerController()
-  let cameraIsAvailable = UIImagePickerController.isSourceTypeAvailable(.Camera)
-  let photoLibraryIsAvailable = UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary)
-  
+  var imagesNames = ["dog0", "cat0", "dog1", "cat1", "dog2", "cat2", "dog3", "cat3"]
   var imagesSelection = [Bool]()
   
   override func viewDidLoad() {
@@ -47,28 +40,19 @@ class PetImageViewController: UIViewController {
     
     // button "Cancel"
     decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: VisualConfiguration.darkGrayColor)
-    decoratedNavigationBar.leftButton.addTarget(self, action: #selector(cancel(_:)), forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
     
-    if cameraIsAvailable || photoLibraryIsAvailable { // have place to pick image from
-      // button "Add photo"
-      decoratedNavigationBar.setButtonImage("camera", forButton: .CenterRight, withTintColor: VisualConfiguration.darkGrayColor)
-      decoratedNavigationBar.centerRightButton.addTarget(self, action: #selector(addPhoto(_:)), forControlEvents: .TouchUpInside)
-    }
+    // button "Add photo"
+    decoratedNavigationBar.setButtonImage("camera", forButton: .CenterRight, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.centerRightButton.addTarget(self, action: "addPhoto:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.centerRightButton.hidden = true
     
     // button "Done"
     decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: VisualConfiguration.darkGrayColor)
-    decoratedNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
     
-    // prepare list if images names
     imagesNames = imagesNames.map{ folderName + $0 } // update all names to full form
     imagesSelection = [Bool](count: imagesNames.count, repeatedValue: false) // at first, all images are not selected
-    // set names in random order
-    var randomOrderImagesNames: [String] = []
-    for _ in 0..<imagesNames.count {
-      let ind = Int(arc4random_uniform(UInt32(imagesNames.count)))
-      randomOrderImagesNames.append(imagesNames.removeAtIndex(ind))
-    }
-    imagesNames = randomOrderImagesNames
     
     if let indexOfCurrentImageName = imagesNames.indexOf(petCurrentImageName) { // if current pet's image name is already in list, set selected state in imagesSelection array
       imagesSelection[indexOfCurrentImageName] = true
@@ -145,65 +129,12 @@ class PetImageViewController: UIViewController {
   
   // Camera-button
   func addPhoto(sender: UIButton) {
-    if cameraIsAvailable && photoLibraryIsAvailable {
-      // both Camera and PhotoLibrary are available - need to present popover to choose
-      
-      let storyboard = UIStoryboard(name: "Main", bundle: nil)
-      if let pickerOptionsViewController = storyboard.instantiateViewControllerWithIdentifier("ImagePickerOptionsPopoverController") as? ImagePickerOptionsPopoverController {
-        pickerOptionsViewController.modalPresentationStyle = .Popover
-        pickerOptionsViewController.delegate = self
-        
-        if let popoverController = pickerOptionsViewController.popoverPresentationController {
-          popoverController.delegate = self
-          popoverController.sourceView = decoratedNavigationBar.centerRightButton.superview
-          popoverController.permittedArrowDirections = .Up
-          popoverController.backgroundColor = UIColor.whiteColor()
-          popoverController.sourceRect = decoratedNavigationBar.centerRightButton.frame
-        }
-        
-        presentViewController(pickerOptionsViewController, animated: true, completion: nil)
-        
-        var popoverWidth: CGFloat = 0.0
-        var popoverHeight: CGFloat = 0.0
-        
-        if let filledPopoverWidth = pickerOptionsViewController.filledWidth {
-          let halfWidth = view.frame.width / 2
-          popoverWidth = filledPopoverWidth < halfWidth ? halfWidth : filledPopoverWidth
-        }
-        
-        if let filledPopoverHeight = pickerOptionsViewController.filledHeight {
-          popoverHeight = filledPopoverHeight
-        }
-        
-        pickerOptionsViewController.preferredContentSize = CGSize(width: popoverWidth, height: popoverHeight)
-      }
-    } else {
-      if cameraIsAvailable {
-        // only camera is available
-        getPhotoFrom(.Camera)
-      } else if photoLibraryIsAvailable {
-        // only photoLibrary is available
-        getPhotoFrom(.PhotoLibrary)
-      }
-    }
-  }
-  
-  
-  func getPhotoFrom(sourceType: UIImagePickerControllerSourceType) {
-    imagePicker.sourceType = sourceType
-    
-    if let mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(sourceType) {
-      let imageMediaTypes = mediaTypes.filter{ $0.lowercaseString.containsString("image") }
-      imagePicker.mediaTypes = imageMediaTypes
-    }
-    
-    if sourceType == .Camera {
-      imagePicker.cameraCaptureMode = .Photo
-    }
-    
-    imagePicker.delegate = self
-    
-    presentViewController(imagePicker, animated: true, completion: nil)
+    //    editState = false // stop editing task
+    //    closePickerCellsForShowState()
+    //    deactivateAllActiveTextFields()
+    //    configureForEditState(withAnimationDuration: animationDuration)
+    //
+    //    edited = taskDidChange()
   }
   
 }
@@ -281,69 +212,3 @@ extension PetImageViewController: UICollectionViewDelegateFlowLayout {
   }
   
 }
-
-extension PetImageViewController: UIPopoverPresentationControllerDelegate {
-  
-  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-    return .None
-  }
-  
-  func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
-  }
-}
-
-extension PetImageViewController: ImagePickerOptionsPopoverControllerDelegate, UINavigationControllerDelegate {
-  
-  func popoverDidPickTakingPhotoWithCamera() {
-    dismissViewControllerAnimated(true, completion: nil)
-    getPhotoFrom(.Camera)
-  }
-  
-  func popoverDidPickGettingPhotoFromLibrary() {
-    dismissViewControllerAnimated(true, completion: nil)
-    getPhotoFrom(.PhotoLibrary)
-  }
-  
-}
-
-extension PetImageViewController: UIImagePickerControllerDelegate {
-  
-  func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-    dismissViewControllerAnimated(false, completion: nil) // dismiss UIImagePickerController
-    
-    if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      
-      if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as? PetImageCell {
-        cell.petImageView.image = pickedImage
-      }
-      
-      
-      
-//      // present modal view controller to crop picker image
-//      let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//      if let imageCropViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoViewController") as? ImageCropViewController {
-//        imageCropViewController.photo = pickedImage
-//        imageCropViewController.delegate = self
-//        presentViewController(imageCropViewController, animated: true, completion: nil)
-//      }
-    }
-  }
-  
-  func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-    dismissViewControllerAnimated(true, completion: nil)
-  }
-  
-}
-
-
-//extension PetImageViewController: ImageCropViewControllerDelegate {
-//  func imageCropViewControllerDidCancel(viewController: ImageCropViewController) {
-//    
-//  }
-//  
-//  func imageCropViewController(viewController: ImageCropViewController, didCropImage image: UIImage) {
-//    //    let imageFileManager = ImageFileManager(withImageFolderName: "PetImages")
-//    //    imageFileManager.saveImage(image, withName: "photo")
-//    imageView.image = image
-//  }
-//}

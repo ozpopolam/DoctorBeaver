@@ -16,10 +16,10 @@ extension Task {
   @NSManaged var pet: Pet
   
   @NSManaged var name: String
-  @NSManaged var typeId: Int32
+  @NSManaged var typeId: Int
   @NSManaged var typeItem: TaskTypeItem
   
-  @NSManaged var timesPerDay: Int32
+  @NSManaged var timesPerDay: Int
   @NSManaged var minutesForTimes: [Int]
   @NSManaged var doseForTimes: [String]
   @NSManaged var specialFeature: String
@@ -27,7 +27,7 @@ extension Task {
   @NSManaged var startDate: NSDate
   @NSManaged var frequency: [Int]
   
-  @NSManaged var endDaysOrTimes: Int32
+  @NSManaged var endDaysOrTimes: Int
   @NSManaged var endDate: NSDate
   @NSManaged var comment: String
   

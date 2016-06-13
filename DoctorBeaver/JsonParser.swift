@@ -70,10 +70,6 @@ class JsonTaskPrimaryValuesParser {
   }
   
   func populateRepositoryWithTaskTypeItemBasicValues(fromJSONDictionary dict: [String: AnyObject]) -> TaskTypeItemBasicValues? {
-    
-    
-    let x = dict["taskNamePlaceholder"]
-    
     guard let taskNamePlaceholder = dict["taskNamePlaceholder"] as? String,
       let separator = dict["separator"] as? String,
       let startDateTitle = dict["startDateTitle"] as? String,
@@ -104,7 +100,7 @@ class JsonTaskPrimaryValuesParser {
   }
   
   func populateRepositoryWithTaskTypeItem(fromJSONDictionary dict: [String: AnyObject], withTaskTypeItemBasicValues basicValues: TaskTypeItemBasicValues) -> TaskTypeItem? {
-    guard let id = dict["id"] as? Int32,
+    guard let id = dict["id"] as? Int,
       let name = dict["name"] as? String,
       let iconName = dict["iconName"] as? String,
       let doseUnit = dict["doseUnit"] as? String,
@@ -113,11 +109,11 @@ class JsonTaskPrimaryValuesParser {
       
       let timesPerDayTitle = dict["timesPerDayTitle"] as? String,
       let timesPerDayOptions = dict["timesPerDayOptions"] as? String,
-      let timesPerDayForInitialization = dict["timesPerDayForInitialization"] as? Int32,
+      let timesPerDayForInitialization = dict["timesPerDayForInitialization"] as? Int,
       
       let minutesForTimesTitle = dict["minutesForTimesTitle"] as? String,
       let minutesForTimesOrderTitles = dict["minutesForTimesOrderTitles"] as? String,
-      let minutesForTimesForInitialization = dict["minutesForTimesForInitialization"] as? Int32,
+      let minutesForTimesForInitialization = dict["minutesForTimesForInitialization"] as? Int,
       
       let doseForTimesTitle = dict["doseForTimesTitle"] as? String,
       let doseForTimesEqualTitle = dict["doseForTimesEqualTitle"] as? String,
@@ -258,9 +254,9 @@ class JsonPetsParser: JsonParser {
   
   func populateTaskInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) -> Task? {
     
-    guard let typeId = dict["typeId"] as? Int32,
+    guard let typeId = dict["typeId"] as? Int,
       let name = dict["name"] as? String,
-      let timesPerDay = dict["timesPerDay"] as? Int32,
+      let timesPerDay = dict["timesPerDay"] as? Int,
       let minutesForTimes = dict["minutesForTimes"] as? [Int],
       let doseForTimes = dict["doseForTimes"] as? [String],
       let specialFeature = dict["specialFeature"] as? String,
@@ -277,14 +273,14 @@ class JsonPetsParser: JsonParser {
       return nil
     }
     
-    var endDaysOrTimes: Int32 = 0
+    var endDaysOrTimes: Int = 0
     var endDate: NSDate = NSDate()
     
     if let ed = dict["endDays"] as? Int {
-      endDaysOrTimes = Int32(-ed)
+      endDaysOrTimes = -ed
     } else {
       if let et = dict["endTimes"] as? Int {
-        endDaysOrTimes = Int32(et)
+        endDaysOrTimes = et
       } else {
         if let endDateString = dict["endDate"] as? String {
           if let endDateFromString = DateHelper.dateFromString(endDateString, withFormat: .DateTime) {

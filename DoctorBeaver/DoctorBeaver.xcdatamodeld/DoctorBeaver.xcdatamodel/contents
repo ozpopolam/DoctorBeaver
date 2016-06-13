@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
     <entity name="Pet" representedClassName=".Pet" syncable="YES">
         <attribute name="id" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="imageName" attributeType="String" syncable="YES"/>
@@ -49,8 +49,8 @@
         <attribute name="frequencySegmentTitles" attributeType="String" syncable="YES"/>
         <attribute name="frequencyTitle" attributeType="String" syncable="YES"/>
         <attribute name="iconName" attributeType="String" syncable="YES"/>
-        <attribute name="id" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="minutesForTimesForInitialization" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="minutesForTimesForInitialization" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="minutesForTimesOrderTitles" attributeType="String" syncable="YES"/>
         <attribute name="minutesForTimesTitle" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -58,7 +58,7 @@
         <attribute name="specialFeatureForInitialization" attributeType="String" syncable="YES"/>
         <attribute name="specialFeatureOptions" attributeType="String" syncable="YES"/>
         <attribute name="specialFeatureTitle" attributeType="String" syncable="YES"/>
-        <attribute name="timesPerDayForInitialization" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="timesPerDayForInitialization" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="timesPerDayOptions" attributeType="String" syncable="YES"/>
         <attribute name="timesPerDayTitle" attributeType="String" syncable="YES"/>
         <relationship name="basicValues" maxCount="1" deletionRule="Nullify" destinationEntity="TaskTypeItemBasicValues" inverseName="typeItem" inverseEntity="TaskTypeItemBasicValues" syncable="YES"/>
@@ -80,7 +80,7 @@
         <element name="Pet" positionX="-297" positionY="-144" width="128" height="135"/>
         <element name="PetBasicValues" positionX="-99" positionY="-90" width="128" height="150"/>
         <element name="Realization" positionX="106" positionY="-108" width="128" height="90"/>
-        <element name="Task" positionX="-90" positionY="-243" width="128" height="255"/>
+        <element name="Task" positionX="-90" positionY="-243" width="128" height="253"/>
         <element name="TaskTypeItem" positionX="-99" positionY="108" width="128" height="405"/>
         <element name="TaskTypeItemBasicValues" positionX="-54" positionY="-45" width="128" height="195"/>
     </elements>

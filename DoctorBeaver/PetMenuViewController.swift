@@ -772,13 +772,6 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
     
   }
   
-  func petImageViewController(viewController: PetImageViewController, didSelectNewImage image: UIImage) {
-    pet.imageName = String(pet.id)
-    
-    
-    
-  }
-  
 }
 
 extension PetMenuViewController: TaskMenuViewControllerDelegate {
