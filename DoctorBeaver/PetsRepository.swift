@@ -222,7 +222,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     return nil
   }
   
-  func fetchTaskTypeItem(withId id: Int) -> TaskTypeItem? {
+  func fetchTaskTypeItem(withId id: Int32) -> TaskTypeItem? {
     let fetchRequest = NSFetchRequest(entityName: TaskTypeItem.entityName)
     fetchRequest.fetchLimit = 1
     let predicate = NSPredicate(format: "%K == %i", TaskTypeItem.Keys.id.rawValue, id)

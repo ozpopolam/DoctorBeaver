@@ -220,8 +220,8 @@ class ScheduleTableViewController: UIViewController {
     for realization in realizations {
       for time in 0..<realization.task.timesPerDay {
         // -1 - время не актуально
-        if realization.done[time] != -1 {
-          timeRealizations.append((timeInDay: time, realization: realization))
+        if realization.done[Int(time)] != -1 {
+          timeRealizations.append((timeInDay: Int(time), realization: realization))
         }
       }
     }

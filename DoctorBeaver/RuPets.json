@@ -3,72 +3,12 @@
            "name": "Хрено-Белка",
            "imageName": "dog2",
            "selected": true,
-           "tasks": [{
-                     "typeId": 0,
-                     "name": "Витамины",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [10, 100, 350],
-                     "doseForTimes": ["3|2/3", "1|1/4", " |1/4"],
-                     "specialFeature": "независимо от еды",
-                     "startDate": "25.05.2016 17:00",
-                     "frequency": [],
-                     "endDate": "28.05.2016 13:00",
-                     "comment": "Прятать в еду",
-                     "realizations": []
-                     }, {
-                     "typeId": 1,
-                     "name": "B6",
-                     "timesPerDay": 2,
-                     "minutesForTimes": [380, 800],
-                     "doseForTimes": ["1|0.5", "1| "],
-                     "specialFeature": "подкожно",
-                     "startDate": "15.05.2016 17:00",
-                     "frequency": [],
-                     "endDate": "10.06.2016 13:00",
-                     "comment": "",
-                     "realizations": []
-                     }, {
-                     "typeId": 1,
-                     "name": "B6",
-                     "timesPerDay": 2,
-                     "minutesForTimes": [380, 800],
-                     "doseForTimes": ["1|0.5", "1| "],
-                     "specialFeature": "подкожно",
-                     "startDate": "15.05.2016 17:00",
-                     "frequency": [],
-                     "endDate": "30.05.2016 13:00",
-                     "comment": "",
-                     "realizations": []
-                     }]
+           "tasks": []
            },
            {
            "name": "Стрелка",
            "imageName": "dog1",
            "selected": true,
-           "tasks": [{
-                     "typeId": 0,
-                     "name": "Витамины",
-                     "timesPerDay": 3,
-                     "minutesForTimes": [10, 100, 350],
-                     "doseForTimes": ["3|2/3", "1|1/4", " |1/4"],
-                     "specialFeature": "независимо от еды",
-                     "startDate": "25.05.2016 17:00",
-                     "frequency": [],
-                     "endTimes": 50,
-                     "comment": "Прятать в еду",
-                     "realizations": []
-                     }, {
-                     "typeId": 1,
-                     "name": "B6",
-                     "timesPerDay": 2,
-                     "minutesForTimes": [380, 800],
-                     "doseForTimes": ["1|0.5", "1| "],
-                     "specialFeature": "подкожно",
-                     "startDate": "1.05.2016 17:00",
-                     "frequency": [],
-                     "endDate": "15.05.2016 13:00",
-                     "comment": "",
-                     "realizations": []
-                     }]
+           "tasks": []
            }]
 }

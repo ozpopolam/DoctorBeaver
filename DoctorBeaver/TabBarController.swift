@@ -20,16 +20,30 @@ class TabBarController: UITabBarController {
     
     configureTabBar() // set visual part
     
-    if true {
-      _helperDeleteAllData()
-      let firstLaunch = true
-      if firstLaunch {
-        preparePetsRepositoryForUse()
-      }
-      _helperPopulateManagedObjectContextWithJsonPetData()
-    }
+    let res = preparePetsRepositoryForUse()
+    
+    
+    
+//    if true {
+//      _helperDeleteAllData()
+//      let firstLaunch = true
+//      if firstLaunch {
+//        preparePetsRepositoryForUse()
+//      }
+//      _helperPopulateManagedObjectContextWithJsonPetData()
+//    }
+//    
+//    
+//    let b = petsRepository.fetchPetBasicValues()
+    
+    //let pets = petsRepository.fetchAllPets()
+    
+    
+    
+    
     
     self.selectedIndex = scheduleTabInd // begin with schedule tab
+    self.selectedIndex = petsTabInd // begin with pets tab
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }

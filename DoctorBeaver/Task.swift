@@ -54,7 +54,7 @@ class Task: NSManagedObject {
     typeId = typeItem.id
     
     timesPerDay = typeItem.timesPerDayForInitialization
-    minutesForTimes = [typeItem.minutesForTimesForInitialization]
+    minutesForTimes = [Int(typeItem.minutesForTimesForInitialization)]
     doseForTimes = [typeItem.doseForTimesForInitialization]
     specialFeature = typeItem.specialFeatureForInitialization
 
@@ -262,8 +262,8 @@ class Task: NSManagedObject {
   }
   
   // подсчитать конечную дату, если задано число дней
-  func countEndDate(withEndDays ed: Int) -> NSDate {
-    if let date = DateHelper.calendar.dateByAddingUnit(.Day, value: ed, toDate: startDate, options: []) {
+  func countEndDate(withEndDays ed: Int32) -> NSDate {
+    if let date = DateHelper.calendar.dateByAddingUnit(.Day, value: Int(ed), toDate: startDate, options: []) {
       if let dateMinMin = DateHelper.calendar.dateByAddingUnit(.Minute, value: -1, toDate: date, options: []) {
         return dateMinMin
       } else {
@@ -275,7 +275,7 @@ class Task: NSManagedObject {
   }
   
   // подсчитать конечную дату, если задано число раз
-  func countEndDate(withEndTimes endTimes: Int) -> NSDate {
+  func countEndDate(withEndTimes endTimes: Int32) -> NSDate {
     
     var date = startDate
     
@@ -285,7 +285,7 @@ class Task: NSManagedObject {
       // прибавляем количество целых дней
       if frequency.count == 0 {
         // задание нужно выполнять ежедневно
-        if let fullDaysDate = DateHelper.calendar.dateByAddingUnit(.Day, value: fullDays, toDate: date, options: []) {
+        if let fullDaysDate = DateHelper.calendar.dateByAddingUnit(.Day, value: Int(fullDays), toDate: date, options: []) {
           date = fullDaysDate
         }
       } else {
@@ -294,15 +294,15 @@ class Task: NSManagedObject {
         let activeDays = frequency[0]
         let passiveDays = frequency[1]
         
-        let fullBlocks = fullDays / activeDays
+        let fullBlocks = fullDays / Int32(activeDays)
         if fullBlocks > 0 {
-          if let nextDate = DateHelper.calendar.dateByAddingUnit(.Day, value: fullBlocks * (activeDays + passiveDays), toDate: date, options: []) {
+          if let nextDate = DateHelper.calendar.dateByAddingUnit(.Day, value: Int(fullBlocks) * (activeDays + passiveDays), toDate: date, options: []) {
             date = nextDate
           }
         }
         
-        let blocks = fullDays % activeDays
-        if let nextDate = DateHelper.calendar.dateByAddingUnit(.Day, value: blocks, toDate: date, options: []) {
+        let blocks = fullDays % Int32(activeDays)
+        if let nextDate = DateHelper.calendar.dateByAddingUnit(.Day, value: Int(blocks), toDate: date, options: []) {
           date = nextDate
         }
       }
@@ -312,7 +312,7 @@ class Task: NSManagedObject {
     var arrangedMFT = arrangeMinutesForTimes(byMinutesOfDate: date)
     
     let timesOfPartialDay = (endTimes - 1) % timesPerDay
-    date = getDateForNextRealization(atMinutes: arrangedMFT[timesOfPartialDay], forDate: date)
+    date = getDateForNextRealization(atMinutes: arrangedMFT[Int(timesOfPartialDay)], forDate: date)
     
     return date
   }
@@ -433,8 +433,8 @@ class Task: NSManagedObject {
     }
     
     for ind in 0..<timesPerDay {
-      if sMinutes <= minutesForTimes[ind] && minutesForTimes[ind] <= eMinutes {
-        done[ind] = 0
+      if sMinutes <= minutesForTimes[Int(ind)] && minutesForTimes[Int(ind)] <= eMinutes {
+        done[Int(ind)] = 0
       }
     }
     
@@ -686,7 +686,7 @@ class Task: NSManagedObject {
           }
         } else {
           for ind in 0..<difference {
-            doseForTimes.append(doseForTimes[ind])
+            doseForTimes.append(doseForTimes[Int(ind)])
           }
         }
         
@@ -703,8 +703,8 @@ class Task: NSManagedObject {
     let dose = doseForTimes[0]
     
     for ind in 1..<timesPerDay {
-      if doseForTimes[ind] != dose {
-        doseForTimes[ind] = dose
+      if doseForTimes[Int(ind)] != dose {
+        doseForTimes[Int(ind)] = dose
       }
     }
   }

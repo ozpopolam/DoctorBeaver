@@ -13,7 +13,7 @@ import Foundation
 import CoreData
 
 extension TaskTypeItem {
-  @NSManaged var id: Int
+  @NSManaged var id: Int32
   @NSManaged var name: String
   @NSManaged var iconName: String
   @NSManaged var doseUnit: String
@@ -22,11 +22,11 @@ extension TaskTypeItem {
   
   @NSManaged var timesPerDayTitle: String
   @NSManaged var timesPerDayOptions: String
-  @NSManaged var timesPerDayForInitialization: Int
+  @NSManaged var timesPerDayForInitialization: Int32
   
   @NSManaged var minutesForTimesTitle: String
   @NSManaged var minutesForTimesOrderTitles: String
-  @NSManaged var minutesForTimesForInitialization: Int
+  @NSManaged var minutesForTimesForInitialization: Int32
   
   @NSManaged var doseForTimesTitle: String
   @NSManaged var doseForTimesEqualTitle: String

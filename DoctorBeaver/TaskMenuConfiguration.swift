@@ -77,7 +77,7 @@ class TaskMenuConfiguration {
   var previousMinutes: [Int: [Int]] = [:]
   var previousDose: [Int: [String]] = [:]
   var previousFrequency: [Int] = []
-  var previousDaysTimesDate: (days: Int, times: Int, date: NSDate) = (days: 1, times: 1, date: NSDate())
+  var previousDaysTimesDate: (days: Int32, times: Int32, date: NSDate) = (days: 1, times: 1, date: NSDate())
   
   // configuration of menu
   func configure(withTask task: Task) {
@@ -208,11 +208,11 @@ class TaskMenuConfiguration {
   }
   
   func savePreviousMinutes() {
-    previousMinutes[task.timesPerDay] = task.minutesForTimes
+    previousMinutes[Int(task.timesPerDay)] = task.minutesForTimes
   }
   
   func savePreviousDose() {
-    previousDose[task.timesPerDay] = task.doseForTimes
+    previousDose[Int(task.timesPerDay)] = task.doseForTimes
   }
   
   func savePreviousFrequency() {
@@ -459,14 +459,14 @@ class TaskMenuConfiguration {
       if let ind = task.timesPerDayOptions.indexOf(strValue) {
         task.timesPerDay = ind + 1
         
-        if let pm = previousMinutes[task.timesPerDay] {
+        if let pm = previousMinutes[Int(task.timesPerDay)] {
           task.minutesForTimes = pm
         } else {
           task.correctMinutes()
           savePreviousMinutes()
         }
         
-        if let pd = previousDose[task.timesPerDay] {
+        if let pd = previousDose[Int(task.timesPerDay)] {
           task.doseForTimes = pd
         } else {
           task.correctDose()

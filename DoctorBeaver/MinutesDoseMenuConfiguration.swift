@@ -70,7 +70,7 @@ class MinutesDoseMenuConfiguration {
     var valueCellType = MinutesDoseMenuCellType.TitleValueCell
     var titleCellState = MinutesDoseMenuCellState.Hidden
     
-    var startIndForCellPairs = 0 // (titleValue and picker cells)
+    var startIndForCellPairs: Int32 = 0 // (titleValue and picker cells)
     var tag = 0
     
     cellsTagTypeState.append([])
@@ -123,7 +123,7 @@ class MinutesDoseMenuConfiguration {
       tag = doseStartTag
     }
     
-    for ind in 0..<task.timesPerDay {
+    for ind in 0..<Int(task.timesPerDay) {
       titleValueTitles[tag] = titles[ind]
       tag += 2
     }
