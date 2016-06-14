@@ -19,7 +19,22 @@ class TaskTypeItem: NSManagedObject {
   }
   
   enum Keys: String {
-    case id = "id"
+    case id = "id_"
+  }
+  
+  var id: Int {
+    get { return Int(id_) }
+    set { id_ = Int32(newValue) }
+  }
+  
+  var timesPerDayForInitialization: Int {
+    get { return Int(timesPerDayForInitialization_) }
+    set { timesPerDayForInitialization_ = Int32(newValue) }
+  }
+  
+  var minutesForTimesForInitialization: Int {
+    get { return Int(minutesForTimesForInitialization_) }
+    set { minutesForTimesForInitialization_ = Int32(newValue) }
   }
   
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
