@@ -13,7 +13,6 @@ extension UIColor {
   
   // светло-оранжевый
   class func lightOrangeColor() -> UIColor {
-    
     return UIColor(red: 240/255.0, green: 173/255.0, blue: 48/255.0, alpha: 1.0)
   }
   
@@ -28,12 +27,5 @@ extension UIColor {
     // #E6E6E6
     return UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
   }
-  
-//  class func mercuryColor() -> UIColor {
-//    // #E6E6E6
-//    return UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
-//  }
-  
-  
   
 }

@@ -17,6 +17,22 @@ class Task: NSManagedObject {
     }
   }
   
+  // Int32 conversion for Core Data
+  var typeId: Int {
+    get { return Int(typeId_) }
+    set { typeId_ = Int32(newValue) }
+  }
+  
+  var timesPerDay: Int {
+    get { return Int(timesPerDay_) }
+    set { timesPerDay_ = Int32(newValue) }
+  }
+  
+  var endDaysOrTimes: Int {
+    get { return Int(endDaysOrTimes_) }
+    set { endDaysOrTimes_ = Int32(newValue) }
+  }
+  
   // endDate can be set specifically or calculated from startDate by adding some days or times
   enum EndType: Int {
     case EndDate = 2
