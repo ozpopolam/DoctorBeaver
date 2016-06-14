@@ -9,16 +9,18 @@
 import Foundation
 
 extension String {
+  
   var isVoid: Bool {
     get {
       return self.isEmpty || self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).isEmpty
     }
   }
+  
   var isFilledWithSomething: Bool {
     get {
       return !isEmpty
-      //return !isVoid
     }
   }
+  
 }
 

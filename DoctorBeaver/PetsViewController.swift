@@ -1,5 +1,5 @@
 //
-//  PetViewController.swift
+//  PetsViewController.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 02.05.16.
@@ -90,8 +90,6 @@ class PetsViewController: UIViewController {
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
-  
-  
   
   //Sorting-button
   func sort(sender: UIButton) {

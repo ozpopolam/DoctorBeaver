@@ -325,6 +325,7 @@
 			children = (
 				62C64D641CD7EF10006B4CEF /* PetsViewController.swift */,
 				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
+				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				6277BA9D1CEA2C23006E4607 /* PetMenuConfiguration.swift */,
 				6219167D1CEF40EF00F073C7 /* PetImageViewController.swift */,
 			);
@@ -411,7 +412,6 @@
 			isa = PBXGroup;
 			children = (
 				620891011D01A57200F870FD /* TaskTypeViewController.swift */,
-				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */,
 				62F0FEB81CB556EB00C13132 /* MinutesDose */,
 			);

@@ -10,12 +10,7 @@ import UIKit
 
 extension UIButton {
   
-  func setImage(withName name: String, ofSize iconSize: CGSize, withTintColor tintColor: UIColor, withAnimationDuration animationDuration: NSTimeInterval = 0)  {
-    if let buttonIcon = UIImage(named: name) {
-      setImage(withImage: buttonIcon, ofSize: iconSize, withTintColor: tintColor, withAnimationDuration: animationDuration)
-    }
-  }
-  
+  // set image for button, set tint color on it and possibly animate changes
   func setImage(withImage image: UIImage, ofSize iconSize: CGSize, withTintColor tintColor: UIColor, withAnimationDuration animationDuration: NSTimeInterval = 0)  {
     
     let scaledButtonIcon = image.ofSize(iconSize)
@@ -31,6 +26,13 @@ extension UIButton {
     }
     
     self.tintColor = tintColor
+  }
+  
+  // set image with imageName, tint color on it and possibly animate changes
+  func setImage(withName name: String, ofSize iconSize: CGSize, withTintColor tintColor: UIColor, withAnimationDuration animationDuration: NSTimeInterval = 0)  {
+    if let buttonIcon = UIImage(named: name) {
+      setImage(withImage: buttonIcon, ofSize: iconSize, withTintColor: tintColor, withAnimationDuration: animationDuration)
+    }
   }
   
 }

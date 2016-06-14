@@ -180,19 +180,7 @@ class TaskMenuViewController: UIViewController {
  // MARK: Actions for buttons
   // Back-button
   func back(sender: UIButton) {
-    // if task for storing initial setting was created, need to delete it
-    if let taskWithInitialSettings = taskWithInitialSettings {
-      
-      taskWasEdited = taskIsDifferent(fromTask: taskWithInitialSettings) // task was edited
-      scheduleWasChanged = taskScheduleIsDifferent(fromTask: taskWithInitialSettings) // schedule was edited in that or some previous iteration
-      petsRepository.deleteObject(taskWithInitialSettings)
-    }
-    // if task for storing version of setting was created, need to delete it
-    if let taskWithPreviousSettings = taskWithPreviousSettings {
-      petsRepository.deleteObject(taskWithPreviousSettings)
-    }
-    
-    petsRepository.saveOrRollback()
+    deleteTemporarySettingsStorage()
     
     if initialMenuMode == .Add {
       delegate?.taskMenuViewController(self, didAddTask: task)
@@ -207,12 +195,31 @@ class TaskMenuViewController: UIViewController {
       }
     }
     
+    popTaskMenuViewController()
+  }
+  
+  func deleteTemporarySettingsStorage() {
+    // if task for storing initial setting was created, need to delete it
+    if let taskWithInitialSettings = taskWithInitialSettings {
+      
+      taskWasEdited = taskIsDifferent(fromTask: taskWithInitialSettings) // task was edited
+      scheduleWasChanged = taskScheduleIsDifferent(fromTask: taskWithInitialSettings) // schedule was edited in that or some previous iteration
+      petsRepository.deleteObject(taskWithInitialSettings)
+    }
+    // if task for storing version of setting was created, need to delete it
+    if let taskWithPreviousSettings = taskWithPreviousSettings {
+      petsRepository.deleteObject(taskWithPreviousSettings)
+    }
+    
+    petsRepository.saveOrRollback()
+  }
+  
+  func popTaskMenuViewController() {
     if let unwindSegueId = unwindSegueId { // we have id for unwind segue -> use it
       performSegueWithIdentifier(unwindSegueId, sender: self)
     } else {
       navigationController?.popViewControllerAnimated(true) // just close VC
     }
-    
   }
   
   // Delete-button
@@ -265,18 +272,31 @@ class TaskMenuViewController: UIViewController {
   
   // Cancel-button
   func cancel(sender: UIButton) {
-    menuMode = .Show // stop editing task
-    deactivateAllActiveTextFields() // close all text fields
     
-    if taskIsDifferent(fromTask: taskWithPreviousSettings) {
-      // settings were changed in that iteration - need to restore them
-      loadPreviousSettings()
-      reloadTaskMenuTable()
+    if menuMode == .Add { // user press cancel-button immediately -> user doesn't want to add new task
+      deleteTemporarySettingsStorage()
+      
+      // delete newly created task
+      petsRepository.deleteObject(task)
+      petsRepository.saveOrRollback()
+      
+      popTaskMenuViewController()
+      return
     } else {
-      closePickerCellsForShowState() // close all open picker cells
+      
+      menuMode = .Show // stop editing task
+      deactivateAllActiveTextFields() // close all text fields
+      
+      if taskIsDifferent(fromTask: taskWithPreviousSettings) {
+        // settings were changed in that iteration - need to restore them
+        loadPreviousSettings()
+        reloadTaskMenuTable()
+      } else {
+        closePickerCellsForShowState() // close all open picker cells
+      }
+      
+      configureForMenuMode(withAnimationDuration: animationDuration)
     }
-    
-    configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
   // check whether some settings of task did change

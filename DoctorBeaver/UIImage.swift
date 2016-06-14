@@ -1,5 +1,5 @@
 //
-//  Image.swift
+//  UIImage.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 11.02.16.
@@ -10,6 +10,7 @@ import UIKit
 
 extension UIImage {
   
+  // if name of image is void - right away return nil
   convenience init?(unsafelyNamed name: String?) {
     if let name = name {
       if !name.isEmpty {
@@ -22,6 +23,7 @@ extension UIImage {
     }
   }
   
+  // size in points of device
   func ofSize(size: CGSize) -> UIImage {
     if self.size == size {
       return self
@@ -36,6 +38,7 @@ extension UIImage {
     }
   }
   
+  // crop internal square of image
   func cropCentralOneThirdSquare() -> UIImage {
     let x = floor(self.size.width / 3)
     let y = floor(self.size.height / 3)

@@ -192,6 +192,20 @@ class PetMenuViewController: UIViewController {
   
   // Back-button
   func back(sender: UIButton) {
+    deleteTemporarySettingsStorage()
+    
+    if initialMenuMode == .Add {
+      delegate?.petMenuViewController(self, didAddPet: pet)
+    } else if petNameWasEdited {
+      delegate?.petMenuViewController(self, didEditNameOfPet: pet)
+    } else if petImageWasEdited {
+      delegate?.petMenuViewController(self, didEditImageOfPet: pet)
+    }
+
+    navigationController?.popViewControllerAnimated(true)
+  }
+  
+  func deleteTemporarySettingsStorage() {
     // if pet for storing initial setting was created, need to delete it
     if let petWithInitialSettings = petWithInitialSettings {
       
@@ -207,16 +221,6 @@ class PetMenuViewController: UIViewController {
     }
     
     petsRepository.saveOrRollback()
-    
-    if initialMenuMode == .Add {
-      delegate?.petMenuViewController(self, didAddPet: pet)
-    } else if petNameWasEdited {
-      delegate?.petMenuViewController(self, didEditNameOfPet: pet)
-    } else if petImageWasEdited {
-      delegate?.petMenuViewController(self, didEditImageOfPet: pet)
-    }
-
-    navigationController?.popViewControllerAnimated(true)
   }
   
   // Delete-button
@@ -269,15 +273,27 @@ class PetMenuViewController: UIViewController {
   
   // Cancel-button
   func cancel(sender: UIButton) {
-    menuMode = .Show
-    deactivateAllActiveTextFields()
-    
-    if petIsDifferent(fromPet: petWithPreviousSettings) {
-      // settings were changed - need to restore them
-      loadPreviousSettings()
-      tableView.reloadData()
+    if menuMode == .Add { // user press cancel-button immediately -> user doesn't want to add pet task
+      deleteTemporarySettingsStorage()
+      
+      // delete newly created pet
+      petsRepository.deleteObject(pet)
+      petsRepository.saveOrRollback()
+      
+      navigationController?.popViewControllerAnimated(true)
+      return
+    } else {
+      
+      menuMode = .Show
+      deactivateAllActiveTextFields()
+      
+      if petIsDifferent(fromPet: petWithPreviousSettings) {
+        // settings were changed - need to restore them
+        loadPreviousSettings()
+        tableView.reloadData()
+      }
+      configureForMenuMode(withAnimationDuration: animationDuration)
     }
-    configureForMenuMode(withAnimationDuration: animationDuration)
   }
   
   // check whether some settings of pet did change
