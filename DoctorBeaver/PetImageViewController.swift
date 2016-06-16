@@ -9,8 +9,8 @@
 import UIKit
 
 protocol PetImageViewControllerDelegate: class {
-  func petImageViewControllerDidCancel(viewController: PetImageViewController)
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String)
+  func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String, andNewImage newImage: UIImage)
 }
 
 class PetImageViewController: UIViewController {
@@ -19,8 +19,8 @@ class PetImageViewController: UIViewController {
   @IBOutlet weak var collectionView: UICollectionView!
   
   weak var delegate: PetImageViewControllerDelegate?
-  var petCurrentImageName: String = ""
-
+  var petInitialImageName: String!
+  
   // settings for layout of UICollectionView
   let petImageCellId = "petImageCell"
   var cellSize = CGSize(width: 0.0, height: 0.0)
@@ -29,10 +29,21 @@ class PetImageViewController: UIViewController {
   var minimumSpacing: CGFloat = 0.0
   
   let folderName = "DefaultPetImages/"
+  let defaultImagesNames = ["aquarium", "bird", "bunny", "cat0", "cat1", "cat2", "dog0", "dog1", "dog2", "fish", "snake"] // default images
+  var imagesNames = [String]() // ~ image from photo/gallery + ~ pet's custom image + default images
+  var images = [UIImage?]()
   
-  var imagesNames = ["aquarium", "bird", "bunny", "cat0", "cat1", "cat2", "dog0", "dog1", "dog2", "fish", "snake"]
+  let importedImageName = "imported" // name of image from photo/gallery
+  var importedImage: UIImage? // image from photo/gallery
   
-  var imagesSelection = [Bool]()
+  let noSelectionIndex = -1
+  let noSelectionImageName = "noImage"
+  var selectedIndex = 0 // index of selected items
+  
+  lazy var imagePicker = UIImagePickerController()
+  // available sources
+  let cameraIsAvailable = UIImagePickerController.isSourceTypeAvailable(.Camera)
+  let photoLibraryIsAvailable = UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary)
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -44,18 +55,29 @@ class PetImageViewController: UIViewController {
     decoratedNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: VisualConfiguration.darkGrayColor)
     decoratedNavigationBar.leftButton.addTarget(self, action: #selector(cancel(_:)), forControlEvents: .TouchUpInside)
     
-    // button "Add photo"
-    decoratedNavigationBar.setButtonImage("camera", forButton: .CenterRight, withTintColor: UIColor.fogColor())
-    decoratedNavigationBar.centerRightButton.addTarget(self, action: #selector(addPhoto(_:)), forControlEvents: .TouchUpInside)
-    decoratedNavigationBar.centerRightButton.hidden = true
+    if cameraIsAvailable || photoLibraryIsAvailable { // image can be picked from camera or gallery
+      // button "Add photo"
+      decoratedNavigationBar.setButtonImage("camera", forButton: .CenterRight, withTintColor: UIColor.fogColor())
+      decoratedNavigationBar.centerRightButton.addTarget(self, action: #selector(addPhoto(_:)), forControlEvents: .TouchUpInside)
+    }
     
     // button "Done"
     decoratedNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: VisualConfiguration.darkGrayColor)
     decoratedNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
     
+    prepareDataSource()
+    
+    let numberOfCellsInALine: CGFloat = 3
+    (sectionInset, minimumSpacing, cellSize, cellCornerRadius) = countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine)
+    collectionView.alwaysBounceVertical = true
+    
+    reloadImagesCollection()
+  }
+  
+  func prepareDataSource() {
     // prepare list of images names
+    imagesNames = defaultImagesNames
     imagesNames = imagesNames.map{ folderName + $0 } // update all names to full form
-    imagesSelection = [Bool](count: imagesNames.count, repeatedValue: false) // at first, all images are not selected
     
     // set names in random order
     var randomOrderImagesNames: [String] = []
@@ -65,18 +87,42 @@ class PetImageViewController: UIViewController {
     }
     imagesNames = randomOrderImagesNames
     
-    if let indexOfCurrentImageName = imagesNames.indexOf(petCurrentImageName) { // if current pet's image name is already in list, set selected state in imagesSelection array
-      imagesSelection[indexOfCurrentImageName] = true
-    } else { // if it is not, add it at the beginning or imagesNames-array and imagesSelection-array
-      let firstIndex = 0
-      imagesNames.insert(petCurrentImageName, atIndex: firstIndex)
-      imagesSelection.insert(true, atIndex: firstIndex)
+    var petHasCustomImage = false
+    
+    // place current image name first
+    if let indexOfCurrentImageName = imagesNames.indexOf(petInitialImageName) { // if current pet's image name is already in list (it is from defaults set), set it first
+      if indexOfCurrentImageName != 0 {
+        (imagesNames[0], imagesNames[indexOfCurrentImageName]) = (imagesNames[indexOfCurrentImageName], imagesNames[0])
+      }
+      selectedIndex = 0 // initially first image is selected
+    } else {
+      
+      if petInitialImageName != noSelectionImageName {
+        // pet has custom image
+        petHasCustomImage = true
+        imagesNames.insert(petInitialImageName, atIndex: 0)
+        selectedIndex = 0 // initially first image is selected
+      } else {
+        // pet has no image - only placeholder
+        selectedIndex = noSelectionIndex
+      }
     }
     
-    let numberOfCellsInALine: CGFloat = 3
-    (sectionInset, minimumSpacing, cellSize, cellCornerRadius) = countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine)
+    // store image created with imagesNames
+    images = []
+    var defaultImagesStartIndex = 0
     
-    reloadImagesCollection()
+    if petHasCustomImage {
+      // must be loaded from disk
+      images.append(UIImage(unsafelyNamed: petInitialImageName))
+      defaultImagesStartIndex = 1
+    }
+    
+    // the rest pictures are added from .xcassests
+    for ind in defaultImagesStartIndex..<imagesNames.count {
+      images.append(UIImage(unsafelyNamed: imagesNames[ind]))
+    }
+    
   }
   
   override func didReceiveMemoryWarning() {
@@ -85,6 +131,10 @@ class PetImageViewController: UIViewController {
   
   func reloadImagesCollection() {
     collectionView.reloadData()
+    
+    if selectedIndex != noSelectionIndex {
+      collectionView.selectItemAtIndexPath(NSIndexPath(forItem: selectedIndex, inSection: 0), animated: false, scrollPosition: .Top)
+    }
   }
   
   func countFlowLayoutValues(forNumberOfCellsInALine numberOfCellsInALine: CGFloat) -> (sectionInset: UIEdgeInsets, minimumSpacing: CGFloat, cellSize: CGSize, cellCornerRadius: CGFloat) {
@@ -109,43 +159,98 @@ class PetImageViewController: UIViewController {
   
   // Cancel-button
   func cancel(sender: UIButton) {
-    delegate?.petImageViewControllerDidCancel(self)
+//    delegate?.petImageViewControllerDidCancel(self)
     navigationController?.popViewControllerAnimated(true)
   }
   
   // Done-button
   func done(sender: UIButton) {
-    var petNewImageName: String? // expected new image name for per
+    var petNewImageName: String // new image name
     
-    for ind in 0..<imagesSelection.count { // try to find selected image
-      if imagesSelection[ind] {
-        petNewImageName = imagesNames[ind]
-        break
-      }
+    if selectedIndex == noSelectionIndex {
+      petNewImageName = noSelectionImageName // no image was selected -> return placeholder image name
+    } else {
+      petNewImageName = imagesNames[selectedIndex]
     }
     
-    if let petNewImageName = petNewImageName { // some image was selected
-      if petNewImageName == petCurrentImageName { // check whether new name and old name are the same
-        delegate?.petImageViewControllerDidCancel(self) // nothing has changed
+    if petNewImageName != petInitialImageName { // check whether new name and old name are the same
+      if selectedIndex == 0 {
+        if let importedImage = importedImage {
+          // user selected imported image
+          delegate?.petImageViewController(self, didSelectNewImageName: petNewImageName, andNewImage: importedImage)
+        } else {
+          delegate?.petImageViewController(self, didSelectNewImageName: petNewImageName)
+        }
       } else {
         delegate?.petImageViewController(self, didSelectNewImageName: petNewImageName)
       }
-      
-    } else { // no image was selected
-      delegate?.petImageViewControllerDidCancel(self)
     }
+    
     
     navigationController?.popViewControllerAnimated(true)
   }
   
   // Camera-button
   func addPhoto(sender: UIButton) {
-    //    editState = false // stop editing task
-    //    closePickerCellsForShowState()
-    //    deactivateAllActiveTextFields()
-    //    configureForEditState(withAnimationDuration: animationDuration)
-    //
-    //    edited = taskDidChange()
+    
+    if cameraIsAvailable && photoLibraryIsAvailable {
+      // both Camera and PhotoLibrary are available - need to present popover to choose
+      
+      let storyboard = UIStoryboard(name: "Main", bundle: nil)
+      if let pickerOptionsViewController = storyboard.instantiateViewControllerWithIdentifier("ImagePickerOptionsPopoverController") as? ImagePickerOptionsPopoverController {
+        pickerOptionsViewController.modalPresentationStyle = .Popover
+        pickerOptionsViewController.delegate = self
+        
+        if let popoverController = pickerOptionsViewController.popoverPresentationController {
+          popoverController.delegate = self
+          popoverController.sourceView = decoratedNavigationBar.centerRightButton.superview
+          popoverController.permittedArrowDirections = .Up
+          popoverController.backgroundColor = UIColor.whiteColor()
+          popoverController.sourceRect = decoratedNavigationBar.centerRightButton.frame
+        }
+        
+        presentViewController(pickerOptionsViewController, animated: true, completion: nil)
+        
+        var popoverWidth: CGFloat = 0.0
+        var popoverHeight: CGFloat = 0.0
+        
+        if let filledPopoverWidth = pickerOptionsViewController.filledWidth {
+          let halfWidth = view.frame.width / 2
+          popoverWidth = filledPopoverWidth < halfWidth ? halfWidth : filledPopoverWidth
+        }
+        
+        if let filledPopoverHeight = pickerOptionsViewController.filledHeight {
+          popoverHeight = filledPopoverHeight
+        }
+        
+        pickerOptionsViewController.preferredContentSize = CGSize(width: popoverWidth, height: popoverHeight)
+      }
+    } else {
+      if cameraIsAvailable {
+        // only camera is available
+        getPhotoFrom(.Camera)
+      } else if photoLibraryIsAvailable {
+        // only photoLibrary is available
+        getPhotoFrom(.PhotoLibrary)
+      }
+    }
+    
+  }
+  
+  func getPhotoFrom(sourceType: UIImagePickerControllerSourceType) {
+    imagePicker.sourceType = sourceType
+    
+    if let mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(sourceType) {
+      let imageMediaTypes = mediaTypes.filter{ $0.lowercaseString.containsString("image") }
+      imagePicker.mediaTypes = imageMediaTypes
+    }
+    
+    if sourceType == .Camera {
+      imagePicker.cameraCaptureMode = .Photo
+    }
+    
+    imagePicker.delegate = self
+    presentViewController(imagePicker, animated: true, completion: nil)
   }
   
 }
@@ -161,9 +266,13 @@ extension PetImageViewController: UICollectionViewDataSource {
       
       cell.selectedView.backgroundColor = VisualConfiguration.lightOrangeColor
       cell.selectedView.cornerProportion = VisualConfiguration.cornerProportion
-      cell.selectedView.hidden = !imagesSelection[indexPath.row]
       
-      cell.petImageView.image = UIImage(unsafelyNamed: imagesNames[indexPath.row])
+      cell.selectionColor = VisualConfiguration.lightOrangeColor
+      cell.unSelectionColor = UIColor.clearColor()
+      
+      cell.selected = indexPath.row == selectedIndex ? true : false
+      
+      cell.petImageView.image = images[indexPath.row]
       cell.petImageView.cornerProportion = VisualConfiguration.cornerProportion
       
       return cell
@@ -176,30 +285,19 @@ extension PetImageViewController: UICollectionViewDataSource {
 
 extension PetImageViewController: UICollectionViewDelegate {
   
-  // update imagesSelected and show or hide selectedView accordingly
+  func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    if selectedIndex == indexPath.row { // user try to select already selected item
+      collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+      selectedIndex = noSelectionIndex
+      return false
+    } else {
+      return true
+    }
+  }
+  
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    
-    imagesSelection[indexPath.row] = !imagesSelection[indexPath.row]
-    
-    var rowsToUpdate = [Int]()
-    
-    if imagesSelection[indexPath.row] { // if item was selected
-      for ind in 0..<imagesSelection.count { // need to deselect all previously selected items
-        if ind != indexPath.row && imagesSelection[ind] {
-          imagesSelection[ind] = false
-          rowsToUpdate.append(ind)
-        }
-      }
-    }
-    
-    rowsToUpdate.append(indexPath.row) // selected item itself
-    
-    for row in rowsToUpdate { // update selectedView' visibility
-      if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forRow: row, inSection: indexPath.section)) as? PetImageCell {
-        cell.selectedView.hidden = !imagesSelection[row]
-      }
-    }
-    
+    // update selectedTypeItemsInd
+    selectedIndex = indexPath.row
   }
   
 }
@@ -222,4 +320,81 @@ extension PetImageViewController: UICollectionViewDelegateFlowLayout {
     return minimumSpacing
   }
   
+}
+
+extension PetImageViewController: UIPopoverPresentationControllerDelegate {
+  
+  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    return .None
+  }
+  
+  func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
+  }
+}
+
+extension PetImageViewController: ImagePickerOptionsPopoverControllerDelegate {
+  
+  func popoverDidPickTakingPhotoWithCamera() {
+    dismissViewControllerAnimated(true, completion: nil)
+    getPhotoFrom(.Camera)
+  }
+  
+  func popoverDidPickGettingPhotoFromLibrary() {
+    dismissViewControllerAnimated(true, completion: nil)
+    getPhotoFrom(.PhotoLibrary)
+  }
+  
+}
+
+extension PetImageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  
+  func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    dismissViewControllerAnimated(false, completion: nil) // dismiss UIImagePickerController
+    
+    if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+      
+      // present modal view controller to crop picker image
+      let storyboard = UIStoryboard(name: "Main", bundle: nil)
+      if let imageCropViewController = storyboard.instantiateViewControllerWithIdentifier("ImageCropViewController") as? ImageCropViewController {
+        imageCropViewController.photo = pickedImage
+        imageCropViewController.delegate = self
+        presentViewController(imageCropViewController, animated: true, completion: nil)
+      }
+    }
+  }
+  
+  func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    dismissViewControllerAnimated(true, completion: nil)
+  }
+  
+}
+
+extension PetImageViewController: ImageCropViewControllerDelegate {
+  func imageCropViewControllerDidCancel(viewController: ImageCropViewController) {
+    
+  }
+  
+  func imageCropViewController(viewController: ImageCropViewController, didCropImage image: UIImage) {
+    selectedIndex = 0
+    let indexPath = NSIndexPath(forItem: selectedIndex, inSection: 0)
+    
+    // user has just imported image for the first time
+    if importedImage == nil {
+      imagesNames.insert(importedImageName, atIndex: 0)
+      images.insert(image, atIndex: 0)
+      collectionView.insertItemsAtIndexPaths([indexPath])
+    } else {
+      // some image has been imported -> need to rewrite its cell with new image
+      imagesNames[0] = importedImageName
+      images[0] = image
+      
+      if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? PetImageCell {
+        cell.petImageView.image = image
+      }
+      
+    }
+    
+    importedImage = image
+    collectionView.selectItemAtIndexPath(indexPath, animated: false, scrollPosition: .Top)
+  }
 }

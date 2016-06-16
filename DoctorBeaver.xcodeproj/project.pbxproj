@@ -22,6 +22,8 @@
 		620373191C6BE98E00352617 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620373181C6BE98E00352617 /* UIColor.swift */; };
 		620891021D01A57200F870FD /* TaskTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620891011D01A57200F870FD /* TaskTypeViewController.swift */; };
 		620891041D01ABF600F870FD /* MenuIconTitleCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */; };
+		620995191D10B03100C4371D /* ImagePickerOptionsPopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */; };
+		6209951B1D10B25300C4371D /* ImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6209951A1D10B25300C4371D /* ImageCropViewController.swift */; };
 		621916761CEE3C6B00F073C7 /* RespondingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621916751CEE3C6B00F073C7 /* RespondingTextField.swift */; };
 		6219167B1CEF3DDF00F073C7 /* DecoratedNavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621916791CEF3DDF00F073C7 /* DecoratedNavigationBarView.swift */; };
 		6219167C1CEF3DDF00F073C7 /* DecoratedNavigationBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6219167A1CEF3DDF00F073C7 /* DecoratedNavigationBarView.xib */; };
@@ -121,6 +123,8 @@
 		620373181C6BE98E00352617 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		620891011D01A57200F870FD /* TaskTypeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTypeViewController.swift; sourceTree = "<group>"; };
 		620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuIconTitleCollectionCell.swift; sourceTree = "<group>"; };
+		620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerOptionsPopoverController.swift; sourceTree = "<group>"; };
+		6209951A1D10B25300C4371D /* ImageCropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropViewController.swift; sourceTree = "<group>"; };
 		621916751CEE3C6B00F073C7 /* RespondingTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RespondingTextField.swift; sourceTree = "<group>"; };
 		621916791CEF3DDF00F073C7 /* DecoratedNavigationBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecoratedNavigationBarView.swift; sourceTree = "<group>"; };
 		6219167A1CEF3DDF00F073C7 /* DecoratedNavigationBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DecoratedNavigationBarView.xib; sourceTree = "<group>"; };
@@ -210,7 +214,6 @@
 			isa = PBXGroup;
 			children = (
 				62C64D841CDA795C006B4CEF /* PetCVCell.swift */,
-				6219167F1CEF96DA00F073C7 /* PetImageCell.swift */,
 				620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */,
 			);
 			name = "Collection Cells";
@@ -325,9 +328,12 @@
 			children = (
 				62C64D641CD7EF10006B4CEF /* PetsViewController.swift */,
 				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
-				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				6277BA9D1CEA2C23006E4607 /* PetMenuConfiguration.swift */,
 				6219167D1CEF40EF00F073C7 /* PetImageViewController.swift */,
+				6219167F1CEF96DA00F073C7 /* PetImageCell.swift */,
+				620891011D01A57200F870FD /* TaskTypeViewController.swift */,
+				620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */,
+				6209951A1D10B25300C4371D /* ImageCropViewController.swift */,
 			);
 			name = Pets;
 			sourceTree = "<group>";
@@ -411,7 +417,7 @@
 		62F0FEB51CB2EA8700C13132 /* Task */ = {
 			isa = PBXGroup;
 			children = (
-				620891011D01A57200F870FD /* TaskTypeViewController.swift */,
+				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */,
 				62F0FEB81CB556EB00C13132 /* MinutesDose */,
 			);
@@ -563,6 +569,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				620995191D10B03100C4371D /* ImagePickerOptionsPopoverController.swift in Sources */,
 				6219167E1CEF40EF00F073C7 /* PetImageViewController.swift in Sources */,
 				6219B4741CA06605006E4E14 /* JsonParser.swift in Sources */,
 				628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */,
@@ -611,6 +618,7 @@
 				62C64D631CD7E8F0006B4CEF /* DataExtensions.swift in Sources */,
 				62A83B351C6D052A00A8DE8D /* FilterViewController.swift in Sources */,
 				62F0FEBC1CB9A3C500C13132 /* MenuTitleSwitchCell.swift in Sources */,
+				6209951B1D10B25300C4371D /* ImageCropViewController.swift in Sources */,
 				6271ADCD1CBEF86A00CD0F5F /* StgDatePickerCell.swift in Sources */,
 				62C64D5C1CD2D1E2006B4CEF /* Pet.swift in Sources */,
 				62A83B331C6CE13000A8DE8D /* VisualConfiguration.swift in Sources */,

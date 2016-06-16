@@ -1849,6 +1849,95 @@
             </objects>
             <point key="canvasLocation" x="3743" y="-2927"/>
         </scene>
+        <!--Image Picker Options Popover Controller-->
+        <scene sceneID="1b6-Eo-are">
+            <objects>
+                <viewController storyboardIdentifier="ImagePickerOptionsPopoverController" id="rKE-qQ-Tpd" customClass="ImagePickerOptionsPopoverController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="5FC-xW-TZO"/>
+                        <viewControllerLayoutGuide type="bottom" id="73Y-Eb-HmI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ill-bS-HKL">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hUg-sV-JGU">
+                                <rect key="frame" x="276" y="66" width="48" height="30"/>
+                                <state key="normal" title="Gallery"/>
+                                <connections>
+                                    <action selector="getPhotoFromLibrary:" destination="rKE-qQ-Tpd" eventType="touchUpInside" id="3SS-y1-bfP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rE3-wA-464">
+                                <rect key="frame" x="279.5" y="28" width="41" height="30"/>
+                                <state key="normal" title="Photo"/>
+                                <connections>
+                                    <action selector="takePhotoWithCamera:" destination="rKE-qQ-Tpd" eventType="touchUpInside" id="hhC-MZ-aT7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hUg-sV-JGU" firstAttribute="top" secondItem="rE3-wA-464" secondAttribute="bottom" constant="-8" id="1rt-b6-tHl"/>
+                            <constraint firstItem="rE3-wA-464" firstAttribute="top" secondItem="5FC-xW-TZO" secondAttribute="bottom" constant="8" id="270-dh-eP9"/>
+                            <constraint firstItem="hUg-sV-JGU" firstAttribute="centerX" secondItem="ill-bS-HKL" secondAttribute="centerX" id="QLu-dQ-sQI"/>
+                            <constraint firstItem="rE3-wA-464" firstAttribute="centerX" secondItem="ill-bS-HKL" secondAttribute="centerX" id="USk-zj-spl"/>
+                            <constraint firstItem="hUg-sV-JGU" firstAttribute="top" secondItem="rE3-wA-464" secondAttribute="bottom" constant="8" id="cPb-i2-da7"/>
+                            <constraint firstItem="rE3-wA-464" firstAttribute="centerX" secondItem="ill-bS-HKL" secondAttribute="centerX" id="ze0-Wm-hxV"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="USk-zj-spl"/>
+                                <exclude reference="1rt-b6-tHl"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="cameraButton" destination="rE3-wA-464" id="bel-R7-V3k"/>
+                        <outlet property="photoLibraryButton" destination="hUg-sV-JGU" id="1Mh-hY-coF"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Cm-TU-z1j" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4377" y="-2927"/>
+        </scene>
+        <!--Image Crop View Controller-->
+        <scene sceneID="4Ng-LN-Z6c">
+            <objects>
+                <viewController storyboardIdentifier="ImageCropViewController" id="LIv-sh-p8J" customClass="ImageCropViewController" customModule="DoctorBeaver" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gHV-kk-YHW"/>
+                        <viewControllerLayoutGuide type="bottom" id="BWs-6t-kVp"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aSS-Ec-o7D">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z4v-X0-cfE" customClass="DecoratedNavigationBarView" customModule="DoctorBeaver" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
+                                <color key="backgroundColor" red="0.94117647058823528" green="0.67843137254901964" blue="0.18823529411764706" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="q5K-I8-Mz8"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="Z4v-X0-cfE" secondAttribute="trailing" constant="-20" id="M3y-2S-1oM"/>
+                            <constraint firstItem="Z4v-X0-cfE" firstAttribute="leading" secondItem="aSS-Ec-o7D" secondAttribute="leadingMargin" constant="-20" id="tae-S1-xpr"/>
+                            <constraint firstItem="Z4v-X0-cfE" firstAttribute="top" secondItem="aSS-Ec-o7D" secondAttribute="topMargin" id="zVK-Q9-AjN"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="decoratedNavigationBar" destination="Z4v-X0-cfE" id="tXk-O5-575"/>
+                        <segue destination="AiB-1P-Edl" kind="unwind" identifier="petMenuUnwindSegue" unwindAction="unwindToPetMenu:" id="WJ0-nw-Rnw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EPr-JP-lyA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="AiB-1P-Edl" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="5009" y="-2927"/>
+        </scene>
         <!--Task Type View Controller-->
         <scene sceneID="Wb0-jc-XC5">
             <objects>

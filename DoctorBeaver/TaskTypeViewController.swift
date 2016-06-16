@@ -58,6 +58,7 @@ class TaskTypeViewController: UIViewController {
     
     let numberOfCellsInALine: CGFloat = 4
     countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine) // count size and insets of cells
+    collectionView.alwaysBounceVertical = true
     
     if viewIsReadyToBeLoadedWithPetsRepository() {
       reloadTypeItemsCollection()

@@ -343,7 +343,7 @@ class PetMenuViewController: UIViewController {
       case editPetImageSegueId:
         if let destinationViewController = segue.destinationViewController as? PetImageViewController {
           destinationViewController.delegate = self
-          destinationViewController.petCurrentImageName = pet.imageName
+          destinationViewController.petInitialImageName = pet.imageName
         }
         
       case editShowTaskSegueId:
@@ -768,11 +768,11 @@ extension PetMenuViewController: StateSwitchDelegate {
 }
 
 extension PetMenuViewController: PetImageViewControllerDelegate {
-  func petImageViewControllerDidCancel(viewController: PetImageViewController) {
-    
-  }
+
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String) {
+    
+    print("didSelectNewImageName")
     
     pet.imageName = imageName
     
@@ -786,6 +786,22 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
       }
     }
     
+  }
+  
+  func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String, andNewImage newImage: UIImage) {
+    print("didSelectNewImageNameAndNewImage")
+    
+    pet.imageName = imageName
+    
+    for section in 0..<menu.cellsTagTypeState.count {
+      for row in 0..<menu.cellsTagTypeState[section].count {
+        if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
+            cell.imageImageView.image = newImage
+          }
+        }
+      }
+    }
   }
   
 }

@@ -58,6 +58,7 @@ class PetsViewController: UIViewController {
     
     let numberOfCellsInALine: CGFloat = 2
     countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine) // count size and insets of cells
+    collectionView.alwaysBounceVertical = true
     
     if viewIsReadyToBeLoadedWithPetsRepository() {
       reloadPetsCollection(withFetchRequest: true)
