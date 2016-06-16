@@ -380,7 +380,15 @@ extension PetImageViewController: ImageCropViewControllerDelegate {
     
     // user has just imported image for the first time
     if importedImage == nil {
-      imagesNames.insert(importedImageName, atIndex: 0)
+      
+      let newImageName = String(NSDate().timeIntervalSince1970)
+      
+      let imageFileManager = ImageFileManager()
+      let suc = imageFileManager.saveImage(image, withName: newImageName)
+      print(newImageName)
+      print(suc)
+      
+      imagesNames.insert(newImageName, atIndex: 0)
       images.insert(image, atIndex: 0)
       collectionView.insertItemsAtIndexPaths([indexPath])
     } else {

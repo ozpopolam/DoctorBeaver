@@ -198,7 +198,8 @@ extension PetsViewController: UICollectionViewDataSource {
       let pet = pets[indexPath.row]
       cell.layer.cornerRadius = cellCornerRadius
       
-      if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+      if let petImage = pet.image {
+      //if let petImage = UIImage(unsafelyNamed: pet.imageName) {
         
         if petImage.size.width < cellSize.width && petImage.size.height < cellSize.height {
           cell.petImageView.contentMode = .Center

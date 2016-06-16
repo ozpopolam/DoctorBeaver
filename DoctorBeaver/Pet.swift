@@ -6,10 +6,44 @@
 //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
 class Pet: NSManagedObject {
+  
+  private var temporaryImage: UIImage? // temporary storage for image with imageName
+  var image: UIImage? {
+    get {
+      if let image = temporaryImage {
+        return image
+      } else {
+        // need to load image from xcassets or file system
+        
+        if imageName == "1466088582.82441" {
+        //if imageName == String(id) {
+          // pet has custom image, stored on a disk -> need to read it
+          let imageFileManager = ImageFileManager(withImageFolderName: "PetImages")
+          temporaryImage = imageFileManager.getImage(withName: imageName)
+        } else {
+          // pet has one of the default images from xcassets
+          temporaryImage = UIImage(unsafelyNamed: imageName)
+        }
+        return temporaryImage
+      }
+    }
+  }
+  
+  var imageName2: String {
+    set {
+      imageName = newValue
+      temporaryImage = nil
+    }
+    get {
+      return imageName
+    }
+  }
+  
+  
   static var entityName: String {
     get {
       return "Pet"

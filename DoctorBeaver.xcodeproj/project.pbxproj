@@ -22,6 +22,7 @@
 		620373191C6BE98E00352617 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620373181C6BE98E00352617 /* UIColor.swift */; };
 		620891021D01A57200F870FD /* TaskTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620891011D01A57200F870FD /* TaskTypeViewController.swift */; };
 		620891041D01ABF600F870FD /* MenuIconTitleCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */; };
+		620971F31D12EF7600EE9D6B /* ImageFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620971F21D12EF7600EE9D6B /* ImageFileManager.swift */; };
 		620995191D10B03100C4371D /* ImagePickerOptionsPopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */; };
 		6209951B1D10B25300C4371D /* ImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6209951A1D10B25300C4371D /* ImageCropViewController.swift */; };
 		621916761CEE3C6B00F073C7 /* RespondingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621916751CEE3C6B00F073C7 /* RespondingTextField.swift */; };
@@ -123,6 +124,7 @@
 		620373181C6BE98E00352617 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		620891011D01A57200F870FD /* TaskTypeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTypeViewController.swift; sourceTree = "<group>"; };
 		620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuIconTitleCollectionCell.swift; sourceTree = "<group>"; };
+		620971F21D12EF7600EE9D6B /* ImageFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFileManager.swift; sourceTree = "<group>"; };
 		620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerOptionsPopoverController.swift; sourceTree = "<group>"; };
 		6209951A1D10B25300C4371D /* ImageCropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropViewController.swift; sourceTree = "<group>"; };
 		621916751CEE3C6B00F073C7 /* RespondingTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RespondingTextField.swift; sourceTree = "<group>"; };
@@ -397,6 +399,7 @@
 			isa = PBXGroup;
 			children = (
 				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
+				620971F21D12EF7600EE9D6B /* ImageFileManager.swift */,
 				628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */,
 				62C64D571CD2D1E2006B4CEF /* Pet+CoreDataProperties.swift */,
 				62C64D561CD2D1E2006B4CEF /* Pet.swift */,
@@ -612,6 +615,7 @@
 				62C64DA01CE28651006B4CEF /* TaskTypeItem.swift in Sources */,
 				62A83B8F1C6D287E00A8DE8D /* UIImage.swift in Sources */,
 				62C64D5E1CD2D1E2006B4CEF /* Realization+CoreDataProperties.swift in Sources */,
+				620971F31D12EF7600EE9D6B /* ImageFileManager.swift in Sources */,
 				62C64D9F1CE28651006B4CEF /* TaskTypeItem+CoreDataProperties.swift in Sources */,
 				623B4FF11C7508B80016EC92 /* BasicPetCell.swift in Sources */,
 				62C64DA61CE286AE006B4CEF /* Task+CoreDataProperties.swift in Sources */,
