@@ -299,7 +299,8 @@ extension PetsViewController: PetMenuViewControllerDelegate {
   
   func petMenuViewController(viewController: PetMenuViewController, didEditImageOfPet pet: Pet) {
     // get cropped version of a pet' icon
-    if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+    if let petImage = pet.image {
+    //if let petImage = UIImage(unsafelyNamed: pet.imageName) {
       croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
     }
     

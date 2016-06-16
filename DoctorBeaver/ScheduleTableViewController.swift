@@ -406,7 +406,8 @@ extension ScheduleTableViewController: UITableViewDataSource {
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
     cell.petNameLabel.text = tr.realization.task.pet.name
-    cell.petImageView.image = UIImage(unsafelyNamed: tr.realization.task.pet.imageName)
+    cell.petImageView.image = tr.realization.task.pet.image
+    //cell.petImageView.image = UIImage(unsafelyNamed: tr.realization.task.pet.imageName)
   }
   
   // конфигурируем состояние выполненности задания

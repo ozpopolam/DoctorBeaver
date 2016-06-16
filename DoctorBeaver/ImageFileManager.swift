@@ -44,8 +44,7 @@ struct ImageFileManager {
   private func constructURLForImage(withName imageName: String, byCreatingImageFolder shouldCreateFolder: Bool = false) -> NSURL? {
     
     if let imageFolderURL = imageFolderURL, let path = imageFolderURL.path  {
-      
-      print(imageFolderURL)
+      //print(imageFolderURL)
       
       if !fileManager.fileExistsAtPath(path) {
         // folder for images doesn't exist

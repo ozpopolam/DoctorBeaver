@@ -43,7 +43,7 @@
            },
            {
            "name": "Стрелка",
-           "imageName": "1466088582.82441",
+           "imageName": "DefaultPetImages/dog1",
            "selected": true,
            "tasks": [{
                      "typeId": 0,

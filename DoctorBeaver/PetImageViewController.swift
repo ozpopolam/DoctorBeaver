@@ -10,7 +10,7 @@ import UIKit
 
 protocol PetImageViewControllerDelegate: class {
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String)
-  func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String, andNewImage newImage: UIImage)
+  func petImageViewController(viewController: PetImageViewController, didSelectNewImage newImage: UIImage, withName newImageName: String)
 }
 
 class PetImageViewController: UIViewController {
@@ -33,7 +33,7 @@ class PetImageViewController: UIViewController {
   var imagesNames = [String]() // ~ image from photo/gallery + ~ pet's custom image + default images
   var images = [UIImage?]()
   
-  let importedImageName = "imported" // name of image from photo/gallery
+  //let importedImageName = "imported" // name of image from photo/gallery
   var importedImage: UIImage? // image from photo/gallery
   
   let noSelectionIndex = -1
@@ -177,7 +177,7 @@ class PetImageViewController: UIViewController {
       if selectedIndex == 0 {
         if let importedImage = importedImage {
           // user selected imported image
-          delegate?.petImageViewController(self, didSelectNewImageName: petNewImageName, andNewImage: importedImage)
+          delegate?.petImageViewController(self, didSelectNewImage: importedImage, withName: petNewImageName)
         } else {
           delegate?.petImageViewController(self, didSelectNewImageName: petNewImageName)
         }
@@ -378,28 +378,21 @@ extension PetImageViewController: ImageCropViewControllerDelegate {
     selectedIndex = 0
     let indexPath = NSIndexPath(forItem: selectedIndex, inSection: 0)
     
+    let newImageName = String(NSDate().timeIntervalSince1970)
+    
     // user has just imported image for the first time
     if importedImage == nil {
-      
-      let newImageName = String(NSDate().timeIntervalSince1970)
-      
-      let imageFileManager = ImageFileManager()
-      let suc = imageFileManager.saveImage(image, withName: newImageName)
-      print(newImageName)
-      print(suc)
-      
       imagesNames.insert(newImageName, atIndex: 0)
       images.insert(image, atIndex: 0)
       collectionView.insertItemsAtIndexPaths([indexPath])
     } else {
       // some image has been imported -> need to rewrite its cell with new image
-      imagesNames[0] = importedImageName
+      imagesNames[0] = newImageName
       images[0] = image
       
       if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? PetImageCell {
         cell.petImageView.image = image
       }
-      
     }
     
     importedImage = image

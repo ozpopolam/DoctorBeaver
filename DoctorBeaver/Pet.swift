@@ -9,18 +9,50 @@
 import UIKit
 import CoreData
 
+// @NSManaged
+extension Pet {
+  @NSManaged var id: Double
+  @NSManaged var basicValues: PetBasicValues
+  
+  @NSManaged var name: String
+  @NSManaged var selected: Bool
+  
+  var imageName: String {
+    set {
+      willChangeValueForKey(imageNameKey)
+      setPrimitiveValue(newValue, forKey: imageNameKey)
+      temporaryImage = nil
+      didChangeValueForKey(imageNameKey)
+    }
+    get {
+      willAccessValueForKey(imageNameKey)
+      if let imNm = primitiveValueForKey(imageNameKey) as? String {
+        didAccessValueForKey(imageNameKey)
+        return imNm
+      } else {
+        didAccessValueForKey(imageNameKey)
+        return ""
+      }
+    }
+  }
+  
+  @NSManaged var tasks: NSSet
+}
+
 class Pet: NSManagedObject {
   
   private var temporaryImage: UIImage? // temporary storage for image with imageName
   var image: UIImage? {
     get {
       if let image = temporaryImage {
+        print("returning for \(id)")
         return image
       } else {
         // need to load image from xcassets or file system
         
-        if imageName == "1466088582.82441" {
-        //if imageName == String(id) {
+        print("loading for \(id)")
+        
+        if imageName == String(id) {
           // pet has custom image, stored on a disk -> need to read it
           let imageFileManager = ImageFileManager(withImageFolderName: "PetImages")
           temporaryImage = imageFileManager.getImage(withName: imageName)
@@ -31,18 +63,12 @@ class Pet: NSManagedObject {
         return temporaryImage
       }
     }
-  }
-  
-  var imageName2: String {
     set {
-      imageName = newValue
-      temporaryImage = nil
-    }
-    get {
-      return imageName
+      temporaryImage = newValue
     }
   }
   
+  let imageNameKey = "imageName"
   
   static var entityName: String {
     get {

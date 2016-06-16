@@ -37,6 +37,8 @@ class PetMenuViewController: UIViewController {
   var petNameWasEdited = false
   var petImageWasEdited = false
   
+  var newCustomImage: (image: UIImage, imageName: String)?
+  
   var tasksSortedByActiveness: (active: [Task], completed: [Task]) = ([], [])
   
   var menu = PetMenuConfiguration()
@@ -314,7 +316,31 @@ class PetMenuViewController: UIViewController {
   }
   func petImageIsDifferent(fromPet petWithOldSettings: Pet?) -> Bool {
     if let petWithOldSettings = petWithOldSettings {
+      
+      
+      if pet.imageName != petWithOldSettings.imageName {
+        
+        
+        
+        if let newCustomImage = newCustomImage {
+          if newCustomImage.imageName == pet.imageName {
+            
+            print("save new custom")
+            
+            // save new custom image to file system
+            pet.imageName = String(pet.id)
+            let imageFileManager = ImageFileManager()
+            imageFileManager.saveImage(newCustomImage.image, withName: pet.imageName)
+            
+          }
+        }
+        
+      }
+      
       return pet.imageName != petWithOldSettings.imageName
+      
+      
+      
     } else {
       return false
     }
@@ -503,7 +529,8 @@ extension PetMenuViewController: UITableViewDataSource {
     cell.tag = menu.tagForIndexPath(indexPath)
     cell.titleLabel.text = "Изображение питомца"
     
-    if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+    if let petImage = pet.image {
+    //if let petImage = UIImage(unsafelyNamed: pet.imageName) {
       cell.imageImageView.image = petImage
     }
     
@@ -780,7 +807,29 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
       for row in 0..<menu.cellsTagTypeState[section].count {
         if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
-            cell.imageImageView.image = UIImage(unsafelyNamed: pet.imageName)
+            cell.imageImageView.image = pet.image
+            //cell.imageImageView.image = UIImage(unsafelyNamed: pet.imageName)
+          }
+        }
+      }
+    }
+    
+  }
+  
+  func petImageViewController(viewController: PetImageViewController, didSelectNewImage newImage: UIImage, withName newImageName: String) {
+    
+    pet.imageName = newImageName
+    pet.image = newImage
+    
+    newCustomImage = (image: newImage, imageName: newImageName)
+    
+    print("didSelectNewImage")
+    
+    for section in 0..<menu.cellsTagTypeState.count {
+      for row in 0..<menu.cellsTagTypeState[section].count {
+        if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
+            cell.imageImageView.image = pet.image
           }
         }
       }
@@ -793,15 +842,7 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
     
     pet.imageName = imageName
     
-    for section in 0..<menu.cellsTagTypeState.count {
-      for row in 0..<menu.cellsTagTypeState[section].count {
-        if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
-            cell.imageImageView.image = newImage
-          }
-        }
-      }
-    }
+    
   }
   
 }

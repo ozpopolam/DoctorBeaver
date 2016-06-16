@@ -12,13 +12,4 @@
 import Foundation
 import CoreData
 
-extension Pet {
-  @NSManaged var id: Double
-  @NSManaged var basicValues: PetBasicValues
-  
-  @NSManaged var name: String
-  @NSManaged var selected: Bool
-  @NSManaged var imageName: String
-  
-  @NSManaged var tasks: NSSet
-}
+
