@@ -317,29 +317,20 @@ class PetMenuViewController: UIViewController {
   func petImageIsDifferent(fromPet petWithOldSettings: Pet?) -> Bool {
     if let petWithOldSettings = petWithOldSettings {
       
-      
-      if pet.imageName != petWithOldSettings.imageName {
-        
-        
-        
+      let imageNameWasChanged = pet.imageName != petWithOldSettings.imageName
+      if imageNameWasChanged {
         if let newCustomImage = newCustomImage {
-          if newCustomImage.imageName == pet.imageName {
+          if newCustomImage.imageName == pet.imageName { // last remembered custom image is desired image to save
             
             print("save new custom")
-            
             // save new custom image to file system
             pet.imageName = String(pet.id)
             let imageFileManager = ImageFileManager()
             imageFileManager.saveImage(newCustomImage.image, withName: pet.imageName)
-            
           }
         }
-        
       }
-      
-      return pet.imageName != petWithOldSettings.imageName
-      
-      
+      return imageNameWasChanged
       
     } else {
       return false
@@ -369,6 +360,7 @@ class PetMenuViewController: UIViewController {
       case editPetImageSegueId:
         if let destinationViewController = segue.destinationViewController as? PetImageViewController {
           destinationViewController.delegate = self
+          destinationViewController.petInitialImage = pet.image
           destinationViewController.petInitialImageName = pet.imageName
         }
         
@@ -530,7 +522,6 @@ extension PetMenuViewController: UITableViewDataSource {
     cell.titleLabel.text = "Изображение питомца"
     
     if let petImage = pet.image {
-    //if let petImage = UIImage(unsafelyNamed: pet.imageName) {
       cell.imageImageView.image = petImage
     }
     
@@ -808,7 +799,6 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
         if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
             cell.imageImageView.image = pet.image
-            //cell.imageImageView.image = UIImage(unsafelyNamed: pet.imageName)
           }
         }
       }

@@ -19,6 +19,7 @@ class PetImageViewController: UIViewController {
   @IBOutlet weak var collectionView: UICollectionView!
   
   weak var delegate: PetImageViewControllerDelegate?
+  var petInitialImage: UIImage!
   var petInitialImageName: String!
   
   // settings for layout of UICollectionView
@@ -114,7 +115,7 @@ class PetImageViewController: UIViewController {
     
     if petHasCustomImage {
       // must be loaded from disk
-      images.append(UIImage(unsafelyNamed: petInitialImageName))
+      images.append(petInitialImage)
       defaultImagesStartIndex = 1
     }
     

@@ -10,6 +10,12 @@ import UIKit
 
 extension UIImage {
   
+  var sizeInPixels: (width: CGFloat, height: CGFloat) {
+    get {
+      return (width: size.width * scale, height: size.height * scale)
+    }
+  }
+  
   // if name of image is void - right away return nil
   convenience init?(unsafelyNamed name: String?) {
     if let name = name {
@@ -40,12 +46,12 @@ extension UIImage {
   
   // crop internal square of image
   func cropCentralOneThirdSquare() -> UIImage {
-    let x = floor(self.size.width / 3)
-    let y = floor(self.size.height / 3)
-    let width = x
-    let height = y
+    let x = floor(sizeInPixels.width / 3)
+    let y = floor(sizeInPixels.height / 3)
+    let croppedWidth = x
+    let croppedHeight = y
     
-    let cropSquare = CGRectMake(x, y, width, height)
+    let cropSquare = CGRectMake(x, y, croppedWidth, croppedHeight)
     let imageRef = CGImageCreateWithImageInRect(self.CGImage, cropSquare)
     
     if let imageRef = imageRef {

@@ -137,7 +137,7 @@ class PetsViewController: UIViewController {
         // get cropped version of all pets' icons
         croppedPetImages = [ : ]
         for pet in pets {
-          if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+          if let petImage = pet.image {
             croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
           }
         }
@@ -199,7 +199,6 @@ extension PetsViewController: UICollectionViewDataSource {
       cell.layer.cornerRadius = cellCornerRadius
       
       if let petImage = pet.image {
-      //if let petImage = UIImage(unsafelyNamed: pet.imageName) {
         
         if petImage.size.width < cellSize.width && petImage.size.height < cellSize.height {
           cell.petImageView.contentMode = .Center
@@ -286,7 +285,7 @@ extension PetsViewController: PetMenuViewControllerDelegate {
   
   func petMenuViewController(viewController: PetMenuViewController, didAddPet pet: Pet) {
     pets.append(pet)
-    if let petImage = UIImage(unsafelyNamed: pet.imageName) {
+    if let petImage = pet.image {
       croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
     }
     
@@ -300,13 +299,12 @@ extension PetsViewController: PetMenuViewControllerDelegate {
   func petMenuViewController(viewController: PetMenuViewController, didEditImageOfPet pet: Pet) {
     // get cropped version of a pet' icon
     if let petImage = pet.image {
-    //if let petImage = UIImage(unsafelyNamed: pet.imageName) {
       croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
     }
     
     if let item = pets.indexOf(pet) {
       if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: item, inSection: 0)) as? PetCVCell {
-        cell.petImageView.image = UIImage(unsafelyNamed: pet.imageName)
+        cell.petImageView.image = pet.image
         cell.borderImageView.image = croppedPetImages[pet.id]
       }
     }

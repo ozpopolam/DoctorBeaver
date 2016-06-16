@@ -225,7 +225,7 @@ class ScheduleViewController: UIViewController {
   func showPetInfo(pet: Pet) {
     petNameLabel.hidden = false
     petNameLabel.text = pet.name
-    setPetImageWithBorder(pet.imageName)
+    setPetImageWithBorder(pet.image)
     
     petsNamesText.hidden = true
   }
@@ -253,20 +253,17 @@ class ScheduleViewController: UIViewController {
   }
   
   // устанавливаем картинку питомца и добавляем рамку
-  func setPetImageWithBorder(image: String?) {
+  func setPetImageWithBorder(image: UIImage?) {
     if let image = image {
       // есть изображение - устанавливаем его
-      if let image = UIImage(named: image) {
-        petImageView.image = image
-        petImageView.layer.cornerRadius = petImageView.frame.size.width / VisualConfiguration.cornerProportion
-        petImageView.clipsToBounds = true
-        
-        petBorderView.layer.cornerRadius = petBorderView.frame.size.width / VisualConfiguration.cornerProportion
-        petBorderView.hidden = false
-      } else {
-        petImageView.image = nil
-        petBorderView.hidden = true
-      }
+      
+      petImageView.image = image
+      petImageView.layer.cornerRadius = petImageView.frame.size.width / VisualConfiguration.cornerProportion
+      petImageView.clipsToBounds = true
+      
+      petBorderView.layer.cornerRadius = petBorderView.frame.size.width / VisualConfiguration.cornerProportion
+      petBorderView.hidden = false
+      
     } else {
       // изображения нет
       petImageView.image = nil
