@@ -786,22 +786,12 @@ extension PetMenuViewController: StateSwitchDelegate {
 }
 
 extension PetMenuViewController: PetImageViewControllerDelegate {
-
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String) {
-    
-    print("didSelectNewImageName")
-    
     pet.imageName = imageName
     
-    for section in 0..<menu.cellsTagTypeState.count {
-      for row in 0..<menu.cellsTagTypeState[section].count {
-        if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
-            cell.imageImageView.image = pet.image
-          }
-        }
-      }
+    if let cell = getMenuTitleImageCell() {
+      cell.imageImageView.image = pet.image
     }
     
   }
@@ -812,16 +802,22 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
     
     newCustomImage = (image: newImage, imageName: newImageName)
     
+    if let cell = getMenuTitleImageCell() {
+      cell.imageImageView.image = pet.image
+    }
+  }
+  
+  func getMenuTitleImageCell() -> MenuTitleImageCell? {
     for section in 0..<menu.cellsTagTypeState.count {
       for row in 0..<menu.cellsTagTypeState[section].count {
         if menu.cellsTagTypeState[section][row].type == .TitleImageCell {
           if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: section)) as? MenuTitleImageCell{
-            cell.imageImageView.image = pet.image
+            return cell
           }
         }
       }
     }
-    
+    return nil
   }
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String, andNewImage newImage: UIImage) {

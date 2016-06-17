@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "no-pets-allowed-symbol_318-50942.jpg",
+      "filename" : "noImage.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "noImage@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "noImage@3x.png",
       "scale" : "3x"
     }
   ],
