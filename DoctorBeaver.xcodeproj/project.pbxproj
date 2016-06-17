@@ -23,6 +23,7 @@
 		620891021D01A57200F870FD /* TaskTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620891011D01A57200F870FD /* TaskTypeViewController.swift */; };
 		620891041D01ABF600F870FD /* MenuIconTitleCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */; };
 		620971F31D12EF7600EE9D6B /* ImageFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620971F21D12EF7600EE9D6B /* ImageFileManager.swift */; };
+		620971F51D1442D200EE9D6B /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620971F41D1442D200EE9D6B /* Task+CoreDataProperties.swift */; };
 		620995191D10B03100C4371D /* ImagePickerOptionsPopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */; };
 		6209951B1D10B25300C4371D /* ImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6209951A1D10B25300C4371D /* ImageCropViewController.swift */; };
 		621916761CEE3C6B00F073C7 /* RespondingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621916751CEE3C6B00F073C7 /* RespondingTextField.swift */; };
@@ -76,7 +77,6 @@
 		62C64DA01CE28651006B4CEF /* TaskTypeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D9B1CE28651006B4CEF /* TaskTypeItem.swift */; };
 		62C64DA11CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D9C1CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift */; };
 		62C64DA21CE28651006B4CEF /* TaskTypeItemBasicValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64D9D1CE28651006B4CEF /* TaskTypeItemBasicValues.swift */; };
-		62C64DA61CE286AE006B4CEF /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64DA41CE286AE006B4CEF /* Task+CoreDataProperties.swift */; };
 		62C64DA91CE28C39006B4CEF /* PetsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C64DA81CE28C39006B4CEF /* PetsRepository.swift */; };
 		62C64DAB1CE292E3006B4CEF /* RuBasicValues.json in Resources */ = {isa = PBXBuildFile; fileRef = 62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */; };
 		62DCB0C71C77952C00ABF206 /* MenuTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DCB0C61C77952C00ABF206 /* MenuTextFieldCell.swift */; };
@@ -125,6 +125,7 @@
 		620891011D01A57200F870FD /* TaskTypeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTypeViewController.swift; sourceTree = "<group>"; };
 		620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuIconTitleCollectionCell.swift; sourceTree = "<group>"; };
 		620971F21D12EF7600EE9D6B /* ImageFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFileManager.swift; sourceTree = "<group>"; };
+		620971F41D1442D200EE9D6B /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerOptionsPopoverController.swift; sourceTree = "<group>"; };
 		6209951A1D10B25300C4371D /* ImageCropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropViewController.swift; sourceTree = "<group>"; };
 		621916751CEE3C6B00F073C7 /* RespondingTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RespondingTextField.swift; sourceTree = "<group>"; };
@@ -178,7 +179,6 @@
 		62C64D9B1CE28651006B4CEF /* TaskTypeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTypeItem.swift; sourceTree = "<group>"; };
 		62C64D9C1CE28651006B4CEF /* TaskTypeItemBasicValues+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TaskTypeItemBasicValues+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		62C64D9D1CE28651006B4CEF /* TaskTypeItemBasicValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTypeItemBasicValues.swift; sourceTree = "<group>"; };
-		62C64DA41CE286AE006B4CEF /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Task+CoreDataProperties.swift"; path = "../Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		62C64DA81CE28C39006B4CEF /* PetsRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetsRepository.swift; sourceTree = "<group>"; };
 		62C64DAA1CE292E3006B4CEF /* RuBasicValues.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuBasicValues.json; sourceTree = "<group>"; };
 		62DCB0C61C77952C00ABF206 /* MenuTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTextFieldCell.swift; sourceTree = "<group>"; };
@@ -404,7 +404,7 @@
 				62C64D561CD2D1E2006B4CEF /* Pet.swift */,
 				6277BA971CE9308B006E4607 /* PetBasicValues+CoreDataProperties.swift */,
 				6277BA981CE9308B006E4607 /* PetBasicValues.swift */,
-				62C64DA41CE286AE006B4CEF /* Task+CoreDataProperties.swift */,
+				620971F41D1442D200EE9D6B /* Task+CoreDataProperties.swift */,
 				62C64D5A1CD2D1E2006B4CEF /* Task.swift */,
 				62C64D9A1CE28651006B4CEF /* TaskTypeItem+CoreDataProperties.swift */,
 				62C64D9B1CE28651006B4CEF /* TaskTypeItem.swift */,
@@ -576,6 +576,7 @@
 				6219167E1CEF40EF00F073C7 /* PetImageViewController.swift in Sources */,
 				6219B4741CA06605006E4E14 /* JsonParser.swift in Sources */,
 				628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */,
+				620971F51D1442D200EE9D6B /* Task+CoreDataProperties.swift in Sources */,
 				620372D11C6944CC00352617 /* ScheduleTableViewController.swift in Sources */,
 				627F2CA01C88444A00B9ADFF /* DataPickerView.swift in Sources */,
 				620372D81C6A621000352617 /* ManyPetsCell.swift in Sources */,
@@ -618,7 +619,6 @@
 				620971F31D12EF7600EE9D6B /* ImageFileManager.swift in Sources */,
 				62C64D9F1CE28651006B4CEF /* TaskTypeItem+CoreDataProperties.swift in Sources */,
 				623B4FF11C7508B80016EC92 /* BasicPetCell.swift in Sources */,
-				62C64DA61CE286AE006B4CEF /* Task+CoreDataProperties.swift in Sources */,
 				62C64D631CD7E8F0006B4CEF /* DataExtensions.swift in Sources */,
 				62A83B351C6D052A00A8DE8D /* FilterViewController.swift in Sources */,
 				62F0FEBC1CB9A3C500C13132 /* MenuTitleSwitchCell.swift in Sources */,
