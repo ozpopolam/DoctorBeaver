@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DateHelper.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 30.03.16.
@@ -60,6 +60,10 @@ struct DateHelper {
   // сравниваем даты по значение дня
   static func compareDatesToDayUnit(firstDate firstDate: NSDate, secondDate: NSDate) -> NSComparisonResult {
     return calendar.compareDate(firstDate, toDate: secondDate, toUnitGranularity: .Day)
+  }
+  
+  static func compareDatesToUnit(firstDate firstDate: NSDate, secondDate: NSDate, unit: NSCalendarUnit) -> NSComparisonResult {
+    return calendar.compareDate(firstDate, toDate: secondDate, toUnitGranularity: unit)
   }
   
   // календарная разница в днях

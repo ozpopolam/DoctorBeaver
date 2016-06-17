@@ -13,7 +13,10 @@ import Foundation
 import CoreData
 
 extension PetBasicValues {
+  @NSManaged var basicName: String
   @NSManaged var namePlaceholder: String
+  @NSManaged var separator: String
+  
   @NSManaged var sectionTitles: String
   @NSManaged var selectedTitle: String
   @NSManaged var selectedForInitialization: Bool

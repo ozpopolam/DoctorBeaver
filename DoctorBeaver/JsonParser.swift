@@ -171,14 +171,18 @@ class JsonTaskPrimaryValuesParser {
   }
   
   func populateRepositoryWithPetBasicValues(fromJSONDictionary dict: [String: AnyObject]) -> PetBasicValues? {
-    guard let namePlaceholder = dict["namePlaceholder"] as? String,
+    guard let basicName = dict["basicName"] as? String,
+      let namePlaceholder = dict["namePlaceholder"] as? String,
+      let separator = dict["separator"] as? String,
       let sectionTitles = dict["sectionTitles"] as? String,
       let selectedTitle = dict["selectedTitle"] as? String,
       let selectedForInitialization = dict["selectedForInitialization"] as? Bool
       else { return nil}
     
     if let petBasicValues = petsRepository.insertPetBasicValues() {
+      petBasicValues.basicName = basicName
       petBasicValues.namePlaceholder = namePlaceholder
+      petBasicValues.separator = separator
       petBasicValues.sectionTitles = sectionTitles
       petBasicValues.selectedTitle = selectedTitle
       petBasicValues.selectedForInitialization = selectedForInitialization
@@ -218,7 +222,7 @@ class JsonPetsParser: JsonParser {
   
   func populatePetInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) {
     guard let name = dict["name"] as? String,
-      let image = dict["image"] as? String,
+      let imageName = dict["imageName"] as? String,
       let selected = dict["selected"] as? Bool,
       let jsonTasks = dict["tasks"] as? [[String: AnyObject]]
       else { return }
@@ -238,7 +242,7 @@ class JsonPetsParser: JsonParser {
       }
       
       pet.name = name
-      pet.image = image
+      pet.imageName = imageName
       pet.selected = selected
       pet.tasks = tasks
       

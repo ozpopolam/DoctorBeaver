@@ -1,5 +1,5 @@
 //
-//  FakeAlertController.swift
+//  CalendarPopoverController.swift
 //  popover
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 23.04.16.
@@ -15,10 +15,12 @@ protocol CalendarPopoverControllerDelegate: class {
 
 class CalendarPopoverController: UIViewController {
   
-  //@IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var datePicker: UIDatePicker!
-  @IBOutlet weak var cancelButton: UIButton!
   
+  @IBOutlet weak var stackView: UIStackView!
+  
+  @IBOutlet weak var cancelButton: UIButton!
+  @IBOutlet weak var todayButton: UIButton!
   @IBOutlet weak var doneButton: UIButton!
   
   weak var delegate: CalendarPopoverControllerDelegate?
@@ -26,7 +28,6 @@ class CalendarPopoverController: UIViewController {
   
   var activeWidth: CGFloat?
   var activeHeight: CGFloat?
-  let buttonIconSize = CGSize(width: 33, height: 33)
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -34,8 +35,9 @@ class CalendarPopoverController: UIViewController {
     view.backgroundColor = UIColor.whiteColor()
     calculateActiveWidthAndHeight()
     
-    cancelButton.setImage(withName: "cancelOrange", ofSize: buttonIconSize, withTintColor: UIColor.fogColor())
-    doneButton.setImage(withName: "doneOrange", ofSize: buttonIconSize, withTintColor: UIColor.fogColor())
+    cancelButton.setImage(withName: "cancelOrange", ofSize: VisualConfiguration.buttonIconSize, withTintColor: UIColor.fogColor())
+    todayButton.setImage(withName: "today", ofSize: VisualConfiguration.buttonIconSize, withTintColor: UIColor.fogColor())
+    doneButton.setImage(withName: "doneOrange", ofSize: VisualConfiguration.buttonIconSize, withTintColor: UIColor.fogColor())
     
     datePicker.calendar = DateHelper.calendar
     datePicker.datePickerMode = .Date
@@ -54,7 +56,7 @@ class CalendarPopoverController: UIViewController {
     var aw: CGFloat = 0.0
     var ah = halfMargin
     
-    let subViews: [UIView] = [datePicker, cancelButton]
+    let subViews: [UIView] = [datePicker, stackView]
     for sv in subViews {
       if aw < margin + sv.frame.width + margin {
         aw = margin + sv.frame.width + margin
@@ -74,12 +76,16 @@ class CalendarPopoverController: UIViewController {
     activeHeight = ah
   }
   
-  // результат выбор неинтересен, скрыть календарь без последствий
   @IBAction func cancel(sender: UIButton) {
     delegate?.calendarDidCancel(self)
   }
   
-  // выбрана новая дата для расписания
+  @IBAction func setToday(sender: UIButton) {
+    let today = NSDate()
+    datePicker.setDate(today, animated: true)
+  }
+  
+  // new date for schedule was chosen
   @IBAction func done(sender: UIButton) {
     delegate?.calendar(self, didPickDate: datePicker.date)
   }

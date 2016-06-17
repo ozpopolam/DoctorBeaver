@@ -15,17 +15,14 @@ class ScheduleTableViewController: UIViewController {
   @IBOutlet weak var warningLabel: UILabel!
   
   // id ячеек
-  let headerCellId = "headerCell"
+  let headerId = "headerView"
   let basicPetCellId = "basicPetCell"
   let manyPetsCellId = "manyPetsCell"
   
-  // addEditTask
-  let editShowTaskSegueId = "editShowTaskSegue"
+  let taskMenuSegueId = "taskMenuSegue"
   
   // максимальная высота ячейки
   let maxCellHeight: CGFloat = 88.0
-  // размер инонки с i
-  let infoIconSize = CGSize(width: 22, height: 22)
   // иконка со значком i
   var infoIcon: UIImage?
   
@@ -39,7 +36,7 @@ class ScheduleTableViewController: UIViewController {
   var date = NSDate()
   let calendar = NSCalendar.currentCalendar()
   
-  var accessoryButtonTask: Task?
+  //var accessoryButtonTask: Task?
   
   typealias TimeRealization = (timeInDay: Int, realization: Realization)
   var timeRealizations: [TimeRealization] = []
@@ -50,21 +47,20 @@ class ScheduleTableViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // высота ячеек будет вычислена из Auto Layout
-    tableView.rowHeight = UITableViewAutomaticDimension
-    tableView.estimatedRowHeight = maxCellHeight
     warningLabel.text = "на сегодня расписание пусто, попробуйте выбрать другой день"
     
     tableView.tableFooterView = UIView(frame: .zero)
     
     infoIcon = UIImage(named: "info")
-    infoIcon = infoIcon?.ofSize(infoIconSize)
+    infoIcon = infoIcon?.ofSize(VisualConfiguration.infoIconSize)
+    
+    let tableSectionHeaderNib = UINib(nibName: "TableSectionHeaderView", bundle: nil)
+    tableView.registerNib(tableSectionHeaderNib, forHeaderFooterViewReuseIdentifier: headerId)
     
     // если view загружено, подгружаем в него данные
     if viewIsReadyToBeLoadedWithSchedule() {
       reloadScheduleTable()
     }
-    
   }
   
   override func didReceiveMemoryWarning() {
@@ -74,6 +70,14 @@ class ScheduleTableViewController: UIViewController {
   func reloadScheduleTable() {
     var possibleTasks: [Task] = []
     var realizations: [Realization] = []
+  
+    if pets.count == 1 {
+      // only one pet -> will use BasicPetCell
+      tableView.rowHeight = 44.0
+    } else {
+      // will use ManyPetsCell
+      tableView.rowHeight = 88.0
+    }
     
     // выбираем задания, в которых может быть искомая дата
     possibleTasks = getPossibleTasks(fromPets: pets, forDate: date)
@@ -95,7 +99,6 @@ class ScheduleTableViewController: UIViewController {
         }
       }
     }
-    
   }
   
   func prepareDataSourceAndReloadTable() {
@@ -295,15 +298,13 @@ class ScheduleTableViewController: UIViewController {
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == editShowTaskSegueId {
-      
-      if let destinationVC = segue.destinationViewController as? EditShowTaskViewController {
-        destinationVC.petsRepository = petsRepository
-        if let accessoryButtonTask = accessoryButtonTask {
-          destinationVC.delegate = self
-          destinationVC.task = accessoryButtonTask
-          destinationVC.hidesBottomBarWhenPushed = true
-        }
+    if segue.identifier == taskMenuSegueId {
+      if let task = sender as? Task, let destinationViewController = segue.destinationViewController as? TaskMenuViewController {
+        destinationViewController.delegate = self
+        destinationViewController.petsRepository = petsRepository
+        destinationViewController.task = task
+        destinationViewController.menuMode = .Show
+        destinationViewController.hidesBottomBarWhenPushed = true
       }
     }
     
@@ -347,7 +348,7 @@ extension ScheduleTableViewController: UITableViewDataSource {
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    if pets.count == 1 {
+    if pets.count == 1 { // only one pet in schedule
       if let cell = tableView.dequeueReusableCellWithIdentifier(basicPetCellId, forIndexPath: indexPath) as? BasicPetCell {
         configureBasicPetCell(cell, forRowAtIndexPath: indexPath)
         return cell
@@ -385,9 +386,9 @@ extension ScheduleTableViewController: UITableViewDataSource {
     
     if let infoIcon = infoIcon {
       let detailButton = UIButton(type: .Custom)
-      detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: infoIconSize)
-      detailButton.setImage(withImage: infoIcon, ofSize: infoIconSize, withTintColor: UIColor.blackColor())
-      detailButton.addTarget(self, action: "detailButtonTapped:", forControlEvents: .TouchUpInside)
+      detailButton.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: VisualConfiguration.infoIconSize)
+      detailButton.setImage(withImage: infoIcon, ofSize: VisualConfiguration.infoIconSize, withTintColor: UIColor.blackColor())
+      detailButton.addTarget(self, action: #selector(detailButtonTapped(_:)), forControlEvents: .TouchUpInside)
       
       cell.accessoryView = detailButton
     }
@@ -410,7 +411,7 @@ extension ScheduleTableViewController: UITableViewDataSource {
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
     cell.petNameLabel.text = tr.realization.task.pet.name
-    cell.petImageView.image = UIImage(named: tr.realization.task.pet.image)
+    cell.petImageView.image = tr.realization.task.pet.image
   }
   
   // конфигурируем состояние выполненности задания
@@ -432,17 +433,51 @@ extension ScheduleTableViewController: UITableViewDataSource {
     }
   }
   
-  // получаем TimeRealization для indexPath
   func timeRealizationForRowAtIndexPath(indexPath: NSIndexPath) -> TimeRealization {
-    
     var row = 0
     for ind in 0..<indexPath.section {
       row += indexesForHeader[ind]
     }
-    
     row += indexPath.row
     
     return timeRealizations[row]
+  }
+  
+  func indexPathForTimeRealization(timeRealization: TimeRealization) -> NSIndexPath? {
+    
+    if let index = timeRealizations.indexOf({$0.timeInDay == timeRealization.timeInDay && $0.realization == timeRealization.realization} ) {
+      
+      var section = 0
+      var countInSections = 0
+      repeat {
+        countInSections += indexesForHeader[section]
+        if index < countInSections {
+          break
+        }
+        section += 1
+      } while section < indexesForHeader.count
+      
+      let row = indexesForHeader[section] - 1 - (countInSections - 1 - index)
+      return NSIndexPath(forRow: row, inSection: section)
+      
+    } else {
+      return nil
+    }
+    
+  }
+  
+  func indexPathsForTask(task: Task) -> [NSIndexPath] {
+    let timeRealizationsForTask = timeRealizations.filter {$0.realization.task == task}
+    
+    var indexPaths = [NSIndexPath]()
+    
+    for timeRealization in timeRealizationsForTask {
+      if let indexPath = indexPathForTimeRealization(timeRealization) {
+        indexPaths.append(indexPath)
+      }
+    }
+    
+    return indexPaths
   }
   
 }
@@ -450,9 +485,10 @@ extension ScheduleTableViewController: UITableViewDataSource {
 extension ScheduleTableViewController: UITableViewDelegate {
   
   func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if let headerCell = tableView.dequeueReusableCellWithIdentifier(headerCellId) as? HeaderCell {
-      headerCell.titleLabel.text = headerNames[section]
-      return headerCell
+    if let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(headerId) as? TableSectionHeaderView {
+      header.titleLabel.text = headerNames[section]
+      header.view.backgroundColor = VisualConfiguration.lightOrangeColor
+      return header
     } else {
       return nil
     }
@@ -476,19 +512,17 @@ extension ScheduleTableViewController: UITableViewDelegate {
     }
   }
   
-  
-  
   func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
     let timeRealization = timeRealizationForRowAtIndexPath(indexPath)
-    accessoryButtonTask = timeRealization.realization.task
-    performSegueWithIdentifier(editShowTaskSegueId, sender: self)
+    let task = timeRealization.realization.task
+    performSegueWithIdentifier(taskMenuSegueId, sender: task)
   }
   
 }
 
-extension ScheduleTableViewController: EditShowTaskVCDelegate {
-  func editShowTaskVC(viewController: EditShowTaskViewController, didDeleteTask task: Task) {
-    navigationController?.popViewControllerAnimated(true)
+extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
+  
+  func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
     
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
     
@@ -500,17 +534,17 @@ extension ScheduleTableViewController: EditShowTaskVCDelegate {
     prepareDataSourceAndReloadTable()
   }
   
-  func editShowTaskVC(viewController: EditShowTaskViewController, didSlightlyEditScheduleOfTask task: Task) {
+  func taskMenuViewController(viewController: TaskMenuViewController, didSlightlyEditScheduleOfTask task: Task) {
+    let indexPaths = indexPathsForTask(task) // get indices for rows of edited task
+    tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+    
     petsRepository.saveOrRollback() // save changes in task
-    tableView.reloadData() // reload table
   }
   
-  func editShowTaskVC(viewController: EditShowTaskViewController, didFullyEditScheduleOfTask task: Task) {
-    
+  func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task) {
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete outdated timeRealizations
     
-    
-    task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
+    let _ = task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
     
     
     for realization in task.realizations {
@@ -525,5 +559,7 @@ extension ScheduleTableViewController: EditShowTaskVCDelegate {
     
     updateScheduleTable(withTask: task)
   }
+  
+  func taskMenuViewController(viewController: TaskMenuViewController, didAddTask task: Task) { }
   
 }

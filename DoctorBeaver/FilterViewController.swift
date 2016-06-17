@@ -16,7 +16,7 @@ protocol FilterDelegate: class {
 
 class FilterViewController: UIViewController {
   
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var toolBar: UIToolbar!
   
@@ -38,28 +38,28 @@ class FilterViewController: UIViewController {
     fakeNavigationBar.titleLabel.text = "Фильтр".uppercaseString
     
     fakeNavigationBar.setButtonImage("cancel", forButton: .Left, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.leftButton.addTarget(self, action: "cancel:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.leftButton.addTarget(self, action: #selector(cancel(_:)), forControlEvents: .TouchUpInside)
     
     fakeNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.rightButton.addTarget(self, action: "done:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
     
     // настраиваем toolBar
     toolBar.translucent = false
     toolBar.barTintColor = UIColor.lightOrangeColor()
     toolBar.items = []
     
-    let flexible = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: "")
+    let flexible = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: Selector())
     toolBar.items?.append(flexible)
     
     let unchBB = barButton("uncheck")
-    unchBB.addTarget(self, action: "uncheckAll:", forControlEvents: .TouchUpInside)
+    unchBB.addTarget(self, action: #selector(uncheckAll(_:)), forControlEvents: .TouchUpInside)
     let unchBarButtonItem = UIBarButtonItem(customView: unchBB)
     toolBar.items?.append(unchBarButtonItem)
     
     toolBar.items?.append(flexible)
     
     let chBB = barButton("check")
-    chBB.addTarget(self, action: "checkAll:", forControlEvents: .TouchUpInside)
+    chBB.addTarget(self, action: #selector(checkAll(_:)), forControlEvents: .TouchUpInside)
     let chBarButtonItem = UIBarButtonItem(customView: chBB)
     toolBar.items?.append(chBarButtonItem)
     
@@ -73,9 +73,11 @@ class FilterViewController: UIViewController {
     }
   }
   
+  
+  
   func barButton(imageName: String) -> UIButton {
     let bb = UIButton(type: .Custom)
-    bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.buttonIconSize)
+    bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.barButtonSize)
     bb.setImage(withName: imageName, ofSize: VisualConfiguration.barIconSize, withTintColor: UIColor.fogColor())
     return bb
   }
@@ -143,6 +145,13 @@ class FilterViewController: UIViewController {
     }
   }
   
+  func setPetsRepository(petsRepository: PetsRepository) {
+    self.petsRepository = petsRepository
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      reloadFilterTable()
+    }
+  }
+  
   // перегружаем всю таблицу с питомцами
   func reloadFilterTable() {
     pets = petsRepository.fetchAllPets()
@@ -169,7 +178,7 @@ extension FilterViewController: UITableViewDataSource {
     if let cell = tableView.dequeueReusableCellWithIdentifier("filterCell", forIndexPath: indexPath) as? FilterCell {
       let pet = pets[indexPath.row]
       
-      cell.petImageView.image = UIImage(named: pet.image)
+      cell.petImageView.image = pet.image
       cell.petNameLabel.text = pet.name
       
       // считаем, сколько неоконченных заданий у питомца
@@ -266,13 +275,4 @@ extension FilterViewController: UITableViewDelegate {
     }
   }
   
-}
-
-extension FilterViewController: PetsRepositorySettable {
-  func setPetsRepository(petsRepository: PetsRepository) {
-    self.petsRepository = petsRepository
-    if viewIsReadyToBeLoadedWithPetsRepository() {
-      reloadFilterTable()
-    }
-  }
 }

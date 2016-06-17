@@ -9,31 +9,8 @@
 import UIKit
 
 extension UIButton {
-//  // добавляем кнопке иконку
-//  func setImage(withName name: String, ofSize iconSize: CGSize, forButtonState state: UIControlState, withAnimationDuration animationDuration: NSTimeInterval = 0) {
-//    
-//    // проверяем, чтобы существовала картинка
-//    if let buttonIcon = UIImage(named: name) {
-//      let scaledButtonIcon = buttonIcon.ofSize(iconSize)
-//      
-//      self.setImage(scaledButtonIcon.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal), forState: state)
-//      
-//      if animationDuration > 0 {
-//        self.alpha = 0.0
-//        UIView.animateWithDuration(animationDuration) {
-//          self.alpha = 1.0
-//        }
-//      }
-//    }
-//  }
   
-  func setImage(withName name: String, ofSize iconSize: CGSize, withTintColor tintColor: UIColor, withAnimationDuration animationDuration: NSTimeInterval = 0)  {
-    // проверяем, чтобы существовала картинка
-    if let buttonIcon = UIImage(named: name) {
-      setImage(withImage: buttonIcon, ofSize: iconSize, withTintColor: tintColor, withAnimationDuration: animationDuration)
-    }
-  }
-  
+  // set image for button, set tint color on it and possibly animate changes
   func setImage(withImage image: UIImage, ofSize iconSize: CGSize, withTintColor tintColor: UIColor, withAnimationDuration animationDuration: NSTimeInterval = 0)  {
     
     let scaledButtonIcon = image.ofSize(iconSize)
@@ -49,6 +26,13 @@ extension UIButton {
     }
     
     self.tintColor = tintColor
+  }
+  
+  // set image with imageName, tint color on it and possibly animate changes
+  func setImage(withName name: String, ofSize iconSize: CGSize, withTintColor tintColor: UIColor, withAnimationDuration animationDuration: NSTimeInterval = 0)  {
+    if let buttonIcon = UIImage(named: name) {
+      setImage(withImage: buttonIcon, ofSize: iconSize, withTintColor: tintColor, withAnimationDuration: animationDuration)
+    }
   }
   
 }

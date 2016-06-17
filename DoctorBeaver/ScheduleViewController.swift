@@ -11,7 +11,7 @@ import CoreData
 
 class ScheduleViewController: UIViewController {
   
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var fakeNavigationBar: DecoratedNavigationBarView!
   
   @IBOutlet weak var petImageView: UIImageView!
   @IBOutlet weak var petBorderView: UIImageView!
@@ -25,7 +25,8 @@ class ScheduleViewController: UIViewController {
   @IBOutlet weak var tableContainerView: UIView!
   
   var petsRepository: PetsRepository!
-  var viewWasLoadedWithPetsRepository = false
+  var viewWasLoadedWithUpToDatePetsRepository = false
+  
   
   var calendarButton: UIButton!
   // дата для отображения расписания
@@ -44,24 +45,25 @@ class ScheduleViewController: UIViewController {
     
     // два варианта расположения кнопки календаря - слева
     fakeNavigationBar.setButtonImage("calendar", forButton: .Left, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.leftButton.addTarget(self, action: "showCalendar:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.leftButton.addTarget(self, action: #selector(showCalendar(_:)), forControlEvents: .TouchUpInside)
     
     // справа от центра
     fakeNavigationBar.setButtonImage("calendar", forButton: .CenterRight, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.centerRightButton.addTarget(self, action: "showCalendar:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.centerRightButton.addTarget(self, action: #selector(showCalendar(_:)), forControlEvents: .TouchUpInside)
     
     // кнопка фильтра
     fakeNavigationBar.setButtonImage("filter", forButton: .Right, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.rightButton.addTarget(self, action: "showFilter:", forControlEvents: .TouchUpInside)
+    fakeNavigationBar.rightButton.addTarget(self, action: #selector(showFilter(_:)), forControlEvents: .TouchUpInside)
     
     // поначалу прячем все кнопки
     fakeNavigationBar.hideAllButtons()
     
-    // проверяем, загружен ли контекст
-    if viewIsReadyToBeLoadedWithPetsRepository() {
-      // настраиваем view
-      fullyReloadSchedule()
-    }
+//    // проверяем, загружен ли контекст
+//    if viewIsReadyToBeLoadedWithPetsRepository() {
+//      fullyReloadSchedule()
+////      // register ScheduleViewController as PetsRepository'observer
+////      petsRepository.addObserver(self)
+//    }
     
   }
   
@@ -69,6 +71,10 @@ class ScheduleViewController: UIViewController {
     super.viewWillAppear(animated)
     // прячем navigation bar
     navigationController?.navigationBarHidden = true
+    
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      fullyReloadSchedule()
+    }
   }
   
   // textView указывает на первую строку
@@ -79,6 +85,29 @@ class ScheduleViewController: UIViewController {
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
+  }
+  
+  deinit {
+    petsRepository.removeObserver(self) // remove observer before deinitialization
+  }
+  
+  func setPetsRepository(petsRepository: PetsRepository) {
+    if self.petsRepository == nil {
+      self.petsRepository = petsRepository
+    }
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      fullyReloadSchedule()
+    }
+  }
+  
+  // проверяем, можно ли обновить view данными из managedContext
+  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
+    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithUpToDatePetsRepository {
+      viewWasLoadedWithUpToDatePetsRepository = true
+      return true
+    } else {
+      return false
+    }
   }
 
   // заполняем таблицу с нуля
@@ -224,20 +253,17 @@ class ScheduleViewController: UIViewController {
   }
   
   // устанавливаем картинку питомца и добавляем рамку
-  func setPetImageWithBorder(image: String?) {
+  func setPetImageWithBorder(image: UIImage?) {
     if let image = image {
       // есть изображение - устанавливаем его
-      if let image = UIImage(named: image) {
-        petImageView.image = image
-        petImageView.layer.cornerRadius = petImageView.frame.size.width / VisualConfiguration.cornerProportion
-        petImageView.clipsToBounds = true
-        
-        petBorderView.layer.cornerRadius = petBorderView.frame.size.width / VisualConfiguration.cornerProportion
-        petBorderView.hidden = false
-      } else {
-        petImageView.image = nil
-        petBorderView.hidden = true
-      }
+      
+      petImageView.image = image
+      petImageView.layer.cornerRadius = petImageView.frame.size.width / VisualConfiguration.cornerProportion
+      petImageView.clipsToBounds = true
+      
+      petBorderView.layer.cornerRadius = petBorderView.frame.size.width / VisualConfiguration.cornerProportion
+      petBorderView.hidden = false
+      
     } else {
       // изображения нет
       petImageView.image = nil
@@ -303,25 +329,10 @@ class ScheduleViewController: UIViewController {
   
 }
 
-extension ScheduleViewController: PetsRepositorySettable {
-  
-  func setPetsRepository(petsRepository: PetsRepository) {
-    self.petsRepository = petsRepository
-    if viewIsReadyToBeLoadedWithPetsRepository() {
-      fullyReloadSchedule()
-    }
+extension ScheduleViewController: PetsRepositoryStateObserver {
+  func petsRepositoryDidChange(repository: PetsRepositoryStateSubject) {
+    viewWasLoadedWithUpToDatePetsRepository = false
   }
-  
-  // проверяем, можно ли обновить view данными из managedContext
-  func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
-    if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
-      viewWasLoadedWithPetsRepository = true
-      return true
-    } else {
-      return false
-    }
-  }
-  
 }
 
 // высплывающий календарь

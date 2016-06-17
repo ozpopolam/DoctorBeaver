@@ -1,5 +1,5 @@
 //
-//  PetViewController.swift
+//  PetsViewController.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 02.05.16.
@@ -9,9 +9,9 @@
 import UIKit
 import CoreData
 
-class PetsViewController: UIViewController, PetsRepositorySettable {
+class PetsViewController: UIViewController {
   
-  @IBOutlet weak var fakeNavigationBar: FakeNavigationBarView!
+  @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var collectionView: UICollectionView!
   @IBOutlet weak var warningLabel: UILabel!
   
@@ -20,7 +20,7 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   
   // settings for layout of UICollectionView
   let petCellId = "petCell"
-  var cellWidth: CGFloat = 0.0
+  
   var cellSize = CGSize(width: 0.0, height: 0.0)
   var cellCornerRadius: CGFloat = 0.0
   var sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
@@ -29,7 +29,7 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   var petsRepository: PetsRepository! {
     didSet {
       if viewIsReadyToBeLoadedWithPetsRepository() {
-        fullyReloadPetCollection()
+        reloadPetsCollection(withFetchRequest: true)
       }
     }
   }
@@ -45,22 +45,32 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
-    fakeNavigationBar.titleLabel.text = "Питомцы".uppercaseString
+    decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
+    decoratedNavigationBar.titleLabel.text = "Питомцы".uppercaseString
     
     // button "Sorting"
-    fakeNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.leftButton.addTarget(self, action: "sort:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.setButtonImage("sortingZA", forButton: .Left, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.leftButton.addTarget(self, action: #selector(sort(_:)), forControlEvents: .TouchUpInside)
     
     // button "Add pet"
-    fakeNavigationBar.setButtonImage("add", forButton: .Right, withTintColor: UIColor.fogColor())
-    fakeNavigationBar.rightButton.addTarget(self, action: "add:", forControlEvents: .TouchUpInside)
+    decoratedNavigationBar.setButtonImage("add", forButton: .Right, withTintColor: UIColor.fogColor())
+    decoratedNavigationBar.rightButton.addTarget(self, action: #selector(add(_:)), forControlEvents: .TouchUpInside)
     
     let numberOfCellsInALine: CGFloat = 2
     countFlowLayoutValues(forNumberOfCellsInALine: numberOfCellsInALine) // count size and insets of cells
+    collectionView.alwaysBounceVertical = true
     
     if viewIsReadyToBeLoadedWithPetsRepository() {
-      fullyReloadPetCollection()
+      reloadPetsCollection(withFetchRequest: true)
+    }
+  }
+  
+  func setPetsRepository(petsRepository: PetsRepository) {
+    if self.petsRepository == nil {
+      self.petsRepository = petsRepository
+    }
+    if viewIsReadyToBeLoadedWithPetsRepository() {
+      reloadPetsCollection(withFetchRequest: true)
     }
   }
   
@@ -86,15 +96,19 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   func sort(sender: UIButton) {
     
     // configure button's icon and action
-    fakeNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
-    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending : .OrderedAscending))
+    decoratedNavigationBar.setButtonImage(sortedAZ ? "sortingAZ" : "sortingZA", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
     
-    sortedAZ = !sortedAZ // new type of current sorting
+    sortPetsByName()
     
     // reload all cells
     collectionView.performBatchUpdates({
       self.collectionView.reloadSections(NSIndexSet(index: 0))
       }, completion: nil)
+  }
+  
+  func sortPetsByName() {
+    pets.sortInPlace(sortedByName(sortedAZ ? .OrderedDescending : .OrderedAscending))
+    sortedAZ = !sortedAZ // new type of current sorting
   }
   
   func sortedByName(direction: NSComparisonResult) -> ((lh: Pet, rh: Pet) -> Bool) {
@@ -106,43 +120,68 @@ class PetsViewController: UIViewController, PetsRepositorySettable {
   
   // Add-button
   func add(sender: UIButton) {
-    performSegueWithIdentifier(addPetSegueId, sender: self)
+    if let pet = petsRepository.insertPet() {
+      pet.configureWithBasicValues()
+      performSegueWithIdentifier(addPetSegueId, sender: pet)
+    }
   }
   
   // fetch data, show warning or reload collection view
-  func fullyReloadPetCollection() {
+  func reloadPetsCollection(withFetchRequest withFetchRequest: Bool = false) {
     
-    if petsRepository.countAll(Pet.entityName) == 0 {
+    if withFetchRequest {
+      if petsRepository.countAll(Pet.entityName) == 0 {
+        pets = []
+      } else {
+        pets = petsRepository.fetchAllPets()
+        // get cropped version of all pets' icons
+        croppedPetImages = [ : ]
+        for pet in pets {
+          if let petImage = pet.image {
+            croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+          }
+        }
+      }
+    }
+    
+    if pets.isEmpty {
       showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
     } else {
       hideWarningMessage()
-      pets = petsRepository.fetchAllPets()
-      
-      // get cropped version of all pets' icons
-      croppedPetImages = [ : ]
-      for pet in pets {
-        if let petImage = UIImage(named: pet.image) {
-          croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
-        }
-      }
-      
-      collectionView.reloadData()
+      sortedAZ = !sortedAZ // after reloading, collection actually hasn't been sorted as sortedAZ shows -> need to reset it
+      sortPetsByName()
     }
     
+    collectionView.reloadData()
   }
   
   func showWarningMessage(message: String) {
+    decoratedNavigationBar.hideButton(.Left)
     collectionView.hidden = true
     warningLabel.text = message
   }
   
   func hideWarningMessage() {
+    decoratedNavigationBar.showButton(.Left)
     collectionView.hidden = false
     warningLabel.text = ""
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    
+    if let pet = sender as? Pet {
+      if let destinationViewController = segue.destinationViewController as? PetMenuViewController {
+        destinationViewController.pet = pet
+        destinationViewController.petsRepository = petsRepository
+        destinationViewController.delegate = self
+        destinationViewController.hidesBottomBarWhenPushed = true
+        
+        if segue.identifier == addPetSegueId {
+          destinationViewController.menuMode = .Add
+        } else if segue.identifier == editShowPetSegueId {
+          destinationViewController.menuMode = .Show
+        }
+      }
+    }
   }
   
 }
@@ -159,8 +198,20 @@ extension PetsViewController: UICollectionViewDataSource {
       let pet = pets[indexPath.row]
       cell.layer.cornerRadius = cellCornerRadius
       
-      cell.petImageView.image = UIImage(named: pet.image)
-      cell.borderImageView.image = croppedPetImages[pet.id]
+      if let petImage = pet.image {
+        
+        if petImage.size.width < cellSize.width && petImage.size.height < cellSize.height {
+          cell.petImageView.contentMode = .Center
+        } else {
+          cell.petImageView.contentMode = .ScaleAspectFit
+        }
+        
+        cell.petImageView.image = petImage
+        cell.borderImageView.image = croppedPetImages[pet.id]
+      } else {
+        cell.petImageView.image = nil
+        cell.borderImageView.image = nil
+      }
       
       cell.petName.font = VisualConfiguration.smallPetNameFont
       cell.petName.numberOfLines = 1
@@ -182,7 +233,7 @@ extension PetsViewController: UICollectionViewDataSource {
 extension PetsViewController: UICollectionViewDelegate {
   
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    performSegueWithIdentifier(editShowPetSegueId, sender: self)
+    performSegueWithIdentifier(editShowPetSegueId, sender: pets[indexPath.row])
   }
 }
 
@@ -228,4 +279,56 @@ extension PetsViewController: UICollectionViewDelegateFlowLayout {
     return minimumSpacing
   }
   
+}
+
+extension PetsViewController: PetMenuViewControllerDelegate {
+  
+  func petMenuViewController(viewController: PetMenuViewController, didAddPet pet: Pet) {
+    pets.append(pet)
+    if let petImage = pet.image {
+      croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+    }
+    
+    reloadPetsCollection()
+  }
+  
+  func petMenuViewController(viewController: PetMenuViewController, didEditNameOfPet pet: Pet) {
+    reloadPetsCollection()
+  }
+  
+  func petMenuViewController(viewController: PetMenuViewController, didEditImageOfPet pet: Pet) {
+    // get cropped version of a pet' icon
+    if let petImage = pet.image {
+      croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
+    }
+    
+    if let item = pets.indexOf(pet) {
+      if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: item, inSection: 0)) as? PetCVCell {
+        cell.petImageView.image = pet.image
+        cell.borderImageView.image = croppedPetImages[pet.id]
+      }
+    }
+    
+  }
+  
+  func petMenuViewController(viewController: PetMenuViewController, didDeletePet pet: Pet) {
+    if let item = pets.indexOf(pet) {
+      // delete pet from list of pets
+      pets = pets.filter{ pet.id != $0.id }
+      
+      // delete cropped image of this pet
+      croppedPetImages.removeValueForKey(pet.id)
+      
+      // delete cell of pet
+      collectionView.deleteItemsAtIndexPaths([NSIndexPath(forItem: item, inSection: 0)])
+    }
+    
+    // delete pet and save it
+    petsRepository.deleteObject(pet)
+    petsRepository.saveOrRollback()
+    
+    if pets.isEmpty {
+      showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
+    }
+  }
 }

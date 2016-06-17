@@ -17,6 +17,22 @@ class Task: NSManagedObject {
     }
   }
   
+  // Int32 conversion for Core Data
+  var typeId: Int {
+    get { return Int(typeId_) }
+    set { typeId_ = Int32(newValue) }
+  }
+  
+  var timesPerDay: Int {
+    get { return Int(timesPerDay_) }
+    set { timesPerDay_ = Int32(newValue) }
+  }
+  
+  var endDaysOrTimes: Int {
+    get { return Int(endDaysOrTimes_) }
+    set { endDaysOrTimes_ = Int32(newValue) }
+  }
+  
   // endDate can be set specifically or calculated from startDate by adding some days or times
   enum EndType: Int {
     case EndDate = 2
@@ -50,7 +66,7 @@ class Task: NSManagedObject {
   func configure(withTypeItem typeItem: TaskTypeItem) {
     self.typeItem = typeItem
     
-    name = ""
+    name = typeItem.name
     typeId = typeItem.id
     
     timesPerDay = typeItem.timesPerDayForInitialization
@@ -61,7 +77,12 @@ class Task: NSManagedObject {
     startDate = NSDate()
     frequency = []
     endDaysOrTimes = 0
-    endDate = startDate
+    
+    if let nextDay = DateHelper.calendar.dateByAddingUnit(.Day, value: 1, toDate: startDate, options: []) {
+      endDate = nextDay
+    } else {
+      endDate = startDate
+    }
     
     comment = ""
   }
@@ -86,7 +107,7 @@ class Task: NSManagedObject {
   
   var sectionTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: separator)
     }
   }
   
@@ -97,7 +118,7 @@ class Task: NSManagedObject {
   }
   var timesPerDayOptions: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: separator)
     }
   }
   
@@ -108,7 +129,7 @@ class Task: NSManagedObject {
   }
   var minutesForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: typeItem.separator)
+      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
@@ -120,18 +141,23 @@ class Task: NSManagedObject {
   }
   var doseForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: typeItem.separator)
+      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
   var doseForTimesOptions: [[String]] {
     get {
-      return getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: typeItem.separator)
+      return getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: separator)
     }
   }
   var doseForTimesForInitialization: String {
     get {
       return typeItem.doseForTimesForInitialization
+    }
+  }
+  var doseForTimesEqualTitle: String {
+    get {
+      return typeItem.doseForTimesEqualTitle
     }
   }
   
@@ -143,7 +169,12 @@ class Task: NSManagedObject {
     let numberDoses = stringDoses.map{ Double($0) }.flatMap{ $0 }
     
     if numberDoses.count == stringDoses.count {
-      return String(numberDoses.reduce(0, combine: { $0 + $1 }))
+      let sumDoses = numberDoses.reduce(0, combine: { $0 + $1 })
+      if sumDoses % 1 == 0 { // no need to show decimal part, which is zero
+        return String(Int(sumDoses))
+      } else {
+        return String(sumDoses)
+      }
     } else {
       return stringDoses.reduce("", combine: { $0 == "" ? $1 : $0 + whitespace + $1 })
     }
@@ -165,7 +196,7 @@ class Task: NSManagedObject {
   }
   var specialFeatureOptions: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: separator)
     }
   }
   
@@ -182,7 +213,7 @@ class Task: NSManagedObject {
   }
   var frequencySegmentTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: separator)
     }
   }
   var frequencyOptions: [[String]] {
@@ -203,7 +234,7 @@ class Task: NSManagedObject {
   }
   var endDaysOrTimesSegmentTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: typeItem.separator)
+      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: separator)
     }
   }
   
@@ -522,21 +553,23 @@ class Task: NSManagedObject {
   }
   
   // эквавалентны ли настройки двух заданий
-  func settingsAreEqual(toTask task: Task) -> Bool {
+  func allSettingsAreEqual(toTask task: Task) -> Bool {
     guard name == task.name else { return false }
     guard typeId == task.typeId else { return false }
+    guard specialFeature == task.specialFeature else { return false }
+    guard doseForTimes == task.doseForTimes else { return false }
+    guard comment == task.comment else { return false }
     
+    return scheduleSettingsAreEqual(toTask: task)
+  }
+  
+  func scheduleSettingsAreEqual(toTask task: Task) -> Bool {
     guard timesPerDay == task.timesPerDay else { return false }
     guard minutesForTimes == task.minutesForTimes else { return false }
-    guard doseForTimes == task.doseForTimes else { return false }
-    guard specialFeature == task.specialFeature else { return false }
-    
     guard startDate == task.startDate else { return false }
     guard frequency == task.frequency else { return false }
-    
     guard endDaysOrTimes == task.endDaysOrTimes else { return false }
     guard endDate == task.endDate else { return false }
-    guard comment == task.comment else { return false }
     
     return true
   }
@@ -694,18 +727,9 @@ class Task: NSManagedObject {
   
   // проверяем, все ли дозы одинаковые
   func allDosesAreEqual() -> Bool {
-    guard doseForTimes.count != 0 else { return true }
-    
-    if doseForTimes.count == 1 {
-      return true
-    } else {
-      for ind in 0..<doseForTimes.count - 1 {
-        if doseForTimes[ind] != doseForTimes[ind + 1] {
-          return false
-        }
-      }
-    }
-    return true
+    let firstDose = doseForTimes[0]
+    let unEqualDoses = doseForTimes.filter { $0 != firstDose }
+    return unEqualDoses.isEmpty
   }
   
   // детали выполнения задания в читабельном виде
@@ -719,7 +743,7 @@ class Task: NSManagedObject {
   }
   
   func getOneDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [String] {
-    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: false).map{String($0)}
+    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: true).map{String($0)}
     return oneDimArray
   }
   

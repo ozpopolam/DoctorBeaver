@@ -1,5 +1,5 @@
 //
-//  Image.swift
+//  UIImage.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 11.02.16.
@@ -9,6 +9,27 @@
 import UIKit
 
 extension UIImage {
+  
+  var sizeInPixels: (width: CGFloat, height: CGFloat) {
+    get {
+      return (width: size.width * scale, height: size.height * scale)
+    }
+  }
+  
+  // if name of image is void - right away return nil
+  convenience init?(unsafelyNamed name: String?) {
+    if let name = name {
+      if !name.isEmpty {
+        self.init(named: name)
+      } else {
+        return nil
+      }
+    } else {
+      return nil
+    }
+  }
+  
+  // size in points of device
   func ofSize(size: CGSize) -> UIImage {
     if self.size == size {
       return self
@@ -23,13 +44,28 @@ extension UIImage {
     }
   }
   
-  func cropCentralOneThirdSquare() -> UIImage {
-    let x = floor(self.size.width / 3)
-    let y = floor(self.size.height / 3)
-    let width = x
-    let height = y
+  // image of max dimention set in points
+  func ofMaxDimension(dimension: CGFloat) -> UIImage {
     
-    let cropSquare = CGRectMake(x, y, width, height)
+    if sizeInPixels.width > dimension * VisualConfiguration.renderedAtMaxX ||
+    sizeInPixels.height > dimension * VisualConfiguration.renderedAtMaxX
+    {
+      let scaledDimension = dimension * VisualConfiguration.renderedAtMaxX / UIScreen.mainScreen().scale
+      return self.ofSize(CGSize(width: scaledDimension, height: scaledDimension))
+    } else {
+      return self
+    }
+  }
+  
+  
+  // crop internal square of image
+  func cropCentralOneThirdSquare() -> UIImage {
+    let x = floor(sizeInPixels.width / 3)
+    let y = floor(sizeInPixels.height / 3)
+    let croppedWidth = x
+    let croppedHeight = y
+    
+    let cropSquare = CGRectMake(x, y, croppedWidth, croppedHeight)
     let imageRef = CGImageCreateWithImageInRect(self.CGImage, cropSquare)
     
     if let imageRef = imageRef {

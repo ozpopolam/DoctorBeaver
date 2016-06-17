@@ -19,10 +19,23 @@ class TaskTypeItem: NSManagedObject {
   }
   
   enum Keys: String {
-    case id = "id"
+    case id = "id_"
   }
   
-  let separator: Character = "|"
+  var id: Int {
+    get { return Int(id_) }
+    set { id_ = Int32(newValue) }
+  }
+  
+  var timesPerDayForInitialization: Int {
+    get { return Int(timesPerDayForInitialization_) }
+    set { timesPerDayForInitialization_ = Int32(newValue) }
+  }
+  
+  var minutesForTimesForInitialization: Int {
+    get { return Int(minutesForTimesForInitialization_) }
+    set { minutesForTimesForInitialization_ = Int32(newValue) }
+  }
   
   convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
     if let entity = NSEntityDescription.entityForName(TaskTypeItem.entityName, inManagedObjectContext: managedContext) {
@@ -62,18 +75,5 @@ class TaskTypeItem: NSManagedObject {
       return nil
     }
   }
-  
-  
-  
-//    func sectionTitles() -> [String] {
-//      switch task.type {
-//      case .Pill, .Injection, .Drops, .Ointment, .Mixture, .Procedure:
-//        return ["", "Способ применения", "Длительность приема", "Особые указания"]
-//      case .Vaccination, .Analysis, .WormTreatment, .FleaTreatment, .Grooming:
-//        return ["", "", "Длительность приема", "Особые указания"]
-//      case .Error:
-//        return []
-//      }
-//    }
   
 }

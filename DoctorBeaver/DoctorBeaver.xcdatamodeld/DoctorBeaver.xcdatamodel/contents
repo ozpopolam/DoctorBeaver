@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
     <entity name="Pet" representedClassName=".Pet" syncable="YES">
         <attribute name="id" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="image" attributeType="String" syncable="YES"/>
+        <attribute name="imageName" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="selected" attributeType="Boolean" syncable="YES"/>
         <relationship name="basicValues" maxCount="1" deletionRule="Nullify" destinationEntity="PetBasicValues" inverseName="pets" inverseEntity="PetBasicValues" syncable="YES"/>
         <relationship name="tasks" toMany="YES" deletionRule="Cascade" destinationEntity="Task" inverseName="pet" inverseEntity="Task" syncable="YES"/>
     </entity>
     <entity name="PetBasicValues" representedClassName=".PetBasicValues" syncable="YES">
+        <attribute name="basicName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="namePlaceholder" attributeType="String" syncable="YES"/>
         <attribute name="sectionTitles" attributeType="String" syncable="YES"/>
         <attribute name="selectedForInitialization" attributeType="Boolean" syncable="YES"/>
         <attribute name="selectedTitle" attributeType="String" syncable="YES"/>
+        <attribute name="separator" attributeType="String" syncable="YES"/>
         <relationship name="pets" toMany="YES" deletionRule="Nullify" destinationEntity="Pet" inverseName="basicValues" inverseEntity="Pet" syncable="YES"/>
     </entity>
     <entity name="Realization" representedClassName=".Realization" syncable="YES">
@@ -24,14 +26,14 @@
         <attribute name="comment" attributeType="String" syncable="YES"/>
         <attribute name="doseForTimes" attributeType="Transformable" syncable="YES"/>
         <attribute name="endDate" attributeType="Date" syncable="YES"/>
-        <attribute name="endDaysOrTimes" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="endDaysOrTimes_" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="frequency" attributeType="Transformable" syncable="YES"/>
         <attribute name="minutesForTimes" attributeType="Transformable" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="specialFeature" attributeType="String" syncable="YES"/>
         <attribute name="startDate" attributeType="Date" syncable="YES"/>
-        <attribute name="timesPerDay" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="typeId" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="timesPerDay_" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="typeId_" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="pet" maxCount="1" deletionRule="Nullify" destinationEntity="Pet" inverseName="tasks" inverseEntity="Pet" syncable="YES"/>
         <relationship name="realizations" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Realization" inverseName="task" inverseEntity="Realization" syncable="YES"/>
         <relationship name="typeItem" maxCount="1" deletionRule="Nullify" destinationEntity="TaskTypeItem" inverseName="tasks" inverseEntity="TaskTypeItem" syncable="YES"/>
@@ -47,8 +49,8 @@
         <attribute name="frequencySegmentTitles" attributeType="String" syncable="YES"/>
         <attribute name="frequencyTitle" attributeType="String" syncable="YES"/>
         <attribute name="iconName" attributeType="String" syncable="YES"/>
-        <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="minutesForTimesForInitialization" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="id_" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="minutesForTimesForInitialization_" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="minutesForTimesOrderTitles" attributeType="String" syncable="YES"/>
         <attribute name="minutesForTimesTitle" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -56,7 +58,7 @@
         <attribute name="specialFeatureForInitialization" attributeType="String" syncable="YES"/>
         <attribute name="specialFeatureOptions" attributeType="String" syncable="YES"/>
         <attribute name="specialFeatureTitle" attributeType="String" syncable="YES"/>
-        <attribute name="timesPerDayForInitialization" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="timesPerDayForInitialization_" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="timesPerDayOptions" attributeType="String" syncable="YES"/>
         <attribute name="timesPerDayTitle" attributeType="String" syncable="YES"/>
         <relationship name="basicValues" maxCount="1" deletionRule="Nullify" destinationEntity="TaskTypeItemBasicValues" inverseName="typeItem" inverseEntity="TaskTypeItemBasicValues" syncable="YES"/>
@@ -76,10 +78,10 @@
     </entity>
     <elements>
         <element name="Pet" positionX="-297" positionY="-144" width="128" height="135"/>
+        <element name="PetBasicValues" positionX="-99" positionY="-90" width="128" height="150"/>
         <element name="Realization" positionX="106" positionY="-108" width="128" height="90"/>
-        <element name="Task" positionX="-90" positionY="-243" width="128" height="253"/>
+        <element name="Task" positionX="-90" positionY="-243" width="128" height="255"/>
         <element name="TaskTypeItem" positionX="-99" positionY="108" width="128" height="405"/>
         <element name="TaskTypeItemBasicValues" positionX="-54" positionY="-45" width="128" height="195"/>
-        <element name="PetBasicValues" positionX="-99" positionY="-90" width="128" height="120"/>
     </elements>
 </model>
