@@ -19,6 +19,7 @@ class PetImageViewController: UIViewController {
   @IBOutlet weak var collectionView: UICollectionView!
   
   weak var delegate: PetImageViewControllerDelegate?
+  
   var petInitialImage: UIImage!
   var petInitialImageName: String!
   
@@ -38,7 +39,7 @@ class PetImageViewController: UIViewController {
   var importedImage: UIImage? // image from photo/gallery
   
   let noSelectionIndex = -1
-  let noSelectionImageName = "noImage"
+  
   var selectedIndex = 0 // index of selected items
   
   lazy var imagePicker = UIImagePickerController()
@@ -98,7 +99,7 @@ class PetImageViewController: UIViewController {
       selectedIndex = 0 // initially first image is selected
     } else {
       
-      if petInitialImageName != noSelectionImageName {
+      if petInitialImageName != VisualConfiguration.noImageName {
         // pet has custom image
         petHasCustomImage = true
         imagesNames.insert(petInitialImageName, atIndex: 0)
@@ -169,7 +170,7 @@ class PetImageViewController: UIViewController {
     var petNewImageName: String // new image name
     
     if selectedIndex == noSelectionIndex {
-      petNewImageName = noSelectionImageName // no image was selected -> return placeholder image name
+      petNewImageName = VisualConfiguration.noImageName // no image was selected -> return placeholder image name
     } else {
       petNewImageName = imagesNames[selectedIndex]
     }

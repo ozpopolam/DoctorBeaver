@@ -195,15 +195,15 @@
                     "name": "Вакцина",
                     "iconName": "vaccination",
                     
-                    "sectionTitles": " ||Длительность приема|Особые указания",
+                    "sectionTitles": " | |Длительность приема|Особые указания",
                     
                     "timesPerDayTitle": "",
                     "timesPerDayOptions": "",
-                    "timesPerDayForInitialization": 0,
+                    "timesPerDayForInitialization": 1,
                     
-                    "minutesForTimesTitle": "",
+                    "minutesForTimesTitle": "Время вакцинации",
                     "minutesForTimesOrderTitles": "",
-                    "minutesForTimesForInitialization": 0,
+                    "minutesForTimesForInitialization": 540,
                     
                     "doseForTimesTitle": "",
                     "doseUnit": "",
@@ -225,15 +225,15 @@
                     "name": "Анализ",
                     "iconName": "analysis",
                     
-                    "sectionTitles": " ||Длительность приема|Особые указания",
+                    "sectionTitles": " | |Длительность приема|Особые указания",
                     
                     "timesPerDayTitle": "",
                     "timesPerDayOptions": "",
-                    "timesPerDayForInitialization": 0,
+                    "timesPerDayForInitialization": 1,
                     
-                    "minutesForTimesTitle": "",
+                    "minutesForTimesTitle": "Время сдачи анализа",
                     "minutesForTimesOrderTitles": "",
-                    "minutesForTimesForInitialization": 0,
+                    "minutesForTimesForInitialization": 540,
                     
                     "doseForTimesTitle": "",
                     "doseUnit": "",
@@ -255,15 +255,15 @@
                     "name": "От глистов",
                     "iconName": "wormTreatment",
                     
-                    "sectionTitles": " ||Длительность приема|Особые указания",
+                    "sectionTitles": " | |Длительность приема|Особые указания",
                     
                     "timesPerDayTitle": "",
                     "timesPerDayOptions": "",
-                    "timesPerDayForInitialization": 0,
+                    "timesPerDayForInitialization": 1,
                     
-                    "minutesForTimesTitle": "",
+                    "minutesForTimesTitle": "Время приема",
                     "minutesForTimesOrderTitles": "",
-                    "minutesForTimesForInitialization": 0,
+                    "minutesForTimesForInitialization": 540,
                     
                     "doseForTimesTitle": "",
                     "doseUnit": "",
@@ -285,15 +285,15 @@
                     "name": "От блох",
                     "iconName": "fleaTreatment",
                     
-                    "sectionTitles": " ||Длительность приема|Особые указания",
+                    "sectionTitles": " | |Длительность приема|Особые указания",
                     
                     "timesPerDayTitle": "",
                     "timesPerDayOptions": "",
-                    "timesPerDayForInitialization": 0,
+                    "timesPerDayForInitialization": 1,
                     
-                    "minutesForTimesTitle": "",
+                    "minutesForTimesTitle": "Время применения",
                     "minutesForTimesOrderTitles": "",
-                    "minutesForTimesForInitialization": 0,
+                    "minutesForTimesForInitialization": 540,
                     
                     "doseForTimesTitle": "",
                     "doseUnit": "",
@@ -315,15 +315,15 @@
                     "name": "Внешний вид",
                     "iconName": "grooming",
                     
-                    "sectionTitles": " ||Длительность приема|Особые указания",
+                    "sectionTitles": " | |Длительность приема|Особые указания",
                     
                     "timesPerDayTitle": "",
                     "timesPerDayOptions": "",
-                    "timesPerDayForInitialization": 0,
+                    "timesPerDayForInitialization": 1,
                     
-                    "minutesForTimesTitle": "",
+                    "minutesForTimesTitle": "Время процедуры",
                     "minutesForTimesOrderTitles": "",
-                    "minutesForTimesForInitialization": 0,
+                    "minutesForTimesForInitialization": 540,
                     
                     "doseForTimesTitle": "",
                     "doseUnit": "",

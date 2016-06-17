@@ -44,6 +44,20 @@ extension UIImage {
     }
   }
   
+  // image of max dimention set in points
+  func ofMaxDimension(dimension: CGFloat) -> UIImage {
+    
+    if sizeInPixels.width > dimension * VisualConfiguration.renderedAtMaxX ||
+    sizeInPixels.height > dimension * VisualConfiguration.renderedAtMaxX
+    {
+      let scaledDimension = dimension * VisualConfiguration.renderedAtMaxX / UIScreen.mainScreen().scale
+      return self.ofSize(CGSize(width: scaledDimension, height: scaledDimension))
+    } else {
+      return self
+    }
+  }
+  
+  
   // crop internal square of image
   func cropCentralOneThirdSquare() -> UIImage {
     let x = floor(sizeInPixels.width / 3)

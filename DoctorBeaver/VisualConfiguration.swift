@@ -13,6 +13,9 @@ import Foundation
 struct VisualConfiguration {
   
   static let errorImageName = "error"
+  static let noImageName = "DefaultPetImages/noImage"
+  static let maxImageDimension: CGFloat = 150.0
+  static let renderedAtMaxX: CGFloat = 3.0
   
   static let barButtonSize = CGSize(width: 44.0, height: 44.0)
   static let barIconSize = CGSize(width: 25, height: 25)

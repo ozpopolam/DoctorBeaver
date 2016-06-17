@@ -57,8 +57,15 @@ class Pet: NSManagedObject {
           let imageFileManager = ImageFileManager(withImageFolderName: "PetImages")
           temporaryImage = imageFileManager.getImage(withName: imageName)
         } else {
-          // pet has one of the default images from xcassets
-          temporaryImage = UIImage(unsafelyNamed: imageName)
+          if let xcassetsImage = UIImage(unsafelyNamed: imageName) {
+            // pet has one of the default images from xcassets
+            temporaryImage = xcassetsImage
+          } else {
+            // pet has no image at all
+            imageName = VisualConfiguration.noImageName
+            temporaryImage = UIImage(named: VisualConfiguration.noImageName)
+          }
+          
         }
         return temporaryImage
       }

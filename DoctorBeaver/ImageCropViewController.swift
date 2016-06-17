@@ -301,7 +301,7 @@ class ImageCropViewController: UIViewController {
     // crop rectangle from original image
     if let croppedCgImage = CGImageCreateWithImageInRect(photo.CGImage, actualSizePhotoRect) {
       let croppedImage = UIImage(CGImage: croppedCgImage, scale: photo.scale, orientation: photo.imageOrientation)
-      return croppedImage
+      return croppedImage.ofMaxDimension(VisualConfiguration.maxImageDimension)
     } else {
       return photo
     }

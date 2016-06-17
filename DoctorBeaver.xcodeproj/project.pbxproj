@@ -217,6 +217,7 @@
 			children = (
 				62C64D841CDA795C006B4CEF /* PetCVCell.swift */,
 				620891031D01ABF600F870FD /* MenuIconTitleCollectionCell.swift */,
+				6219167F1CEF96DA00F073C7 /* PetImageCell.swift */,
 			);
 			name = "Collection Cells";
 			sourceTree = "<group>";
@@ -332,8 +333,6 @@
 				6277BA9B1CEA28E9006E4607 /* PetMenuViewController.swift */,
 				6277BA9D1CEA2C23006E4607 /* PetMenuConfiguration.swift */,
 				6219167D1CEF40EF00F073C7 /* PetImageViewController.swift */,
-				6219167F1CEF96DA00F073C7 /* PetImageCell.swift */,
-				620891011D01A57200F870FD /* TaskTypeViewController.swift */,
 				620995181D10B03100C4371D /* ImagePickerOptionsPopoverController.swift */,
 				6209951A1D10B25300C4371D /* ImageCropViewController.swift */,
 			);
@@ -420,6 +419,7 @@
 		62F0FEB51CB2EA8700C13132 /* Task */ = {
 			isa = PBXGroup;
 			children = (
+				620891011D01A57200F870FD /* TaskTypeViewController.swift */,
 				623B4FF21C7648A50016EC92 /* TaskMenuViewController.swift */,
 				62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */,
 				62F0FEB81CB556EB00C13132 /* MinutesDose */,
