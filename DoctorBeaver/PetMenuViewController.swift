@@ -807,13 +807,10 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
   }
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImage newImage: UIImage, withName newImageName: String) {
-    
     pet.imageName = newImageName
     pet.image = newImage
     
     newCustomImage = (image: newImage, imageName: newImageName)
-    
-    print("didSelectNewImage")
     
     for section in 0..<menu.cellsTagTypeState.count {
       for row in 0..<menu.cellsTagTypeState[section].count {
@@ -828,11 +825,7 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
   }
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String, andNewImage newImage: UIImage) {
-    print("didSelectNewImageNameAndNewImage")
-    
     pet.imageName = imageName
-    
-    
   }
   
 }

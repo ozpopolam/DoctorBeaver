@@ -47,9 +47,6 @@ class ScheduleTableViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // высота ячеек будет вычислена из Auto Layout
-    tableView.rowHeight = UITableViewAutomaticDimension
-    tableView.estimatedRowHeight = maxCellHeight
     warningLabel.text = "на сегодня расписание пусто, попробуйте выбрать другой день"
     
     tableView.tableFooterView = UIView(frame: .zero)
@@ -73,6 +70,14 @@ class ScheduleTableViewController: UIViewController {
   func reloadScheduleTable() {
     var possibleTasks: [Task] = []
     var realizations: [Realization] = []
+  
+    if pets.count == 1 {
+      // only one pet -> will use BasicPetCell
+      tableView.rowHeight = 44.0
+    } else {
+      // will use ManyPetsCell
+      tableView.rowHeight = 88.0
+    }
     
     // выбираем задания, в которых может быть искомая дата
     possibleTasks = getPossibleTasks(fromPets: pets, forDate: date)

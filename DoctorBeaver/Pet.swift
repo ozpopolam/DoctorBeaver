@@ -45,13 +45,9 @@ class Pet: NSManagedObject {
   var image: UIImage? {
     get {
       if let image = temporaryImage {
-        print("returning for \(id)")
         return image
       } else {
         // need to load image from xcassets or file system
-        
-        print("loading for \(id)")
-        
         if imageName == String(id) {
           // pet has custom image, stored on a disk -> need to read it
           let imageFileManager = ImageFileManager(withImageFolderName: "PetImages")
@@ -99,7 +95,7 @@ class Pet: NSManagedObject {
   func configureWithBasicValues() {
     name = basicValues.basicName
     selected = true
-    imageName = VisualConfiguration.errorImageName
+    imageName = VisualConfiguration.noImageName
   }
   
   func addTask(task: Task) {

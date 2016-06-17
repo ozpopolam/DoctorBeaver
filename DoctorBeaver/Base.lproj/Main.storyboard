@@ -371,7 +371,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="399"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YUk-OT-kYp">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YUk-OT-kYp">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="399"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -459,6 +459,7 @@
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
+                                                            <exclude reference="ZJa-pS-yau"/>
                                                             <exclude reference="Nt9-JW-SrJ"/>
                                                             <exclude reference="j23-o1-JIZ"/>
                                                             <exclude reference="mn8-Nb-thO"/>
@@ -491,7 +492,7 @@
                                             <segue destination="skV-Mj-83R" kind="show" identifier="taskMenuSegue" trigger="accessoryAction" id="Eko-fb-VsA"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="manyPetsCell" id="obE-Mm-kfa" customClass="ManyPetsCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="manyPetsCell" rowHeight="88" id="obE-Mm-kfa" customClass="ManyPetsCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="66" width="600" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="obE-Mm-kfa" id="qxm-oF-a3p">
@@ -622,6 +623,7 @@
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
+                                                            <exclude reference="rkp-GS-IbH"/>
                                                             <exclude reference="1AV-lX-F2q"/>
                                                         </mask>
                                                     </variation>
@@ -700,7 +702,7 @@
                         <viewControllerLayoutGuide type="bottom" id="ax6-fy-vhq"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="djM-W8-kOg">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="399"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wRJ-B1-Pv4" customClass="DecoratedNavigationBarView" customModule="DoctorBeaver" customModuleProvider="target">
@@ -710,7 +712,7 @@
                                     <constraint firstAttribute="height" constant="64" id="e5u-dX-U8U"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ycV-F0-j7M">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ycV-F0-j7M">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -1210,7 +1212,7 @@
                         <viewControllerLayoutGuide type="bottom" id="6Qb-pz-31c"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="wec-VA-oJM">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="399"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NY4-bb-dVy" customClass="DecoratedNavigationBarView" customModule="DoctorBeaver" customModuleProvider="target">
@@ -1220,7 +1222,7 @@
                                     <constraint firstAttribute="height" constant="64" id="gjf-ln-yE4"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mtC-0l-zy0">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mtC-0l-zy0">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -1551,7 +1553,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="error" translatesAutoresizingMaskIntoConstraints="NO" id="ihF-R5-Ma3">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ihF-R5-Ma3">
                                                     <rect key="frame" x="517.5" y="1" width="41.5" height="41.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="ihF-R5-Ma3" secondAttribute="height" multiplier="1:1" id="xXg-H7-1V9"/>
@@ -1862,15 +1864,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hUg-sV-JGU">
-                                <rect key="frame" x="276" y="66" width="48" height="30"/>
-                                <state key="normal" title="Gallery"/>
+                                <rect key="frame" x="273" y="69" width="54" height="33"/>
+                                <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="17"/>
+                                <state key="normal" title="Gallery">
+                                    <color key="titleColor" red="0.94117647059999998" green="0.67843137249999996" blue="0.18823529410000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="getPhotoFromLibrary:" destination="rKE-qQ-Tpd" eventType="touchUpInside" id="3SS-y1-bfP"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rE3-wA-464">
-                                <rect key="frame" x="279.5" y="28" width="41" height="30"/>
-                                <state key="normal" title="Photo"/>
+                                <rect key="frame" x="277.5" y="28" width="45" height="33"/>
+                                <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="17"/>
+                                <state key="normal" title="Photo">
+                                    <color key="titleColor" red="0.94117647059999998" green="0.67843137249999996" blue="0.18823529410000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="takePhotoWithCamera:" destination="rKE-qQ-Tpd" eventType="touchUpInside" id="hhC-MZ-aT7"/>
                                 </connections>
@@ -2119,10 +2127,9 @@
     </scenes>
     <resources>
         <image name="checkmark" width="19" height="19"/>
-        <image name="error" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="CUJ-bD-W6g"/>
-        <segue reference="gYv-dy-mxa"/>
+        <segue reference="Eko-fb-VsA"/>
     </inferredMetricsTieBreakers>
 </document>

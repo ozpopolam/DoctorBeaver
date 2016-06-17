@@ -12,7 +12,6 @@ import Foundation
 // оформление приложения
 struct VisualConfiguration {
   
-  static let errorImageName = "error"
   static let noImageName = "DefaultPetImages/noImage"
   static let maxImageDimension: CGFloat = 150.0
   static let renderedAtMaxX: CGFloat = 3.0
