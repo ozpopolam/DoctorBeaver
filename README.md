@@ -18,7 +18,7 @@ You can select pet's image from default set or load one from your device and cro
 ![task_adding](https://img-fotki.yandex.ru/get/100269/218764126.0/0_13f1ac_1f8a4817_orig.jpg)  
 Configure task's settings with a wide set of options
 
-## Coming soon...
+## :hourglass: Coming soon... 
 * show notification when some task must be executed
 * weak overview
 * search page
