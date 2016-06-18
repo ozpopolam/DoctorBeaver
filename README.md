@@ -1,4 +1,4 @@
-![icons](https://pp.vk.me/c633517/v633517596/3821e/2JxMpZOmSYQ.jpg)
+![icons](https://psv4.vk.me/c415628/u163373596/docs/eaebd4d557ff/iconIOSSwift_152x75.png)
 
 # DoctorBeaver
 
