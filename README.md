@@ -1,4 +1,4 @@
-![icons](blob:https%3A//drive.google.com/ae989461-2b59-4354-b358-3effb65bde1d)
+![icons](https://pp.vk.me/c633517/v633517596/3821e/2JxMpZOmSYQ.jpg)
 
 # DoctorBeaver
 
