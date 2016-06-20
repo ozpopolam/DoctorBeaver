@@ -1,3 +1,20 @@
 {
-  "pets": []
+  "pets": [{
+           "name": "Хеллоупет",
+           "imageName": "DefaultPetImages/cat0",
+           "selected": true,
+           "tasks": [{
+                     "typeId": 0,
+                     "name": "Витамины счастья",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [540, 930, 1260],
+                     "doseForTimes": ["3|2/3", "1|1/4", " |1/4"],
+                     "specialFeature": "независимо от еды",
+                     "startDate": "20.06.2016 6:00",
+                     "frequency": [],
+                     "endTimes": 100,
+                     "comment": "давать и не жадничать",
+                     "realizations": []
+                     }]
+           }]
 }

@@ -21,7 +21,7 @@ import UIKit
   @IBOutlet weak var centerRightButton: UIButton!
   @IBOutlet weak var rightButton: UIButton!
   
-  // FakeNavigationBarView view from the XIB file
+  // DecoratedNavigationBarView view from the XIB file
   var view: UIView!
   var buttonIconSize = CGSize(width: 25, height: 25)
   
@@ -46,7 +46,7 @@ import UIKit
     let bundle = NSBundle(forClass: self.dynamicType)
     let nib = UINib(nibName: "DecoratedNavigationBarView", bundle: bundle)
     
-    // Assumes UIView is top level and only object in FakeNavigationBarView.xib file
+    // assumes UIView is top level and only object in FakeNavigationBarView.xib file
     if let view = nib.instantiateWithOwner(self, options: nil)[0] as? UIView {
       return view
     } else {
@@ -54,10 +54,9 @@ import UIKit
     }
   }
   
-  // добавляем кнопке иконку
   func setButtonImage(name: String, forButton buttonPosition: ButtonPosition, withTintColor tintColor: UIColor, withAnimationDuration animationDuration: NSTimeInterval = 0) {
     var button: UIButton
-    // выбираем, какой кнопке будем добавлять иконку
+    
     switch buttonPosition {
     case .Left: button = leftButton
     case .CenterRight: button = centerRightButton
@@ -67,10 +66,9 @@ import UIKit
     button.setImage(withName: name, ofSize: buttonIconSize, withTintColor: tintColor, withAnimationDuration: animationDuration)
   }
   
-  // убираем иконку с кнопки
   func removeButtonImage(forButton buttonPosition: ButtonPosition, ofState state: UIControlState) {
     var button: UIButton
-    // выбираем, какой кнопке будем добавлять иконку
+    
     switch buttonPosition {
     case .Left: button = leftButton
     case .CenterRight: button = centerRightButton
@@ -80,10 +78,9 @@ import UIKit
     button.setImage(nil, forState: state)
   }
   
-  // показываем кнопку
   func showButton(buttonPosition: ButtonPosition, withAnimationDuration animationDuration: NSTimeInterval = 0) {
     var button: UIButton
-    // выбираем, какую кнопку будем прятать
+    
     switch buttonPosition {
     case .Left: button = leftButton
     case .CenterRight: button = centerRightButton
@@ -101,10 +98,9 @@ import UIKit
     }
   }
   
-  // прячем кнопку
   func hideButton(buttonPosition: ButtonPosition) {
     var button: UIButton
-    // выбираем, какую кнопку будем прятать
+    
     switch buttonPosition {
     case .Left: button = leftButton
     case .CenterRight: button = centerRightButton
@@ -116,7 +112,6 @@ import UIKit
     }
   }
   
-  // прячем все кнопки
   func hideAllButtons() {
     let buttons = [leftButton, centerRightButton, rightButton]
     for button in buttons {
@@ -125,6 +120,4 @@ import UIKit
       }
     }
   }
-  
-
 }

@@ -6,6 +6,28 @@
 //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
 //
 
+extension Task {
+  @NSManaged var pet: Pet
+  
+  @NSManaged var name: String
+  @NSManaged var typeId_: Int32
+  @NSManaged var typeItem: TaskTypeItem
+  
+  @NSManaged var timesPerDay_: Int32
+  @NSManaged var minutesForTimes: [Int]
+  @NSManaged var doseForTimes: [String]
+  @NSManaged var specialFeature: String
+  
+  @NSManaged var startDate: NSDate
+  @NSManaged var frequency: [Int]
+  
+  @NSManaged var endDaysOrTimes_: Int32
+  @NSManaged var endDate: NSDate
+  @NSManaged var comment: String
+  
+  @NSManaged var realizations: NSOrderedSet
+}
+
 import Foundation
 import CoreData
 
@@ -107,7 +129,7 @@ class Task: NSManagedObject {
   
   var sectionTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: separator)
     }
   }
   
@@ -118,7 +140,7 @@ class Task: NSManagedObject {
   }
   var timesPerDayOptions: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: separator)
     }
   }
   
@@ -129,7 +151,7 @@ class Task: NSManagedObject {
   }
   var minutesForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: separator)
+      let allOrderTitles = String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
@@ -141,13 +163,13 @@ class Task: NSManagedObject {
   }
   var doseForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: separator)
+      let allOrderTitles = String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
   var doseForTimesOptions: [[String]] {
     get {
-      return getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: separator)
+      return String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: separator)
     }
   }
   var doseForTimesForInitialization: String {
@@ -165,7 +187,7 @@ class Task: NSManagedObject {
     guard time < doseForTimes.count else { return "" }
     
     let whitespace = " "
-    let stringDoses = getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator).filter{$0 != whitespace}
+    let stringDoses = String.getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator).filter{$0 != whitespace}
     let numberDoses = stringDoses.map{ Double($0) }.flatMap{ $0 }
     
     if numberDoses.count == stringDoses.count {
@@ -182,7 +204,7 @@ class Task: NSManagedObject {
   
   func doseAsArrayOfStrings(forTime time: Int) -> [String] {
     guard time < doseForTimes.count else { return [] }
-    return getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator)
+    return String.getOneDimArrayOfStrings(fromUnseparatedString: doseForTimes[time], withSeparator: separator)
   }
   
   func doseFromArrayOfStrings(arrayOfStrings: [String]) -> String {
@@ -196,7 +218,7 @@ class Task: NSManagedObject {
   }
   var specialFeatureOptions: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: separator)
     }
   }
   
@@ -213,7 +235,7 @@ class Task: NSManagedObject {
   }
   var frequencySegmentTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: separator)
     }
   }
   var frequencyOptions: [[String]] {
@@ -221,7 +243,7 @@ class Task: NSManagedObject {
       
       guard !frequencyTitle.isEmpty else { return [] }
       
-      let daysOptions = getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.daysOptions, withSeparator: separator)
+      let daysOptions = String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.daysOptions, withSeparator: separator)
       let daysOptionsWithPrepos = daysOptions.map { typeItem.frequencyPreposition + " " + $0 }
       return [daysOptions, daysOptionsWithPrepos]
     }
@@ -234,7 +256,7 @@ class Task: NSManagedObject {
   }
   var endDaysOrTimesSegmentTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: separator)
     }
   }
   
@@ -254,7 +276,7 @@ class Task: NSManagedObject {
       stringOptions = typeItem.basicValues.timesOptions
     }
     
-    let options = getOneDimArrayOfStrings(fromUnseparatedString: stringOptions, withSeparator: separator).map { typeItem.basicValues.endDaysOrTimesOptionsPreposition + " " + $0 }
+    let options = String.getOneDimArrayOfStrings(fromUnseparatedString: stringOptions, withSeparator: separator).map { typeItem.basicValues.endDaysOrTimesOptionsPreposition + " " + $0 }
     return options
   }
   
@@ -264,9 +286,9 @@ class Task: NSManagedObject {
     }
   }
   
+// MARK: methods
   
-  
-  // подсчитать конечную дату, если задано число дней или число раз
+  // count endDate if endDays or endTimes was set
   func countEndDate() {
     if endDaysOrTimes < 0 {
       endDate = countEndDate(withEndDays: -endDaysOrTimes)
@@ -277,7 +299,7 @@ class Task: NSManagedObject {
     }
   }
   
-  // подсчитать конечную дату, если задано число дней
+  // count endDate if endDays was set
   func countEndDate(withEndDays ed: Int) -> NSDate {
     if let date = DateHelper.calendar.dateByAddingUnit(.Day, value: ed, toDate: startDate, options: []) {
       if let dateMinMin = DateHelper.calendar.dateByAddingUnit(.Minute, value: -1, toDate: date, options: []) {
@@ -290,7 +312,7 @@ class Task: NSManagedObject {
     }
   }
   
-  // подсчитать конечную дату, если задано число раз
+  // count endDate if endTimes was set
   func countEndDate(withEndTimes endTimes: Int) -> NSDate {
     
     var date = startDate
@@ -298,15 +320,15 @@ class Task: NSManagedObject {
     let fullDays = (endTimes - 1) / timesPerDay
     
     if fullDays > 0 {
-      // прибавляем количество целых дней
+      // add amount of fullDays
       if frequency.count == 0 {
-        // задание нужно выполнять ежедневно
+        // task must be performed everyday
         if let fullDaysDate = DateHelper.calendar.dateByAddingUnit(.Day, value: fullDays, toDate: date, options: []) {
           date = fullDaysDate
         }
       } else {
-        // задана периодичность
         
+        // task must be performed periodically
         let activeDays = frequency[0]
         let passiveDays = frequency[1]
         
@@ -324,7 +346,7 @@ class Task: NSManagedObject {
       }
     }
     
-    // реорганизованное расписание приема
+    // reorganize task's schedule
     var arrangedMFT = arrangeMinutesForTimes(byMinutesOfDate: date)
     
     let timesOfPartialDay = (endTimes - 1) % timesPerDay
@@ -333,7 +355,7 @@ class Task: NSManagedObject {
     return date
   }
   
-  // реорганизовать расписание приема, чтобы оно начиналось со времени переданной даты
+  // reorganize task's schedule to begin with specified date
   func arrangeMinutesForTimes(byMinutesOfDate date: NSDate) -> [Int] {
     
     if timesPerDay <= 1 {
@@ -364,7 +386,7 @@ class Task: NSManagedObject {
     }
   }
   
-  // вычисляем новую дату, комбинируя старую и новое время
+  // calculate new date, by combining the old one and new time
   func getDateForNextRealization(atMinutes minutes: Int, forDate date: NSDate) -> NSDate {
     
     let components = NSDateComponents()
@@ -381,7 +403,7 @@ class Task: NSManagedObject {
     
     let dateMinutes = DateHelper.getMinutes(fromDate: date)
     if dateMinutes > minutes {
-      // следующий день
+      // next day
       if let nrd = DateHelper.calendar.dateByAddingUnit(.Day, value: 1, toDate: nextRealizationDate, options: []) {
         nextRealizationDate = nrd
       }
@@ -390,7 +412,6 @@ class Task: NSManagedObject {
     return nextRealizationDate
   }
   
-  // выясняем, распологается ли дата между датами начала и конца
   func dateInTaskStartEndRange(date: NSDate) -> Bool {
     if DateHelper.compareDatesToDayUnit(firstDate: startDate, secondDate: date) != .OrderedDescending && DateHelper.compareDatesToDayUnit(firstDate: date, secondDate: endDate) != .OrderedDescending {
       return true
@@ -399,7 +420,7 @@ class Task: NSManagedObject {
     }
   }
   
-  // список выполненности задания на конкретную дату
+  // list of task's fulfillment on a concrete date
   func getDone(forDate date: NSDate) -> [Int] {
     
     let transition = getDateTransitionType(forDate: date)
@@ -457,42 +478,39 @@ class Task: NSManagedObject {
     return done
   }
   
-  // тип перехода даты
   enum DayTransitionType {
-    // переход от неактивной даты к активной
+    // transition from inactive date to active
     case PassToAct
-    // череда активных дат
+    // sequence of active dates
     case ActToAct
-    // череда неактивных дат
+    // sequence of inactive dates
     case PassToPass
-    // переход от неактивной даты к активной
+    // transition from active date to inactive
     case ActToPass
   }
   
-  // получить тип перехода по дате
   func getDateTransitionType(forDate date: NSDate) -> DayTransitionType {
     
     let firstDay = DateHelper.compareDatesToDayUnit(firstDate: startDate, secondDate: date) == .OrderedSame
     let lastDay = DateHelper.compareDatesToDayUnit(firstDate: date, secondDate: endDate) == .OrderedSame
     
     if firstDay {
-      // дата - первый день
+      // date is the first day
       return .PassToAct
     } else {
       
       if frequency.count == 0 {
-        // дата - среди активных дат
-        
+        // date is in a sequence of active dates
         if lastDay {
-          // дата - последний день
+          // date is the last day
           return .ActToPass
         } else {
-          // дата - среди последовательности активных дат
+          // date is in a sequence of active dates
           return .ActToAct
         }
         
       } else {
-        // дата - среди череды активных и неактивных дат
+        // date is in a sequence of transitions from active date to inactive
         
         let dayDifference = DateHelper.calendarDayDifference(fromDate: startDate, toDate: date)
         
@@ -505,21 +523,17 @@ class Task: NSManagedObject {
         if 0 <= dayInBlock && dayInBlock <= (activeDays - 1) {
           
           if dayInBlock == 0 {
-            // переход от неактивного к активному
             return .PassToAct
             
           } else {
-            // среди активных
             return .ActToAct
           }
           
         } else {
           
           if dayInBlock == activeDays {
-            // переход от активного к неактивному
             return .ActToPass
           } else {
-            // среди неактивных
             return .PassToPass
           }
           
@@ -529,7 +543,6 @@ class Task: NSManagedObject {
     }
   }
   
-  // копируем настройки
   func copySettings(fromTask task: Task, withPet wPet: Bool = false) {
     name = task.name
     typeId = task.typeId
@@ -552,7 +565,6 @@ class Task: NSManagedObject {
     }
   }
   
-  // эквавалентны ли настройки двух заданий
   func allSettingsAreEqual(toTask task: Task) -> Bool {
     guard name == task.name else { return false }
     guard typeId == task.typeId else { return false }
@@ -574,15 +586,7 @@ class Task: NSManagedObject {
     return true
   }
   
-  func settingsMinutesAreEqual(toTask task: Task) -> Bool {
-    return true
-  }
-  
-  func settingsDoseAreEqual(toTask task: Task) -> Bool {
-    return true
-  }
-  
-  // корректируем расписание при изменении числа раз в день
+  // correct minutes values when timesPerDay has changed
   func correctMinutes() {
     var difference = timesPerDay - minutesForTimes.count
     
@@ -590,10 +594,8 @@ class Task: NSManagedObject {
       
       var insertMinutes: Bool
       if difference > 0 {
-        // необходимо вставить
         insertMinutes = true
       } else {
-        // необходимо убрать лишние минуты
         insertMinutes = false
       }
       
@@ -601,7 +603,7 @@ class Task: NSManagedObject {
       for _ in 0..<difference {
         
         if insertMinutes {
-          // вставляем минуты
+          // insert minutes
           let gi = gapAtIndInMinutes(biggest: true)
           
           var newMinutes = minutesForTimes[gi.ind] + gi.gap / 2
@@ -623,7 +625,7 @@ class Task: NSManagedObject {
           }
           
         } else {
-          // удаляем минуты
+          // delete minutes
           let gi = gapAtIndInMinutes(biggest: false)
           
           if gi.ind + 1 < minutesForTimes.count {
@@ -637,7 +639,7 @@ class Task: NSManagedObject {
     }
   }
   
-  // находим самый большой или самый маленький интервал в расписании
+  // find the biggest or the least gap between minutes
   func gapAtIndInMinutes(biggest biggest: Bool) -> (gap: Int, ind: Int) {
     
     var gap = 0
@@ -678,7 +680,7 @@ class Task: NSManagedObject {
     return (gap: gap, ind: ind)
   }
   
-  // корректируем дозировку при изменении числа раз в день
+  // correct dose values when timesPerDay has changed
   func correctDose() {
     guard doseForTimes.count != 0 else { return }
     
@@ -714,7 +716,6 @@ class Task: NSManagedObject {
     } 
   }
   
-  // устанавливаем единые дозировки
   func setAllDosesEqual() {
     let dose = doseForTimes[0]
     
@@ -725,14 +726,13 @@ class Task: NSManagedObject {
     }
   }
   
-  // проверяем, все ли дозы одинаковые
   func allDosesAreEqual() -> Bool {
     let firstDose = doseForTimes[0]
     let unEqualDoses = doseForTimes.filter { $0 != firstDose }
     return unEqualDoses.isEmpty
   }
   
-  // детали выполнения задания в читабельном виде
+  // details of task's execution in readable format
   func details(forTime time: Int) -> String {
     let dsPrnt = dosePrintable(forTime: time)
     if !dsPrnt.isEmpty {
@@ -741,32 +741,5 @@ class Task: NSManagedObject {
       return "\(specialFeature)"
     }
   }
-  
-  func getOneDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [String] {
-    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: true).map{String($0)}
-    return oneDimArray
-  }
-  
-  func getTwoDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [[String]] {
-    
-    let twoDimSeparator = String(separator) + String(separator)
-    var twoDimArray = [[String]]()
-    
-    let twoDimStringElements = string.componentsSeparatedByString(twoDimSeparator)
-    for twoDimStringElement in twoDimStringElements {
-      twoDimArray.append(getOneDimArrayOfStrings(fromUnseparatedString: twoDimStringElement, withSeparator: separator))
-    }
-    //return twoDimArray
-    return (twoDimArray.filter{ !$0.isEmpty }).isEmpty ? [] : twoDimArray
-  }
-  
-  
-  
-  
-/////////////
-  
-  
-  
-
   
 }

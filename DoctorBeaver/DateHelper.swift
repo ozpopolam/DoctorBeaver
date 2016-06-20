@@ -25,14 +25,13 @@ struct DateHelper {
       return dateFormatter
   }()
   
-  // дата в строку
   static func dateFromString(dateString: String, withFormat format: DateFormatterFormat) -> NSDate? {
     let df = dateFormatter
     df.dateFormat = format.rawValue
     return df.dateFromString(dateString)
   }
   
-  // дата из строки
+  // date to string with special format
   static func dateToString(date: NSDate, withDateFormat dateFormat: String = DateFormatterFormat.DateTime.rawValue) -> String {
     dateFormatter.dateFormat = dateFormat
     return dateFormatter.stringFromDate(date)
@@ -40,7 +39,7 @@ struct DateHelper {
   
   static let maxMinutes = 24 * 60
   
-  // минуты в виде строки hh:mm
+  // minutes in hh:mm format
   static func minutesToString(totalMinutes: Int) -> String {
     
     let hours = totalMinutes / 60
@@ -49,7 +48,7 @@ struct DateHelper {
     return String(format: "%02d:%02d", hours, minutes)
   }
   
-  // получить минуты (компонента-часы * 60 + компонента-минуты) из даты
+  // get minutes (hours * 60 + minutes) from date
   static func getMinutes(fromDate date: NSDate) -> Int {
     let hourComponent = DateHelper.calendar.component(.Hour, fromDate: date)
     let minuteComponent = DateHelper.calendar.component(.Minute, fromDate: date)
@@ -57,17 +56,17 @@ struct DateHelper {
     return minutes
   }
   
-  // сравниваем даты по значение дня
-  static func compareDatesToDayUnit(firstDate firstDate: NSDate, secondDate: NSDate) -> NSComparisonResult {
-    return calendar.compareDate(firstDate, toDate: secondDate, toUnitGranularity: .Day)
-  }
-  
   static func compareDatesToUnit(firstDate firstDate: NSDate, secondDate: NSDate, unit: NSCalendarUnit) -> NSComparisonResult {
     return calendar.compareDate(firstDate, toDate: secondDate, toUnitGranularity: unit)
   }
   
-  // календарная разница в днях
+  static func compareDatesToDayUnit(firstDate firstDate: NSDate, secondDate: NSDate) -> NSComparisonResult {
+    return calendar.compareDate(firstDate, toDate: secondDate, toUnitGranularity: .Day)
+  }
+  
   static func calendarDayDifference(fromDate fd: NSDate, toDate sd: NSDate) -> Int {
+    // 11.09.16 12.15 & 11.09.16 23.15 - the same day, 11.09.16 23.15 & 12.09.16 01.15 - one day difference
+    
     let dayComponents = calendar.components(.Day, fromDate: fd, toDate: sd, options: [])
     
     let daysApart = dayComponents.day
@@ -89,7 +88,3 @@ struct DateHelper {
   }
   
 }
-
-  
-  
-

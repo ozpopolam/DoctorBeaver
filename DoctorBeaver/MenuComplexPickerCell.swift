@@ -1,5 +1,5 @@
 //
-//  StgDataDateTimePickerCell.swift
+//  MenuComplexPickerCell.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 02.03.16.
@@ -9,22 +9,22 @@
 import Foundation
 import UIKit
 
-protocol StgComplexPickerCellDelegate: class {
+protocol MenuComplexPickerCellDelegate: class {
   func getPickerOptionsAndInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> (options: [[String]], initialValues: [String], delegate: DataPickerViewDelegate)
   func getPickerInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> [String]
   func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> (iDate: NSDate, mDate: NSDate, delegate: DatePickerDelegate)
   func getPickerInitialDate(bySelectedSegment index: Int, andByTag tag: Int) -> NSDate
 }
 
-class StgComplexPickerCell: UITableViewCell {
+class MenuComplexPickerCell: UITableViewCell {
   
-  weak var delegate: StgComplexPickerCellDelegate?
+  weak var delegate: MenuComplexPickerCellDelegate?
   
   @IBOutlet weak var tripleOptionSgCtrl: UISegmentedControl!
   
   @IBOutlet weak var firstDataPickerView: DataPickerView!
   @IBOutlet weak var secondDataPickerView: DataPickerView!
-  @IBOutlet weak var datePicker: StgDatePicker!
+  @IBOutlet weak var datePicker: MenuDatePicker!
   
   var dataPickerViews: [DataPickerView] = []
   
@@ -62,7 +62,7 @@ class StgComplexPickerCell: UITableViewCell {
     }
   }
   
-  func configure(withTags tags: [Int], andDelegate delegate: StgComplexPickerCellDelegate) {
+  func configure(withTags tags: [Int], andDelegate delegate: MenuComplexPickerCellDelegate) {
     self.tag = tags[0]
     self.delegate = delegate
     
@@ -155,7 +155,7 @@ class StgComplexPickerCell: UITableViewCell {
     }
     
     var selectedRow: Int
-    // сменился сегмент - сменилось выбранное значение на pickerView
+    // segment has changed -> selected value of pickerView has changed also
     if index != 2 {
       let pickerView = dataPickerViews[index].pickerView
       selectedRow = pickerView.selectedRowInComponent(0)
@@ -166,7 +166,6 @@ class StgComplexPickerCell: UITableViewCell {
     
   }
   
-  // datePicker выбрал дату или время
   @IBAction func pickerDidPickDate(sender: UIDatePicker) {
     datePicker.didPick()
   }

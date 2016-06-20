@@ -20,23 +20,35 @@ class TabBarController: UITabBarController {
     
     configureTabBar() // set visual part
     
-//    if true {
-//      _helperDeleteAllData()
-//      let firstLaunch = true
-//      if firstLaunch {
-//        preparePetsRepositoryForUse()
-//      }
-//      _helperPopulateManagedObjectContextWithJsonPetData()
-//    }
+    if firstEverLaunch() {
+      preparePetsRepositoryForUse()
+      populateManagedObjectContextWithJsonPetData()
+    }
     
     self.selectedIndex = scheduleTabInd // begin with schedule tab
-    //self.selectedIndex = petsTabInd // begin with pets tab
+    self.selectedIndex = petsTabInd // begin with pets tab
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
+  }
+  
+  func firstEverLaunch() -> Bool {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
+    let key = "firstLaunchDidHappen"
+    let firstLaunchDidHappen = defaults.boolForKey(key)
+  
+    if !firstLaunchDidHappen {
+      defaults.setBool(true, forKey: key)
+      print("firstLaunchEver")
+      return true
+    } else {
+      print("notFirstLaunch")
+      return false
+    }
   }
   
   func configureTabBar() {
@@ -135,7 +147,7 @@ extension TabBarController {
     //    print(petsRepository.fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)?.count)
   }
   
-  func _helperPopulateManagedObjectContextWithJsonPetData() {
+  func populateManagedObjectContextWithJsonPetData() {
     let jsonPetParser = JsonPetsParser(forPetsRepository: petsRepository, withFileName: "RuPets", andType: "json")
     jsonPetParser.populateManagedObjectContextWithJsonPetData()
   }

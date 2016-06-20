@@ -17,14 +17,13 @@ class ManyPetsCell: BasicPetCell {
       petImageView.clipsToBounds = true
     }
   }
-
+  
   override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-
+    super.awakeFromNib()
+  }
+  
+  override func setSelected(selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+  }
+  
 }

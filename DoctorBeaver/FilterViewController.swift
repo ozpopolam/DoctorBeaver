@@ -43,7 +43,6 @@ class FilterViewController: UIViewController {
     fakeNavigationBar.setButtonImage("done", forButton: .Right, withTintColor: UIColor.fogColor())
     fakeNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
     
-    // настраиваем toolBar
     toolBar.translucent = false
     toolBar.barTintColor = UIColor.lightOrangeColor()
     toolBar.items = []
@@ -67,14 +66,12 @@ class FilterViewController: UIViewController {
 
     tableView.tableFooterView = UIView(frame: .zero)
     
-    // если view загружено, подгружаем в него данные
     if viewIsReadyToBeLoadedWithPetsRepository() {
       reloadFilterTable()
     }
   }
   
-  
-  
+  // create bar button with a given image
   func barButton(imageName: String) -> UIButton {
     let bb = UIButton(type: .Custom)
     bb.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: VisualConfiguration.barButtonSize)
@@ -90,7 +87,6 @@ class FilterViewController: UIViewController {
     super.didReceiveMemoryWarning()
   }
   
-  // проверяем, можно ли обновить view данными из managedContext
   func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
     if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithPetsRepository {
       viewWasLoadedWithPetsRepository = true
@@ -100,7 +96,7 @@ class FilterViewController: UIViewController {
     }
   }
   
-  // нажали "Выбрать все" на tool bar
+  // check all bar button pressed
   func checkAll(sender: UIBarButtonItem) {
     if !checkAllPressed {
       checkAllPressed = true
@@ -111,7 +107,7 @@ class FilterViewController: UIViewController {
     }
   }
   
-  // нажали "Ничего не выбрать" на tool bar
+  // uncheck all bar button pressed
   func uncheckAll(sender: UIBarButtonItem) {
     if !unCheckAllPressed {
       unCheckAllPressed = true
@@ -122,7 +118,7 @@ class FilterViewController: UIViewController {
     }
   }
   
-  // устанавливаем для всех питомцев одинаковый статус выбранности
+  // set all check-status for all pets
   func setAllCellsDoneState(toState state: Bool) -> [Int] {
     var rows: [Int] = []
     
@@ -135,7 +131,7 @@ class FilterViewController: UIViewController {
     return rows
   }
   
-  // конфигурируем внешний вид ячейки для переданных рядов
+  // configure check-status for given cells
   func configureCellDoneState(forRows rows: [Int]) {
     for ind in 0..<rows.count {
       let indexPath = NSIndexPath(forRow: rows[ind], inSection: 0)
@@ -152,11 +148,10 @@ class FilterViewController: UIViewController {
     }
   }
   
-  // перегружаем всю таблицу с питомцами
   func reloadFilterTable() {
     pets = petsRepository.fetchAllPets()
     
-    // запоминаем id питомцев, выбранных изначально
+    // save id of initially selected pets
     for pet in pets {
       if pet.selected {
         selectedPetsID.insert(pet.id)
@@ -181,7 +176,7 @@ extension FilterViewController: UITableViewDataSource {
       cell.petImageView.image = pet.image
       cell.petNameLabel.text = pet.name
       
-      // считаем, сколько неоконченных заданий у питомца
+      // count all active tasks of a pet
       let activeTasks = pet.countActiveTasks(forDate: NSDate())
       cell.remainTasksLabel.text = activeTasksToString(activeTasks)
       configureCellDoneState(cell, forRowAtIndexPath: indexPath)
@@ -191,7 +186,7 @@ extension FilterViewController: UITableViewDataSource {
     return UITableViewCell()
   }
   
-  // число активных заданий в читабельном виде
+  // amount of active tasks in readable form
   func activeTasksToString(actTs: Int) -> String {
     guard actTs != 0 else {
       return "нет активных заданий"
@@ -224,16 +219,16 @@ extension FilterViewController: UITableViewDataSource {
     return actTsStr
   }
   
-  // в зависиомсти о того, выбран ли питомец, конфигурируем вид ячейки
+  // configure appearance of a cell depending on its check status
   func configureCellDoneState(cell: FilterCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let row = indexPath.row
     cell.checkmarkImageView.hidden = !pets[row].selected
     cell.selectView.hidden = pets[row].selected
   }
   
-  // пользователь хочет применить фильтр
+  // done button pressed
   func done(sender: UIButton) {
-    // проверяем, были ли изменения в выбранности
+    // verify if some changes have occurred
     var newSelectedPetsID = Set<Double>()
     var selectedPets: [Pet] = []
     for pet in pets {
@@ -243,7 +238,7 @@ extension FilterViewController: UITableViewDataSource {
       }
     }
     
-    // если в выбранности ничего не изменилось
+    // if there were no changes
     if newSelectedPetsID == selectedPetsID {
       cancel()
     } else {
@@ -252,9 +247,9 @@ extension FilterViewController: UITableViewDataSource {
     }
   }
   
-  // пользователь не хочет применять фильтр
+  // cancel button pressed
   func cancel(sender: UIButton? = nil) {
-    // возвращаем изначальное состояние выбранности
+    
     petsRepository.rollback()
     delegate?.filterDidCancel(self)
   }

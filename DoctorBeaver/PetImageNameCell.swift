@@ -1,5 +1,5 @@
 //
-//  PetCVCell.swift
+//  PetImageNameCell.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 04.05.16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PetCVCell: UICollectionViewCell {
+class PetImageNameCell: UICollectionViewCell {
   @IBOutlet weak var borderImageView: UIImageView!
   @IBOutlet weak var petImageView: UIImageView!
   @IBOutlet weak var petName: UILabel!

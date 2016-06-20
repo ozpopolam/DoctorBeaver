@@ -116,15 +116,9 @@ class Pet: NSManagedObject {
     }
   }
   
-  func getOneDimArrayOfStrings(fromUnseparatedString string: String, withSeparator separator: Character) -> [String] {
-    let oneDimArray = string.characters.split(separator, maxSplit: string.characters.count, allowEmptySlices: false).map{String($0)}
-    
-    return oneDimArray
-  }
-  
   var sectionTitles: [String] {
     get {
-      return getOneDimArrayOfStrings(fromUnseparatedString: basicValues.sectionTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: basicValues.sectionTitles, withSeparator: separator)
     }
   }
   

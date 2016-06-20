@@ -218,7 +218,6 @@ class JsonPetsParser: JsonParser {
       }
     }
   }
-
   
   func populatePetInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) {
     guard let name = dict["name"] as? String,

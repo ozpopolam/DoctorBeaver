@@ -740,7 +740,7 @@
                                             <outlet property="textField" destination="O7O-cA-QnC" id="GTO-Uf-fa7"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgTitleValueCell" id="yOu-2e-sOu" customClass="StgTitleValueCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuTitleValueCell" id="yOu-2e-sOu" customClass="MenuTitleValueCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yOu-2e-sOu" id="pxT-Ob-DkY">
@@ -778,7 +778,7 @@
                                             <outlet property="valueLabel" destination="Oaw-0y-83P" id="aGT-1F-Yny"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgTitleSegmentCell" id="njh-nf-mrt" customClass="StgTitleSegmentCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuTitleSegmentCell" id="njh-nf-mrt" customClass="MenuTitleSegmentCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="116" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="njh-nf-mrt" id="INc-qJ-5yP">
@@ -791,7 +791,7 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="3Kr-aD-lbl" customClass="HideShowSegmentedControl" customModule="DoctorBeaver" customModuleProvider="target">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="3Kr-aD-lbl" customClass="MenuHideShowSegmentedControl" customModule="DoctorBeaver" customModuleProvider="target">
                                                     <rect key="frame" x="545" y="8" width="47" height="29"/>
                                                     <segments>
                                                         <segment title="0"/>
@@ -821,7 +821,7 @@
                                             <outlet property="titleLabel" destination="chb-zv-vBW" id="udc-xl-x6r"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgDataPickerCell" rowHeight="216" id="r3E-iA-7g7" customClass="StgDataPickerCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuDataPickerCell" rowHeight="216" id="r3E-iA-7g7" customClass="MenuDataPickerCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="160" width="600" height="216"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="r3E-iA-7g7" id="EO0-BK-4Jr">
@@ -846,14 +846,14 @@
                                             <outlet property="dataPickerView" destination="rqZ-Xw-me6" id="ZVe-q9-5LA"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgDatePickerCell" rowHeight="216" id="mw7-bJ-CIN" customClass="StgDatePickerCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuDatePickerCell" rowHeight="216" id="mw7-bJ-CIN" customClass="MenuDatePickerCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="376" width="600" height="216"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mw7-bJ-CIN" id="SJs-Yo-PFT">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="215.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ih0-nl-CsA" customClass="StgDatePicker" customModule="DoctorBeaver" customModuleProvider="target">
+                                                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ih0-nl-CsA" customClass="MenuDatePicker" customModule="DoctorBeaver" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
                                                     <date key="date" timeIntervalSinceReferenceDate="482277752.84911001">
                                                         <!--2016-04-13 22:02:32 +0000-->
@@ -881,7 +881,7 @@
                                             <outlet property="datePicker" destination="ih0-nl-CsA" id="QEI-xy-4Zh"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgComplexPickerCell" rowHeight="260" id="3GR-ys-VTT" customClass="StgComplexPickerCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuComplexPickerCell" rowHeight="260" id="3GR-ys-VTT" customClass="MenuComplexPickerCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="592" width="600" height="260"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3GR-ys-VTT" id="YZJ-c1-ux8">
@@ -900,7 +900,7 @@
                                                         <action selector="selectSegment:" destination="3GR-ys-VTT" eventType="valueChanged" id="vwI-3r-0dj"/>
                                                     </connections>
                                                 </segmentedControl>
-                                                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kxg-2Z-dd1" customClass="StgDatePicker" customModule="DoctorBeaver" customModuleProvider="target">
+                                                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kxg-2Z-dd1" customClass="MenuDatePicker" customModule="DoctorBeaver" customModuleProvider="target">
                                                     <rect key="frame" x="8" y="44" width="584" height="216"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="216" id="Yxa-Wc-OPV"/>
@@ -1061,7 +1061,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="petCell" id="8z8-O0-gYl" customClass="PetCVCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="petCell" id="8z8-O0-gYl" customClass="PetImageNameCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="200" height="250"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -1226,7 +1226,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgTitleValueCell" id="lEn-Oe-MOX" customClass="StgTitleValueCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuTitleValueCell" id="lEn-Oe-MOX" customClass="MenuTitleValueCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lEn-Oe-MOX" id="Ucp-1O-zAO">
@@ -1305,7 +1305,7 @@
                                             <outlet property="titleLabel" destination="Lxj-3q-csk" id="sww-ol-iJm"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgDataPickerCell" rowHeight="216" id="g6b-Vx-bH7" customClass="StgDataPickerCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuDataPickerCell" rowHeight="216" id="g6b-Vx-bH7" customClass="MenuDataPickerCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="116" width="600" height="216"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="g6b-Vx-bH7" id="yXo-f4-aQH">
@@ -1330,14 +1330,14 @@
                                             <outlet property="dataPickerView" destination="ayo-SQ-dqa" id="0ae-F5-SQt"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="stgDatePickerCell" rowHeight="216" id="PLP-d8-nFg" customClass="StgDatePickerCell" customModule="DoctorBeaver" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menuDatePickerCell" rowHeight="216" id="PLP-d8-nFg" customClass="MenuDatePickerCell" customModule="DoctorBeaver" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="332" width="600" height="216"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PLP-d8-nFg" id="Wtr-Jz-36z">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="215.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OqJ-AC-ZH8" customClass="StgDatePicker" customModule="DoctorBeaver" customModuleProvider="target">
+                                                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OqJ-AC-ZH8" customClass="MenuDatePicker" customModule="DoctorBeaver" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
                                                     <date key="date" timeIntervalSinceReferenceDate="482277752.84911001">
                                                         <!--2016-04-13 22:02:32 +0000-->

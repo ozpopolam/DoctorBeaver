@@ -1,5 +1,5 @@
 //
-//  HideShowSegmentedControl.swift
+//  MenuHideShowSegmentedControl.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 01.03.16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HideShowSegmentedControl: UISegmentedControl {
+class MenuHideShowSegmentedControl: UISegmentedControl {
   
   var currentSegment = 0
   override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

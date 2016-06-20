@@ -1,24 +1,22 @@
 //
-//  SettingPickerCell.swift
+//  MenuTitleValueCell.swift
 //  DoctorBeaver
 //
-//  Created by Anastasia Stepanova-Kolupakhina on 19.02.16.
+//  Created by Anastasia Stepanova-Kolupakhina on 18.02.16.
 //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
 //
 
 import UIKit
 
-class StgDataPickerCell: UITableViewCell {
+class MenuTitleValueCell: UITableViewCell {
   
-  @IBOutlet weak var dataPickerView: DataPickerView!
-  
+  @IBOutlet weak var titleLabel: UILabel!
+  @IBOutlet weak var valueLabel: UILabel!
   override func awakeFromNib() {
     super.awakeFromNib()
-    // Initialization code
   }
   
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)
   }
-  
 }

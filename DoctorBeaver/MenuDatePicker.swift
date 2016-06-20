@@ -1,5 +1,5 @@
 //
-//  StgDatePicker.swift
+//  MenuDatePicker.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 14.04.16.
@@ -14,7 +14,7 @@ protocol DatePickerDelegate: class {
   func dateStillNeeded(fromPicker picker: UIDatePicker) -> Bool
 }
 
-class StgDatePicker: UIDatePicker {
+class MenuDatePicker: UIDatePicker {
   
   weak var delegate: DatePickerDelegate?
   var pickerWithLimits = false
@@ -25,7 +25,7 @@ class StgDatePicker: UIDatePicker {
   var isEmpty = true // data sourse is empty
   var needToResetInitialValues = false // need to be reloaded, when user selected some value, but later it wasn't used
   
-  // дата и время
+  // date and time
   func configure(withDelegate delegate: DatePickerDelegate, selectedDate sDate: NSDate, andMinimumDate mDate: NSDate) {
     self.delegate = delegate
     datePickerMode = .DateAndTime
@@ -47,7 +47,7 @@ class StgDatePicker: UIDatePicker {
     setDate(sDate, animated: true)
   }
   
-  // время
+  // time
   func configure(withDelegate delegate: DatePickerDelegate, selectedMinutes minutes: Int) {
     self.delegate = delegate
     datePickerMode = .Time
@@ -68,7 +68,7 @@ class StgDatePicker: UIDatePicker {
     isEmpty = false
   }
   
-  // время с ограничениями
+  // time with constraints
   func configure(withDelegate delegate: DatePickerDelegate, selectedMinutes sMinutes: Int, minimumMinutes miMinutes: Int, maximumMinutes maMinutes: Int) {
     self.delegate = delegate
     datePickerMode = .Time
@@ -106,7 +106,7 @@ class StgDatePicker: UIDatePicker {
   }
   
   func didPick() {
-    // дата
+    // date
     if datePickerMode == .DateAndTime {
       if let delegate = delegate {
         if delegate.dateStillNeeded(fromPicker: self) {
@@ -116,7 +116,7 @@ class StgDatePicker: UIDatePicker {
           needToResetInitialValues = true
         }
       }
-      //время
+      // time
     } else if datePickerMode == .Time {
       let components = DateHelper.calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute], fromDate: self.date)
       let minutes = components.hour * 60 + components.minute

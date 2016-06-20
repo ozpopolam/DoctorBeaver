@@ -113,7 +113,7 @@ extension DataPickerView: UIPickerViewDataSource {
     return rowsInComponent[component]
   }
   
-  // число рядов таким образом, чтобы барабан выглядит зацикленным
+  // number of rows to create effect of barrel
   func circularNumberOfRowsFor(numberOfSourceRows rows: Int) -> Int {
     var circularRows = 0
     if rows >= minCircularRows {
@@ -151,7 +151,7 @@ extension DataPickerView: UIPickerViewDelegate {
     return title
   }
   
-  // комбинация со всеми пустыми рядами
+  // if all rows are empty -> combination is impossible
   func impossibleCombination(selectedValues: [String]) -> Bool {
     var selectedString = ""
     for s in selectedValues {
@@ -178,8 +178,9 @@ extension DataPickerView: UIPickerViewDelegate {
     }
     
     selectedRow = pickerView.selectedRowInComponent(component)
-    // невозможна комбинация со всеми пустыми рядами
+    
     if impossibleCombination(selectedValues) {
+      // select the next row
       selectedRow += 1
       let sourceRow = (selectedRow) % options[component].count
       selectedValues[component] = options[component][sourceRow]

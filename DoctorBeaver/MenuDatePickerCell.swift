@@ -1,5 +1,5 @@
 //
-//  StgDatePickerCell.swift
+//  MenuDatePickerCell.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 14.04.16.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class StgDatePickerCell: UITableViewCell {
+class MenuDatePickerCell: UITableViewCell {
   
-  @IBOutlet weak var datePicker: StgDatePicker!
+  @IBOutlet weak var datePicker: MenuDatePicker!
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -19,15 +19,7 @@ class StgDatePickerCell: UITableViewCell {
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)
   }
-  
-//  func stopFromValueChanged() {
-//    
-//    print("remove pickerDidPickDate")
-//    
-//    datePicker.removeTarget(self, action: "pickerDidPickDate:", forControlEvents: .ValueChanged)
-//  }
-  
-  // datePicker выбрал дату или время
+
   @IBAction func pickerDidPickDate(sender: UIDatePicker) {
     datePicker.didPick()
   }

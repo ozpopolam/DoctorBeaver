@@ -322,7 +322,6 @@ class PetMenuViewController: UIViewController {
         if let newCustomImage = newCustomImage {
           if newCustomImage.imageName == pet.imageName { // last remembered custom image is desired image to save
             
-            print("save new custom")
             // save new custom image to file system
             pet.imageName = String(pet.id)
             let imageFileManager = ImageFileManager()
