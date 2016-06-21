@@ -18,6 +18,21 @@
                                       "date": "21.06.2016",
                                       "done": [1, 0, 0]
                                       }]
+                     }, {
+                     "typeId": 6,
+                     "name": "Вакцинация",
+                     "timesPerDay": 1,
+                     "minutesForTimes": [540],
+                     "doseForTimes": [],
+                     "specialFeature": "",
+                     "startDate": "15.06.2016 15:00",
+                     "frequency": [],
+                     "endDate": "16.06.2016 12:00",
+                     "comment": "",
+                     "realizations": [{
+                                      "date": "16.06.2016",
+                                      "done": [1]
+                                      }]
                      }]
            }]
 }
