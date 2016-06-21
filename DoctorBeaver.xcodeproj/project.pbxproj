@@ -11,8 +11,6 @@
 		620072261CF0BFBC000F0C2C /* RoundedCornersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620072251CF0BFBC000F0C2C /* RoundedCornersView.swift */; };
 		620372501C66930300352617 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6203724F1C66930300352617 /* AppDelegate.swift */; };
 		6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6203725B1C66930300352617 /* LaunchScreen.storyboard */; };
-		620372681C66930400352617 /* DoctorBeaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372671C66930400352617 /* DoctorBeaverTests.swift */; };
-		620372731C66930400352617 /* DoctorBeaverUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372721C66930400352617 /* DoctorBeaverUITests.swift */; };
 		620372891C66CE8A00352617 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620372881C66CE8A00352617 /* ScheduleViewController.swift */; };
 		6203728C1C68137000352617 /* ImageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6203728B1C68137000352617 /* ImageAssets.xcassets */; };
 		620372901C69023900352617 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6203728F1C69023900352617 /* TabBarController.swift */; };
@@ -78,23 +76,6 @@
 		62F0FEBC1CB9A3C500C13132 /* MenuTitleSwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0FEBB1CB9A3C500C13132 /* MenuTitleSwitchCell.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		620372641C66930400352617 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 620372441C66930300352617 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6203724B1C66930300352617;
-			remoteInfo = DoctorBeaver;
-		};
-		6203726F1C66930400352617 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 620372441C66930300352617 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6203724B1C66930300352617;
-			remoteInfo = DoctorBeaver;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		620072221CF0936E000F0C2C /* RoundedCornersImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCornersImageView.swift; sourceTree = "<group>"; };
 		620072251CF0BFBC000F0C2C /* RoundedCornersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCornersView.swift; sourceTree = "<group>"; };
@@ -102,12 +83,6 @@
 		6203724F1C66930300352617 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6203725C1C66930300352617 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6203725E1C66930300352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		620372631C66930400352617 /* DoctorBeaverTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoctorBeaverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		620372671C66930400352617 /* DoctorBeaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorBeaverTests.swift; sourceTree = "<group>"; };
-		620372691C66930400352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6203726E1C66930400352617 /* DoctorBeaverUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoctorBeaverUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		620372721C66930400352617 /* DoctorBeaverUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorBeaverUITests.swift; sourceTree = "<group>"; };
-		620372741C66930400352617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		620372881C66CE8A00352617 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		6203728B1C68137000352617 /* ImageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImageAssets.xcassets; sourceTree = "<group>"; };
 		6203728F1C69023900352617 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -181,20 +156,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		620372601C66930400352617 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6203726B1C66930400352617 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -212,8 +173,6 @@
 			isa = PBXGroup;
 			children = (
 				6203724E1C66930300352617 /* DoctorBeaver */,
-				620372661C66930400352617 /* DoctorBeaverTests */,
-				620372711C66930400352617 /* DoctorBeaverUITests */,
 				6203724D1C66930300352617 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -222,8 +181,6 @@
 			isa = PBXGroup;
 			children = (
 				6203724C1C66930300352617 /* DoctorBeaver.app */,
-				620372631C66930400352617 /* DoctorBeaverTests.xctest */,
-				6203726E1C66930400352617 /* DoctorBeaverUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -242,24 +199,6 @@
 				6203728B1C68137000352617 /* ImageAssets.xcassets */,
 			);
 			path = DoctorBeaver;
-			sourceTree = "<group>";
-		};
-		620372661C66930400352617 /* DoctorBeaverTests */ = {
-			isa = PBXGroup;
-			children = (
-				620372671C66930400352617 /* DoctorBeaverTests.swift */,
-				620372691C66930400352617 /* Info.plist */,
-			);
-			path = DoctorBeaverTests;
-			sourceTree = "<group>";
-		};
-		620372711C66930400352617 /* DoctorBeaverUITests */ = {
-			isa = PBXGroup;
-			children = (
-				620372721C66930400352617 /* DoctorBeaverUITests.swift */,
-				620372741C66930400352617 /* Info.plist */,
-			);
-			path = DoctorBeaverUITests;
 			sourceTree = "<group>";
 		};
 		620372D41C6A61AF00352617 /* Custom views */ = {
@@ -435,42 +374,6 @@
 			productReference = 6203724C1C66930300352617 /* DoctorBeaver.app */;
 			productType = "com.apple.product-type.application";
 		};
-		620372621C66930400352617 /* DoctorBeaverTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6203727A1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverTests" */;
-			buildPhases = (
-				6203725F1C66930400352617 /* Sources */,
-				620372601C66930400352617 /* Frameworks */,
-				620372611C66930400352617 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				620372651C66930400352617 /* PBXTargetDependency */,
-			);
-			name = DoctorBeaverTests;
-			productName = DoctorBeaverTests;
-			productReference = 620372631C66930400352617 /* DoctorBeaverTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		6203726D1C66930400352617 /* DoctorBeaverUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6203727D1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverUITests" */;
-			buildPhases = (
-				6203726A1C66930400352617 /* Sources */,
-				6203726B1C66930400352617 /* Frameworks */,
-				6203726C1C66930400352617 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				620372701C66930400352617 /* PBXTargetDependency */,
-			);
-			name = DoctorBeaverUITests;
-			productName = DoctorBeaverUITests;
-			productReference = 6203726E1C66930400352617 /* DoctorBeaverUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -484,14 +387,6 @@
 					6203724B1C66930300352617 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = K56NDXLX63;
-					};
-					620372621C66930400352617 = {
-						CreatedOnToolsVersion = 7.2;
-						TestTargetID = 6203724B1C66930300352617;
-					};
-					6203726D1C66930400352617 = {
-						CreatedOnToolsVersion = 7.2;
-						TestTargetID = 6203724B1C66930300352617;
 					};
 				};
 			};
@@ -509,8 +404,6 @@
 			projectRoot = "";
 			targets = (
 				6203724B1C66930300352617 /* DoctorBeaver */,
-				620372621C66930400352617 /* DoctorBeaverTests */,
-				6203726D1C66930400352617 /* DoctorBeaverUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -528,20 +421,6 @@
 				62C64DAB1CE292E3006B4CEF /* RuBasicValues.json in Resources */,
 				628E3CC41C963A55000C122A /* RuPets.json in Resources */,
 				6203725D1C66930300352617 /* LaunchScreen.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		620372611C66930400352617 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6203726C1C66930400352617 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -614,36 +493,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6203725F1C66930400352617 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				620372681C66930400352617 /* DoctorBeaverTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6203726A1C66930400352617 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				620372731C66930400352617 /* DoctorBeaverUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		620372651C66930400352617 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6203724B1C66930300352617 /* DoctorBeaver */;
-			targetProxy = 620372641C66930400352617 /* PBXContainerItemProxy */;
-		};
-		620372701C66930400352617 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6203724B1C66930300352617 /* DoctorBeaver */;
-			targetProxy = 6203726F1C66930400352617 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		6203725B1C66930300352617 /* LaunchScreen.storyboard */ = {
@@ -779,54 +629,6 @@
 			};
 			name = Release;
 		};
-		6203727B1C66930400352617 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = DoctorBeaverTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DoctorBeaver.app/DoctorBeaver";
-			};
-			name = Debug;
-		};
-		6203727C1C66930400352617 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = DoctorBeaverTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DoctorBeaver.app/DoctorBeaver";
-			};
-			name = Release;
-		};
-		6203727E1C66930400352617 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = DoctorBeaverUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = DoctorBeaver;
-				USES_XCTRUNNER = YES;
-			};
-			name = Debug;
-		};
-		6203727F1C66930400352617 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = DoctorBeaverUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.DoctorBeaverUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = DoctorBeaver;
-				USES_XCTRUNNER = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -844,24 +646,6 @@
 			buildConfigurations = (
 				620372781C66930400352617 /* Debug */,
 				620372791C66930400352617 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6203727A1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6203727B1C66930400352617 /* Debug */,
-				6203727C1C66930400352617 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6203727D1C66930400352617 /* Build configuration list for PBXNativeTarget "DoctorBeaverUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6203727E1C66930400352617 /* Debug */,
-				6203727F1C66930400352617 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
