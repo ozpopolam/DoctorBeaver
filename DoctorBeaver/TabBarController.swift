@@ -43,10 +43,8 @@ class TabBarController: UITabBarController {
   
     if !firstLaunchDidHappen {
       defaults.setBool(true, forKey: key)
-      print("firstLaunchEver")
       return true
     } else {
-      print("notFirstLaunch")
       return false
     }
   }
@@ -99,6 +97,11 @@ class TabBarController: UITabBarController {
     let jsonBasicValuesParser = JsonTaskPrimaryValuesParser(forPetsRepository: petsRepository)
     return jsonBasicValuesParser.populateRepositoryWithBasicValues(withFileName: "RuBasicValues", andType: "json")
   }
+  
+  func populateManagedObjectContextWithJsonPetData() {
+    let jsonPetParser = JsonPetsParser(forPetsRepository: petsRepository, withFileName: "RuPets", andType: "json")
+    jsonPetParser.populateManagedObjectContextWithJsonPetData()
+  }
 }
  
 extension TabBarController: UITabBarControllerDelegate {
@@ -132,24 +135,6 @@ extension TabBarController: UITabBarControllerDelegate {
 extension TabBarController: PetsRepositorySettable {
   func setPetsRepository(petsRepository: PetsRepository) {
     self.petsRepository = petsRepository
-  }
-}
-
-// MARK: _HELPERS
-extension TabBarController {
-  func _helperDeleteAllData() {
-    petsRepository.deleteAllObjects(forEntityName: Pet.entityName)
-    petsRepository.deleteAllObjects(forEntityName: PetBasicValues.entityName)
-    petsRepository.deleteAllObjects(forEntityName: TaskTypeItem.entityName)
-    petsRepository.deleteAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)
-    //    print(petsRepository.fetchAllObjects(forEntityName: Pet.entityName)?.count)
-    //    print(petsRepository.fetchAllObjects(forEntityName: TaskTypeItem.entityName)?.count)
-    //    print(petsRepository.fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)?.count)
-  }
-  
-  func populateManagedObjectContextWithJsonPetData() {
-    let jsonPetParser = JsonPetsParser(forPetsRepository: petsRepository, withFileName: "RuPets", andType: "json")
-    jsonPetParser.populateManagedObjectContextWithJsonPetData()
   }
 }
  
