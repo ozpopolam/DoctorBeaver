@@ -193,7 +193,7 @@ extension PetsViewController: UICollectionViewDataSource {
   }
   
   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(petCellId, forIndexPath: indexPath) as? PetCVCell {
+    if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(petCellId, forIndexPath: indexPath) as? PetImageNameCell {
       
       let pet = pets[indexPath.row]
       cell.layer.cornerRadius = cellCornerRadius
@@ -303,7 +303,7 @@ extension PetsViewController: PetMenuViewControllerDelegate {
     }
     
     if let item = pets.indexOf(pet) {
-      if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: item, inSection: 0)) as? PetCVCell {
+      if let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: item, inSection: 0)) as? PetImageNameCell {
         cell.petImageView.image = pet.image
         cell.borderImageView.image = croppedPetImages[pet.id]
       }

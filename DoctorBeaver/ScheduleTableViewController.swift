@@ -1,6 +1,6 @@
 //
-//  TableViewController.swift
-//  tableView
+//  ScheduleTableViewController.swift
+//  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 09.02.16.
 //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
@@ -14,29 +14,22 @@ class ScheduleTableViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var warningLabel: UILabel!
   
-  // id ячеек
+  // cell's id
   let headerId = "headerView"
   let basicPetCellId = "basicPetCell"
   let manyPetsCellId = "manyPetsCell"
   
   let taskMenuSegueId = "taskMenuSegue"
   
-  // максимальная высота ячейки
-  let maxCellHeight: CGFloat = 88.0
-  // иконка со значком i
+  // info icon with i-symbol
   var infoIcon: UIImage?
   
   var petsRepository: PetsRepository!
   var scheduleWasSet = false
   var viewWasLoadedWithSchedule = false
   
-  // питомцы, чьи задания будут отображены
   var pets: [Pet] = []
-  // дата отображаемых заданий
   var date = NSDate()
-  let calendar = NSCalendar.currentCalendar()
-  
-  //var accessoryButtonTask: Task?
   
   typealias TimeRealization = (timeInDay: Int, realization: Realization)
   var timeRealizations: [TimeRealization] = []
@@ -57,7 +50,6 @@ class ScheduleTableViewController: UIViewController {
     let tableSectionHeaderNib = UINib(nibName: "TableSectionHeaderView", bundle: nil)
     tableView.registerNib(tableSectionHeaderNib, forHeaderFooterViewReuseIdentifier: headerId)
     
-    // если view загружено, подгружаем в него данные
     if viewIsReadyToBeLoadedWithSchedule() {
       reloadScheduleTable()
     }
@@ -79,13 +71,13 @@ class ScheduleTableViewController: UIViewController {
       tableView.rowHeight = 88.0
     }
     
-    // выбираем задания, в которых может быть искомая дата
+    // find tasks which may be executed in a specified date
     possibleTasks = getPossibleTasks(fromPets: pets, forDate: date)
     
     if possibleTasks.count == 0 {
       showWarningMessage()
     } else {
-      // ищем конкретные планы выполнения задания по дате
+      // find realizations of task's execution in a specified date
       realizations = getRealizations(fromTasks: possibleTasks, forDate: date)
       if realizations.count == 0 {
         showWarningMessage()
@@ -102,7 +94,6 @@ class ScheduleTableViewController: UIViewController {
   }
   
   func prepareDataSourceAndReloadTable() {
-    
     if timeRealizations.count == 0 {
       showWarningMessage()
     } else {
@@ -126,13 +117,12 @@ class ScheduleTableViewController: UIViewController {
     var realizations: [Realization] = []
     var taskTimeRealizations: [TimeRealization] = []
     
-    // проверяем, может ли в задании быть искомая дата
     if task.dateInTaskStartEndRange(date) {
       possibleTasks.append(task)
     }
     
     if possibleTasks.count != 0 {
-      // ищем конкретные планы выполнения задания по дате
+      
       realizations = getRealizations(fromTasks: possibleTasks, forDate: date)
       if realizations.count != 0 {
         taskTimeRealizations = getTimeRealizations(fromRealizations: realizations)
@@ -152,7 +142,6 @@ class ScheduleTableViewController: UIViewController {
     
   }
   
-  // показываем строку с предупреждением
   func showWarningMessage() {
     if tableView.hidden == false {
       tableView.hidden = true
@@ -162,7 +151,7 @@ class ScheduleTableViewController: UIViewController {
     }
   }
   
-  // выбираем задания, которые могут быть актуальны для заданной даты
+  // find task wich can be possibly executed in a specified date
   func getPossibleTasks(fromPets pets: [Pet], forDate date: NSDate) -> [Task] {
     var tasks: [Task] = []
     
@@ -180,17 +169,18 @@ class ScheduleTableViewController: UIViewController {
     return tasks
   }
   
-  // выбираем конкретные планы выполнения задания по дате
+  // find realizations of task' execution
   func getRealizations(fromTasks tasks: [Task], forDate date: NSDate) -> [Realization] {
     
     var realizations: [Realization] = []
     
     for task in tasks {
       if let realization = getRealization(fromRealizations: task.realizations, forDate: date) {
-        // если для даты уже есть список "сделано-несделано", то добавляем его в итоговый список
+        // if task has already had a realization-list for a date
         realizations.append(realization)
       } else {
-        // списка нет - вычисляем новый список, добавляем его в базу
+        
+        // task hasn't had a realiation-list -> need to calculate it
         let done = task.getDone(forDate: date)
         
         if let realization = petsRepository.insertRealization() {
@@ -206,7 +196,7 @@ class ScheduleTableViewController: UIViewController {
     return realizations
   }
   
-  // выбираем конкретные планы выполнения задания по дате у определенного задания
+  // find a realization for a specific date from realizations list
   func getRealization(fromRealizations realizations: NSOrderedSet, forDate date: NSDate) -> Realization? {
     for realization in realizations {
       if let realization = realization as? Realization {
@@ -218,7 +208,7 @@ class ScheduleTableViewController: UIViewController {
     return nil
   }
   
-  // составляем пары из времени выполнения и конкретного планы выполнения задания
+  // create pairs (timeOfTask'sExecution, realization)
   func getTimeRealizations(fromRealizations realizations: [Realization]) -> [TimeRealization] {
     var timeRealizations: [TimeRealization] = []
     
@@ -234,10 +224,9 @@ class ScheduleTableViewController: UIViewController {
     return timeRealizations
   }
   
-  // сортируем конкретные планы выполнения по времени и по имени питомца
+  // sort (time, realization) by time and pet's name
   func sortedByMinutesAndNameASC(lh: TimeRealization, rh: TimeRealization) -> Bool {
     if lh.realization.task.minutesForTimes[lh.timeInDay] == rh.realization.task.minutesForTimes[rh.timeInDay] {
-      // время задания равно - соритуем по имени питомца
       
       return lh.realization.task.pet.name.localizedStandardCompare(rh.realization.task.pet.name) == .OrderedAscending
     } else {
@@ -256,7 +245,6 @@ class ScheduleTableViewController: UIViewController {
     }
   }
   
-  // минуты в ночное время
   func minutesIsNight(minutes: Int) -> Bool {
     if 0...299 ~= minutes || 1260...DateHelper.maxMinutes ~= minutes {
       return true
@@ -265,23 +253,22 @@ class ScheduleTableViewController: UIViewController {
     }
   }
   
-  // вычисляем число и значения заголовков
   func calculateHeadersAndIndexes(ofTimeRealizations timeRealizations: [TimeRealization]) {
     let partOfTheDayNames = ["утро", "день", "вечер", "ночь"]
     var partOfTheDayAmount: [Int] = [0, 0, 0, 0]
     
     for tr in timeRealizations {
       switch tr.realization.task.minutesForTimes[tr.timeInDay] {
-      // утро с 5 до 11.59
+      // morning (from 5 to 11.59)
       case 300...719:
         partOfTheDayAmount[0] += 1
-      // день с 12 до 16.59
+      // day (from 12 to 16.59)
       case 720...1019:
         partOfTheDayAmount[1] += 1
-      // вечер c 17 до 20.59
+      // evening (from 17 to 20.59)
       case 1020...1259:
         partOfTheDayAmount[2] += 1
-      // ночь с 21 до 5
+      // night (from 21 to 4.59)
       default:
         partOfTheDayAmount[3] += 1
       }
@@ -319,13 +306,11 @@ class ScheduleTableViewController: UIViewController {
       self.scheduleWasSet = true
     }
     
-    // если view загружено, подгружаем в него данные расписания
     if viewIsReadyToBeLoadedWithSchedule() {
       reloadScheduleTable()
     }
   }
   
-  // проверяем, можно ли обновить view переданными данными
   func viewIsReadyToBeLoadedWithSchedule() -> Bool {
     if isViewLoaded() && scheduleWasSet {
       self.viewWasLoadedWithSchedule = true
@@ -363,7 +348,7 @@ extension ScheduleTableViewController: UITableViewDataSource {
     return UITableViewCell()
   }
   
-  // конфигурируем базовую часть ячейки, общую для всех
+  // configure basic part of a cell, identical both for BasicPetCell and ManyPetsCell
   func configureBasicPetCell(cell: BasicPetCell, forRowAtIndexPath indexPath: NSIndexPath) {
     cell.tintColor = UIColor.lightGrayColor()
     
@@ -395,8 +380,8 @@ extension ScheduleTableViewController: UITableViewDataSource {
     
     configureCellDoneState(cell, forRowAtIndexPath: indexPath)
   }
-  
-  // определяем, detail-кнопка какой ячейки была нажата и вызываем accessoryButtonTappedForRowWithIndexPath
+
+  // determine, which cell contains tapped detail-button and call accessoryButtonTappedForRowWithIndexPath
   func detailButtonTapped(sender: UIButton) {
     let senderPoint = sender.convertPoint(CGPointZero, toView: tableView)
     if let indexPath = tableView.indexPathForRowAtPoint(senderPoint) {
@@ -404,7 +389,7 @@ extension ScheduleTableViewController: UITableViewDataSource {
     }
   }
   
-  // конфигурируем часть ячейки, актуальную только для варианта с множеством питомцев
+  // configure specific part of a ManyPetsCell
   func configureManyPetsCell(cell: ManyPetsCell, forRowAtIndexPath indexPath: NSIndexPath) {
     configureBasicPetCell(cell, forRowAtIndexPath: indexPath)
     
@@ -414,18 +399,17 @@ extension ScheduleTableViewController: UITableViewDataSource {
     cell.petImageView.image = tr.realization.task.pet.image
   }
   
-  // конфигурируем состояние выполненности задания
   func configureCellDoneState(cell: BasicPetCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
     if tr.realization.done[tr.timeInDay] == 1 {
-      // задание выполнено
+      // task is executed
       cell.selectView.hidden = false
       cell.timeLabel.hidden = true
       cell.checkmarkImageView.hidden = false
     } else {
       if tr.realization.done[tr.timeInDay] == 0 {
-        // задание не выполнено
+        // task must be executed but hasn't been yet
         cell.selectView.hidden = true
         cell.timeLabel.hidden = false
         cell.checkmarkImageView.hidden = true
@@ -546,7 +530,6 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
     
     let _ = task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
     
-    
     for realization in task.realizations {
       if let realization = realization as? Realization {
         petsRepository.deleteObject(realization)
@@ -554,7 +537,6 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
     }
     task.realizations = []
     
-    // сохраняем изменения
     petsRepository.saveOrRollback()
     
     updateScheduleTable(withTask: task)

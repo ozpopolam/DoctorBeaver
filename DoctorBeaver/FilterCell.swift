@@ -19,7 +19,7 @@ class FilterCell: UITableViewCell {
   @IBOutlet weak var petNameLabel: UILabel!
   @IBOutlet weak var remainTasksLabel: UILabel!
   @IBOutlet weak var checkmarkImageView: UIImageView!
-  @IBOutlet weak var selectView: UIView!  
+  @IBOutlet weak var selectView: UIView!
   
   override func awakeFromNib() {
     super.awakeFromNib()

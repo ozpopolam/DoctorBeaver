@@ -38,10 +38,10 @@ class MinutesDoseMenuViewController: UIViewController {
   var menuMode: MinutesDoseMenuMode!
   
   // types of cells in table
-  let menuTitleValueCellId = "stgTitleValueCell"
+  let menuTitleValueCellId = "menuTitleValueCell"
   let menuTitleSwitchCellId = "menuTitleSwitchCell"
-  let menuDataPickerCellId = "stgDataPickerCell"
-  let menuDatePickerCellId = "stgDatePickerCell"
+  let menuDataPickerCellId = "menuDataPickerCell"
+  let menuDatePickerCellId = "menuDatePickerCell"
   
   // heights of cells
   let regularCellHeight: CGFloat = 44.0
@@ -253,7 +253,7 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
     
     switch cellType {
     case .TitleValueCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(menuTitleValueCellId) as? StgTitleValueCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuTitleValueCellId) as? MenuTitleValueCell {
         configureTitleValueCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
@@ -265,13 +265,13 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
       }
       
     case .DataPickerCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(menuDataPickerCellId) as? StgDataPickerCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuDataPickerCellId) as? MenuDataPickerCell {
         configureDataPickerCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
       
     case .TimePickerCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(menuDatePickerCellId) as? StgDatePickerCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuDatePickerCellId) as? MenuDatePickerCell {
         configureDatePickerCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
@@ -293,7 +293,7 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
   }
 
 // MARK: Configuration of cells of different types  
-  func configureTitleValueCell(cell: StgTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureTitleValueCell(cell: MenuTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
     cell.tag = menu.cellsTagTypeState[section][row].tag
@@ -338,7 +338,7 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
     }
   }
   
-  func configureDataPickerCell(cell: StgDataPickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureDataPickerCell(cell: MenuDataPickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
     // this cell always lay below MenuTitleValueCell and is used to set its value
     let section = indexPath.section
     let row = indexPath.row
@@ -359,7 +359,7 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
     }
   }
   
-  func configureDatePickerCell(cell: StgDatePickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureDatePickerCell(cell: MenuDatePickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
     
@@ -422,7 +422,7 @@ extension MinutesDoseMenuViewController: UITableViewDelegate {
     // after tapping on these cell, cell with picker must be revealed or hidden
     if cellType == .TitleValueCell {
       
-      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
+      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleValueCell {
         let pickerCellRow = row + 1 // picker lies under tapped cell
         let pickerCellState = menu.cellsTagTypeState[section][pickerCellRow].state
         let pickerCellIndPth = NSIndexPath(forRow: pickerCellRow, inSection: section)
@@ -467,7 +467,7 @@ extension MinutesDoseMenuViewController: UITableViewDelegate {
           menu.cellsTagTypeState[s][r].state = .Hidden
           
           rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? StgTitleValueCell {
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? MenuTitleValueCell {
             // if cell, lying above the picker is TitleValueCell, which displays its content
             cell.valueLabel.textColor = VisualConfiguration.lightGrayColor
           }

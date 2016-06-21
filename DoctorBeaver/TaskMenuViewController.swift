@@ -42,11 +42,11 @@ class TaskMenuViewController: UIViewController {
   // types of cells in table
   let headerId = "headerView"
   let menuTextFieldCellId = "menuTextFieldCell"
-  let stgTitleValueCellId = "stgTitleValueCell"
-  let stgTitleSegmentCellId = "stgTitleSegmentCell"
-  let stgDataPickerCellId = "stgDataPickerCell"
-  let stgDatePickerCellId = "stgDatePickerCell"
-  let stgComplexPickerCellId = "stgComplexPickerCell"
+  let menuTitleValueCellId = "menuTitleValueCell"
+  let menuTitleSegmentCellId = "menuTitleSegmentCell"
+  let menuDataPickerCellId = "menuDataPickerCell"
+  let menuDatePickerCellId = "menuDatePickerCell"
+  let menuComplexPickerCellId = "menuComplexPickerCell"
   
   // heights of cells
   let headerHeight: CGFloat = 22.0
@@ -337,7 +337,7 @@ class TaskMenuViewController: UIViewController {
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == minutesDoseMenuSegueId {
       if let destinationViewController = segue.destinationViewController as? MinutesDoseMenuViewController {
-        if let cell = sender as? StgTitleValueCell {
+        if let cell = sender as? MenuTitleValueCell {
           destinationViewController.task = task
           //destinationViewController.delegate = self
           destinationViewController.menuType = menu.getMinutesDoseMenuType(ofTag: cell.tag)
@@ -367,7 +367,7 @@ extension TaskMenuViewController: UITableViewDataSource {
         let cellTagTypeState = menu.cellsTagTypeState[s][r]
         if cellTagTypeState.type == .TitleSegmentCell && cellTagTypeState.state != .Hidden {
           
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? StgTitleSegmentCell {
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r, inSection: s)) as? MenuTitleSegmentCell {
             cell.hideShowSgCtrl.userInteractionEnabled = menuMode == .Add || menuMode == .Edit
           }
         }
@@ -421,31 +421,31 @@ extension TaskMenuViewController: UITableViewDataSource {
       }
       
     case .TitleValueCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(stgTitleValueCellId) as? StgTitleValueCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuTitleValueCellId) as? MenuTitleValueCell {
         configureTitleValueCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
       
     case .TitleSegmentCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(stgTitleSegmentCellId) as? StgTitleSegmentCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuTitleSegmentCellId) as? MenuTitleSegmentCell {
         configureTitleSegmentCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
       
     case .DataPickerCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(stgDataPickerCellId) as? StgDataPickerCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuDataPickerCellId) as? MenuDataPickerCell {
         configureDataPickerCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
       
     case .TimePickerCell, .DateTimePickerCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(stgDatePickerCellId) as? StgDatePickerCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuDatePickerCellId) as? MenuDatePickerCell {
         configureDatePickerCell(cell, ofType: cellType, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
       
     case .ComplexPickerCell:
-      if let cell = tableView.dequeueReusableCellWithIdentifier(stgComplexPickerCellId) as? StgComplexPickerCell {
+      if let cell = tableView.dequeueReusableCellWithIdentifier(menuComplexPickerCellId) as? MenuComplexPickerCell {
         configureComplexPickerCell(cell, forRowAtIndexPath: indexPath)
         generalCell = cell
       }
@@ -480,7 +480,7 @@ extension TaskMenuViewController: UITableViewDataSource {
     cellState == TaskMenuCellState.Visible ? textField.resignFirstResponder() : textField.becomeFirstResponder()
   }
   
-  func configureTitleValueCell(cell: StgTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureTitleValueCell(cell: MenuTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
     cell.tag = menu.tagForIndexPath(indexPath)
@@ -505,7 +505,7 @@ extension TaskMenuViewController: UITableViewDataSource {
     
   }
   
-  func configureTitleSegmentCell(cell: StgTitleSegmentCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureTitleSegmentCell(cell: MenuTitleSegmentCell, forRowAtIndexPath indexPath: NSIndexPath) {
     // cell with segmented control with two options: 1 - no value, 2 - some values
     let tag = menu.tagForIndexPath(indexPath)
     
@@ -527,8 +527,8 @@ extension TaskMenuViewController: UITableViewDataSource {
     }
   }
   
-  func configureDataPickerCell(cell: StgDataPickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    // this cell always lay below StgTitleValueCell and is used to set its value
+  func configureDataPickerCell(cell: MenuDataPickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    // this cell always lay below MenuTitleValueCell and is used to set its value
     let section = indexPath.section
     let row = indexPath.row
     
@@ -548,7 +548,7 @@ extension TaskMenuViewController: UITableViewDataSource {
     }
   }
   
-  func configureDatePickerCell(cell: StgDatePickerCell, ofType cellType: TaskMenuCellType, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureDatePickerCell(cell: MenuDatePickerCell, ofType cellType: TaskMenuCellType, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
     
@@ -570,7 +570,7 @@ extension TaskMenuViewController: UITableViewDataSource {
     }
   }
   
-  func configureComplexPickerCell(cell: StgComplexPickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func configureComplexPickerCell(cell: MenuComplexPickerCell, forRowAtIndexPath indexPath: NSIndexPath) {
     // cell with segmentd control, which switch between 3 pickers: 2 data-picker and 1 date-picker
     // choice of picker depends on endType: picker for end-times, end-days and end-date
     let section = indexPath.section
@@ -672,7 +672,7 @@ extension TaskMenuViewController: UITableViewDelegate {
     let cellState = menu.cellsTagTypeState[section][row].state
     
     if cellState == .Accessory {
-      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
+      if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleValueCell {
         // prepare to edit minutes or doses of task
         performSegueWithIdentifier(minutesDoseMenuSegueId, sender: cell)
       }
@@ -717,7 +717,7 @@ extension TaskMenuViewController: UITableViewDelegate {
         }
         
         if cellState != .Accessory {
-          if let cell = tableView.cellForRowAtIndexPath(indexPath) as? StgTitleValueCell {
+          if let cell = tableView.cellForRowAtIndexPath(indexPath) as? MenuTitleValueCell {
             if pickerCellState == .Hidden {
               // if cell with picker is about to be revealed, text color of selected cell will become orange (active)
               cell.valueLabel.textColor = VisualConfiguration.textOrangeColor
@@ -762,8 +762,8 @@ extension TaskMenuViewController: UITableViewDelegate {
           menu.cellsTagTypeState[s][r].state = .Hidden // change state to hidden
           rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
           
-          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? StgTitleValueCell {
-            // deactive text color of overlying StgTitleValueCell
+          if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: r - 1, inSection: s)) as? MenuTitleValueCell {
+            // deactive text color of overlying MenuTitleValueCell
             cell.valueLabel.textColor = VisualConfiguration.textGrayColor
           }
         }
@@ -866,7 +866,7 @@ extension TaskMenuViewController: DataPickerViewDelegate {
     if let cellIndexPath = menu.indexPathForTag(picker.tag) {
       
       if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
-        if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? StgComplexPickerCell {
+        if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? MenuComplexPickerCell {
           
           let pickerIsHidden = cell.hidden(forTag: picker.tag)
           if pickerIsHidden {
@@ -902,7 +902,7 @@ extension TaskMenuViewController: DatePickerDelegate {
     if let cellIndexPath = menu.indexPathForTag(picker.tag) {
       
       if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].type == .ComplexPickerCell {
-        if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? StgComplexPickerCell {
+        if let cell = tableView.cellForRowAtIndexPath(cellIndexPath) as? MenuComplexPickerCell {
           return !cell.hidden(forTag: picker.tag)
         }
       } else if menu.cellsTagTypeState[cellIndexPath.section][cellIndexPath.row].state != .Hidden {
@@ -928,8 +928,8 @@ extension TaskMenuViewController: DoubleOptionSegmControlDelegate {
   }
 }
 
- // MARK: StgComplexPickerCellDelegate
-extension TaskMenuViewController: StgComplexPickerCellDelegate {
+ // MARK: MenuComplexPickerCellDelegate
+extension TaskMenuViewController: MenuComplexPickerCellDelegate {
   
   func getPickerOptionsAndInitialValues(bySelectedSegment index: Int, andByTag tag: Int) -> (options: [[String]], initialValues: [String], delegate: DataPickerViewDelegate) {
     // get options and initial values for a picker, corresponding for specific end type (end-days or end-times)

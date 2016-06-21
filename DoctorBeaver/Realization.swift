@@ -9,6 +9,16 @@
 import Foundation
 import CoreData
 
+extension Realization {
+  @NSManaged var task: Task
+  
+  @NSManaged var date: NSDate
+  
+  // -1 - task shoudn't be performed
+  // 0 - task hasn't performed yet
+  // 1 - task was performed
+  @NSManaged var done: [Int]
+}
 
 class Realization: NSManagedObject {
   

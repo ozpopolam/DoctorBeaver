@@ -1,5 +1,5 @@
 //
-//  SettingTitleSegmentCell.swift
+//  MenuTitleSegmentCell.swift
 //  DoctorBeaver
 //
 //  Created by Anastasia Stepanova-Kolupakhina on 29.02.16.
@@ -12,10 +12,10 @@ protocol DoubleOptionSegmControlDelegate: class {
   func segmControl(sgCtrl: UISegmentedControl, didSelectSegment segment: Int)
 }
 
-class StgTitleSegmentCell: UITableViewCell {
+class MenuTitleSegmentCell: UITableViewCell {
   
   @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var hideShowSgCtrl: HideShowSegmentedControl!
+  @IBOutlet weak var hideShowSgCtrl: MenuHideShowSegmentedControl!
   
   weak var delegate: DoubleOptionSegmControlDelegate?
   

@@ -27,12 +27,10 @@ class ScheduleViewController: UIViewController {
   var petsRepository: PetsRepository!
   var viewWasLoadedWithUpToDatePetsRepository = false
   
-  
   var calendarButton: UIButton!
-  // дата для отображения расписания
+  // date selected for schedule
   var date = NSDate()
   
-  // питомцы, которые будут отражены в расписании
   var selectedPets = [Pet]()
   
   let filterSegueId = "filterSegue"
@@ -43,33 +41,24 @@ class ScheduleViewController: UIViewController {
     fakeNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
     fakeNavigationBar.titleLabel.text = "Расписание".uppercaseString
     
-    // два варианта расположения кнопки календаря - слева
+    // two variants of position of a calendar-button - left
     fakeNavigationBar.setButtonImage("calendar", forButton: .Left, withTintColor: UIColor.fogColor())
     fakeNavigationBar.leftButton.addTarget(self, action: #selector(showCalendar(_:)), forControlEvents: .TouchUpInside)
     
-    // справа от центра
+    // and center-right
     fakeNavigationBar.setButtonImage("calendar", forButton: .CenterRight, withTintColor: UIColor.fogColor())
     fakeNavigationBar.centerRightButton.addTarget(self, action: #selector(showCalendar(_:)), forControlEvents: .TouchUpInside)
     
-    // кнопка фильтра
+    // filter-button
     fakeNavigationBar.setButtonImage("filter", forButton: .Right, withTintColor: UIColor.fogColor())
     fakeNavigationBar.rightButton.addTarget(self, action: #selector(showFilter(_:)), forControlEvents: .TouchUpInside)
     
-    // поначалу прячем все кнопки
     fakeNavigationBar.hideAllButtons()
-    
-//    // проверяем, загружен ли контекст
-//    if viewIsReadyToBeLoadedWithPetsRepository() {
-//      fullyReloadSchedule()
-////      // register ScheduleViewController as PetsRepository'observer
-////      petsRepository.addObserver(self)
-//    }
     
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    // прячем navigation bar
     navigationController?.navigationBarHidden = true
     
     if viewIsReadyToBeLoadedWithPetsRepository() {
@@ -77,7 +66,7 @@ class ScheduleViewController: UIViewController {
     }
   }
   
-  // textView указывает на первую строку
+  // textView must show the first line
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     petsNamesText.setContentOffset(CGPointZero, animated: false)
@@ -100,7 +89,6 @@ class ScheduleViewController: UIViewController {
     }
   }
   
-  // проверяем, можно ли обновить view данными из managedContext
   func viewIsReadyToBeLoadedWithPetsRepository() -> Bool {
     if isViewLoaded() && petsRepository != nil && !viewWasLoadedWithUpToDatePetsRepository {
       viewWasLoadedWithUpToDatePetsRepository = true
@@ -110,20 +98,14 @@ class ScheduleViewController: UIViewController {
     }
   }
 
-  // заполняем таблицу с нуля
-  // настраиваем внешний вид по инфо питомца и инициируем отображение расписания
   func fullyReloadSchedule() {
     
-    // настраиваем расположение кнопок и по необходимости выводим предупреждающие надписи
+    // configure positions of buttons and in case of need show warning
     if petsRepository.countAll(Pet.entityName) == 0 {
-      // не зарегестрировано ни одного питомца
-      // прячем все кнопки с nav bar
       fakeNavigationBar.hideAllButtons()
       
-      // очищаем информацию о питомце
+      // hide info of previously shown pet
       emptyPetInfo()
-      
-      // показываем предупреждение
       showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")
       
     } else {
@@ -132,51 +114,41 @@ class ScheduleViewController: UIViewController {
     
   }
   
-  // загружаем только выбранных питомцев
+  // load only selected pets and show them in a schedule
   func reloadSchedule(withNoFetchRequest noFetchRequest: Bool = false) {
-    
-    // прячем view с ошибкой
     hideWarningMessage()
     
     if !noFetchRequest {
-      // загружаем питомцев, которых отметил пользователь
       selectedPets = petsRepository.fetchAllSelectedPets()
     }
     
     if selectedPets.count == 0 {
-      // ни одного питомца не было выбрано для отображения
-      // оставляем только кнопку фильтра, расположенную справа
+      // no pets were selected
+      // only filter button can be accessible
       fakeNavigationBar.showButton(.Right)
       fakeNavigationBar.hideButton(.CenterRight)
       fakeNavigationBar.hideButton(.Left)
       
-      // очищаем информацию о питомце
       emptyPetInfo()
-      
-      // показываем предупреждение
       showWarningMessage("попробуйте сначала выбрать питомца")
       
     } else {
       if selectedPets.count == 1 {
-        // питомец только один
-        // распологаем кнопку календаря и показываем кнопку фильтра
+        // only one selected pet
+        // place calendar button and show filter button
         fakeNavigationBar.showButton(.Right)
         fakeNavigationBar.showButton(.CenterRight)
         calendarButton = fakeNavigationBar.centerRightButton
         fakeNavigationBar.hideButton(.Left)
         
-        // показываем информацию о нем
         showPetInfo(selectedPets[0])
-        
       } else {
-        // много питомцев
-        // распологаем кнопку календаря и показываем кнопку фильтра
+        // many selected pets
         fakeNavigationBar.showButton(.Right)
         fakeNavigationBar.showButton(.Left)
         calendarButton = fakeNavigationBar.leftButton
         fakeNavigationBar.hideButton(.CenterRight)
         
-        // показываем информацию о них
         showPetsInfo(selectedPets)
       }
 
@@ -195,15 +167,13 @@ class ScheduleViewController: UIViewController {
       viewController.update(withDate: date)
     }
   }
-  
-  // показываем view с предупреждением
+ 
   func showWarningMessage(message: String) {
     calendarContainerView.hidden = true
     tableContainerView.hidden = true
     warningLabel.text = message
   }
   
-  // прячем view с предупреждением
   func hideWarningMessage() {
     if calendarContainerView.hidden {
       calendarContainerView.hidden = false
@@ -214,14 +184,12 @@ class ScheduleViewController: UIViewController {
     warningLabel.text = ""
   }
   
-  // очищаем информацию о питомце
   func emptyPetInfo() {
     petNameLabel.hidden = true
     petsNamesText.hidden = true
     setPetImageWithBorder(nil)
   }
   
-  // показываем информацию о питомце
   func showPetInfo(pet: Pet) {
     petNameLabel.hidden = false
     petNameLabel.text = pet.name
@@ -230,12 +198,11 @@ class ScheduleViewController: UIViewController {
     petsNamesText.hidden = true
   }
   
-  // показываем информацию о нескольких питомцах
   func showPetsInfo(pets: [Pet]) {
-    // убираем картинку с питомцем
+    // hide image of previous active single pet
     setPetImageWithBorder(nil)
     
-    // формируем строку с запятыми и пробелами
+    // form line with pets' names
     var petsNames = ""
     for ind in 0..<pets.count {
       petsNames += pets[ind].name
@@ -249,13 +216,11 @@ class ScheduleViewController: UIViewController {
     petsNamesText.textAlignment = .Center
     
     petNameLabel.hidden = true
-    
   }
   
-  // устанавливаем картинку питомца и добавляем рамку
+  // set pet's image with white border
   func setPetImageWithBorder(image: UIImage?) {
     if let image = image {
-      // есть изображение - устанавливаем его
       
       petImageView.image = image
       petImageView.layer.cornerRadius = petImageView.frame.size.width / VisualConfiguration.cornerProportion
@@ -265,14 +230,14 @@ class ScheduleViewController: UIViewController {
       petBorderView.hidden = false
       
     } else {
-      // изображения нет
+      // no image
       petImageView.image = nil
       petBorderView.hidden = true
     }
     
   }
   
-  // была нажата кнопка "Календарь"
+  // calendar button pressev
   func showCalendar(sender: UIButton) {
     
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -313,7 +278,7 @@ class ScheduleViewController: UIViewController {
     
   }
   
-  // была нажата кнопка "Фильтр"
+  // filter button pressed
   func showFilter(sender: UIButton) {
     performSegueWithIdentifier(filterSegueId, sender: self)
   }
@@ -335,7 +300,7 @@ extension ScheduleViewController: PetsRepositoryStateObserver {
   }
 }
 
-// высплывающий календарь
+// popover calendar
 extension ScheduleViewController: UIPopoverPresentationControllerDelegate {
   
   func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -360,7 +325,7 @@ extension ScheduleViewController: UIPopoverPresentationControllerDelegate {
   
 }
 
-// дата из календаря
+// calendar popover picked new date
 extension ScheduleViewController: CalendarPopoverControllerDelegate {
   func calendar(cpc: CalendarPopoverController, didPickDate date: NSDate) {
     dismissViewControllerAnimated(true, completion: nil)
@@ -372,12 +337,11 @@ extension ScheduleViewController: CalendarPopoverControllerDelegate {
   }
 }
 
-// фильтрация питомцев по выбранности
+// filter view picker new selected pets
 extension ScheduleViewController: FilterDelegate {
   func filter(flt: FilterViewController, didPickPets pets: [Pet]) {
     dismissViewControllerAnimated(true, completion: nil)
     
-    // питомцы, отмеченные галочкой для показа
     selectedPets = pets
     reloadSchedule(withNoFetchRequest: true)
   }

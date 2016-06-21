@@ -20,23 +20,33 @@ class TabBarController: UITabBarController {
     
     configureTabBar() // set visual part
     
-//    if true {
-//      _helperDeleteAllData()
-//      let firstLaunch = true
-//      if firstLaunch {
-//        preparePetsRepositoryForUse()
-//      }
-//      _helperPopulateManagedObjectContextWithJsonPetData()
-//    }
+    if firstEverLaunch() {
+      preparePetsRepositoryForUse()
+      populateManagedObjectContextWithJsonPetData()
+    }
     
     self.selectedIndex = scheduleTabInd // begin with schedule tab
-    //self.selectedIndex = petsTabInd // begin with pets tab
+    self.selectedIndex = petsTabInd // begin with pets tab
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
+  }
+  
+  func firstEverLaunch() -> Bool {
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
+    let key = "firstLaunchDidHappen"
+    let firstLaunchDidHappen = defaults.boolForKey(key)
+  
+    if !firstLaunchDidHappen {
+      defaults.setBool(true, forKey: key)
+      return true
+    } else {
+      return false
+    }
   }
   
   func configureTabBar() {
@@ -87,6 +97,11 @@ class TabBarController: UITabBarController {
     let jsonBasicValuesParser = JsonTaskPrimaryValuesParser(forPetsRepository: petsRepository)
     return jsonBasicValuesParser.populateRepositoryWithBasicValues(withFileName: "RuBasicValues", andType: "json")
   }
+  
+  func populateManagedObjectContextWithJsonPetData() {
+    let jsonPetParser = JsonPetsParser(forPetsRepository: petsRepository, withFileName: "RuPets", andType: "json")
+    jsonPetParser.populateManagedObjectContextWithJsonPetData()
+  }
 }
  
 extension TabBarController: UITabBarControllerDelegate {
@@ -120,24 +135,6 @@ extension TabBarController: UITabBarControllerDelegate {
 extension TabBarController: PetsRepositorySettable {
   func setPetsRepository(petsRepository: PetsRepository) {
     self.petsRepository = petsRepository
-  }
-}
-
-// MARK: _HELPERS
-extension TabBarController {
-  func _helperDeleteAllData() {
-    petsRepository.deleteAllObjects(forEntityName: Pet.entityName)
-    petsRepository.deleteAllObjects(forEntityName: PetBasicValues.entityName)
-    petsRepository.deleteAllObjects(forEntityName: TaskTypeItem.entityName)
-    petsRepository.deleteAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)
-    //    print(petsRepository.fetchAllObjects(forEntityName: Pet.entityName)?.count)
-    //    print(petsRepository.fetchAllObjects(forEntityName: TaskTypeItem.entityName)?.count)
-    //    print(petsRepository.fetchAllObjects(forEntityName: TaskTypeItemBasicValues.entityName)?.count)
-  }
-  
-  func _helperPopulateManagedObjectContextWithJsonPetData() {
-    let jsonPetParser = JsonPetsParser(forPetsRepository: petsRepository, withFileName: "RuPets", andType: "json")
-    jsonPetParser.populateManagedObjectContextWithJsonPetData()
   }
 }
  

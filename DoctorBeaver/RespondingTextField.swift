@@ -17,7 +17,7 @@ class RespondingTextField: UITextField {
     userInteractionEnabled = true
     let canBecomeFirstResponder = super.becomeFirstResponder()
     textColor = textColorResponder
-    //print("becomeFirstResponder")
+    
     return canBecomeFirstResponder
   }
   
@@ -25,7 +25,7 @@ class RespondingTextField: UITextField {
     let canResignFirstResponder = super.resignFirstResponder()
     textColor = textColorNonResponder
     userInteractionEnabled = false
-    //print("resignFirstResponder")
+    
     return canResignFirstResponder
   }
   
