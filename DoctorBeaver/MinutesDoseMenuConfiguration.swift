@@ -60,7 +60,7 @@ class MinutesDoseMenuConfiguration {
       pickerOptions = [doseStartTag: task.doseForTimesOptions]
     }
     
-    doseForTimesEqualTitle = task.typeItem.doseForTimesEqualTitle
+    doseForTimesEqualTitle = task.typeItem!.doseForTimesEqualTitle
   }
   
   // forimg the structure of cells, forming the menu

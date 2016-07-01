@@ -101,7 +101,8 @@ class ScheduleViewController: UIViewController {
   func fullyReloadSchedule() {
     
     // configure positions of buttons and in case of need show warning
-    if petsRepository.countAll(Pet.entityName) == 0 {
+    
+    if petsRepository.countAllObjects(ofType: Pet.self) == 0 {
       fakeNavigationBar.hideAllButtons()
       
       // hide info of previously shown pet
@@ -119,7 +120,7 @@ class ScheduleViewController: UIViewController {
     hideWarningMessage()
     
     if !noFetchRequest {
-      selectedPets = petsRepository.fetchAllSelectedPets()
+      selectedPets = petsRepository.fetchSelectedPets()
     }
     
     if selectedPets.count == 0 {

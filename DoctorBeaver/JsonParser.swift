@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreData
 
 class JsonParser {
   let petsRepository: PetsRepository
@@ -81,22 +80,23 @@ class JsonTaskPrimaryValuesParser {
       let commentPlaceholder = dict["commentPlaceholder"] as? String
       else { return nil}
     
-    if let taskTypeItemBasicValues = petsRepository.insertTaskTypeItemBasicValues() {
-      taskTypeItemBasicValues.taskNamePlaceholder = taskNamePlaceholder
-      taskTypeItemBasicValues.separator = separator
-      taskTypeItemBasicValues.startDateTitle = startDateTitle
-      taskTypeItemBasicValues.daysOptions = daysOptions
-      taskTypeItemBasicValues.endDaysOrTimesTitle = endDaysOrTimesTitle
-      taskTypeItemBasicValues.endDaysOrTimesSegmentTitles = endDaysOrTimesSegmentTitles
-      taskTypeItemBasicValues.endDaysOrTimesOptionsPreposition = endDaysOrTimesOptionsPreposition
-      taskTypeItemBasicValues.timesOptions = timesOptions
-      taskTypeItemBasicValues.commentPlaceholder = commentPlaceholder
-      
-      if petsRepository.saveOrRollback() {
-        return taskTypeItemBasicValues
-      }
+    let taskTypeItemBasicValues = TaskTypeItemBasicValues()
+    taskTypeItemBasicValues.taskNamePlaceholder = taskNamePlaceholder
+    taskTypeItemBasicValues.separator = separator
+    taskTypeItemBasicValues.startDateTitle = startDateTitle
+    taskTypeItemBasicValues.daysOptions = daysOptions
+    taskTypeItemBasicValues.endDaysOrTimesTitle = endDaysOrTimesTitle
+    taskTypeItemBasicValues.endDaysOrTimesSegmentTitles = endDaysOrTimesSegmentTitles
+    taskTypeItemBasicValues.endDaysOrTimesOptionsPreposition = endDaysOrTimesOptionsPreposition
+    taskTypeItemBasicValues.timesOptions = timesOptions
+    taskTypeItemBasicValues.commentPlaceholder = commentPlaceholder
+    
+    if petsRepository.add(taskTypeItemBasicValues) {
+      return taskTypeItemBasicValues
+    } else {
+      return nil
     }
-    return nil
+    
   }
   
   func populateRepositoryWithTaskTypeItem(fromJSONDictionary dict: [String: AnyObject], withTaskTypeItemBasicValues basicValues: TaskTypeItemBasicValues) -> TaskTypeItem? {
@@ -130,44 +130,44 @@ class JsonTaskPrimaryValuesParser {
       let frequencyTitle = dict["frequencyTitle"] as? String
       else { return nil }
     
+    let taskTypeItem = TaskTypeItem()
+    taskTypeItem.id = id
+    taskTypeItem.name = name
+    taskTypeItem.iconName = iconName
+    taskTypeItem.doseUnit = doseUnit
     
-    if let taskTypeItem = petsRepository.insertTaskTypeItem() {
-      taskTypeItem.id = id
-      taskTypeItem.name = name
-      taskTypeItem.iconName = iconName
-      taskTypeItem.doseUnit = doseUnit
-      
-      taskTypeItem.sectionTitles = sectionTitles
-      
-      taskTypeItem.timesPerDayTitle = timesPerDayTitle
-      taskTypeItem.timesPerDayOptions = timesPerDayOptions
-      taskTypeItem.timesPerDayForInitialization = timesPerDayForInitialization
-      
-      taskTypeItem.minutesForTimesTitle = minutesForTimesTitle
-      taskTypeItem.minutesForTimesOrderTitles = minutesForTimesOrderTitles
-      taskTypeItem.minutesForTimesForInitialization = minutesForTimesForInitialization
-      
-      taskTypeItem.doseForTimesTitle = doseForTimesTitle
-      taskTypeItem.doseForTimesEqualTitle = doseForTimesEqualTitle
-      taskTypeItem.doseForTimesOrderTitles = doseForTimesOrderTitles
-      taskTypeItem.doseForTimesOptions = doseForTimesOptions
-      taskTypeItem.doseForTimesForInitialization = doseForTimesForInitialization
-      
-      taskTypeItem.specialFeatureTitle = specialFeatureTitle
-      taskTypeItem.specialFeatureOptions = specialFeatureOptions
-      taskTypeItem.specialFeatureForInitialization = specialFeatureForInitialization
-      
-      taskTypeItem.frequencyPreposition = frequencyOptionsPreposition
-      taskTypeItem.frequencySegmentTitles = frequencySegmentTitles
-      taskTypeItem.frequencyTitle = frequencyTitle
-      
-      taskTypeItem.basicValues = basicValues
-      
-      if petsRepository.saveOrRollback() {
-        return taskTypeItem
-      }
+    taskTypeItem.sectionTitles = sectionTitles
+    
+    taskTypeItem.timesPerDayTitle = timesPerDayTitle
+    taskTypeItem.timesPerDayOptions = timesPerDayOptions
+    taskTypeItem.timesPerDayForInitialization = timesPerDayForInitialization
+    
+    taskTypeItem.minutesForTimesTitle = minutesForTimesTitle
+    taskTypeItem.minutesForTimesOrderTitles = minutesForTimesOrderTitles
+    taskTypeItem.minutesForTimesForInitialization = minutesForTimesForInitialization
+    
+    taskTypeItem.doseForTimesTitle = doseForTimesTitle
+    taskTypeItem.doseForTimesEqualTitle = doseForTimesEqualTitle
+    taskTypeItem.doseForTimesOrderTitles = doseForTimesOrderTitles
+    taskTypeItem.doseForTimesOptions = doseForTimesOptions
+    taskTypeItem.doseForTimesForInitialization = doseForTimesForInitialization
+    
+    taskTypeItem.specialFeatureTitle = specialFeatureTitle
+    taskTypeItem.specialFeatureOptions = specialFeatureOptions
+    taskTypeItem.specialFeatureForInitialization = specialFeatureForInitialization
+    
+    taskTypeItem.frequencyPreposition = frequencyOptionsPreposition
+    taskTypeItem.frequencySegmentTitles = frequencySegmentTitles
+    taskTypeItem.frequencyTitle = frequencyTitle
+    
+    taskTypeItem.basicValues = basicValues
+    
+    if petsRepository.add(taskTypeItem) {
+      return taskTypeItem
+    } else {
+      return nil
     }
-    return nil
+    
   }
   
   func populateRepositoryWithPetBasicValues(fromJSONDictionary dict: [String: AnyObject]) -> PetBasicValues? {
@@ -179,19 +179,20 @@ class JsonTaskPrimaryValuesParser {
       let selectedForInitialization = dict["selectedForInitialization"] as? Bool
       else { return nil}
     
-    if let petBasicValues = petsRepository.insertPetBasicValues() {
-      petBasicValues.basicName = basicName
-      petBasicValues.namePlaceholder = namePlaceholder
-      petBasicValues.separator = separator
-      petBasicValues.sectionTitles = sectionTitles
-      petBasicValues.selectedTitle = selectedTitle
-      petBasicValues.selectedForInitialization = selectedForInitialization
-      
-      if petsRepository.saveOrRollback() {
-        return petBasicValues
-      }
+    let petBasicValues = PetBasicValues()
+    petBasicValues.basicName = basicName
+    petBasicValues.namePlaceholder = namePlaceholder
+    petBasicValues.separator = separator
+    petBasicValues.sectionTitles = sectionTitles
+    petBasicValues.selectedTitle = selectedTitle
+    petBasicValues.selectedForInitialization = selectedForInitialization
+    
+    if petsRepository.add(petBasicValues) {
+      return petBasicValues
+    } else {
+      return nil
     }
-    return nil
+    
   }
   
 }
@@ -226,29 +227,34 @@ class JsonPetsParser: JsonParser {
       let jsonTasks = dict["tasks"] as? [[String: AnyObject]]
       else { return }
     
-    let tasks: NSMutableSet = []
+    var tasks = [Task]()
     
     for jsonTask in jsonTasks {
       if let task = populateTaskInManagedObjectContext(fromJSONDictionary: jsonTask) {
-        tasks.addObject(task)
+        
+        tasks.append(task)
       }
     }
     
-    if let pet = petsRepository.insertPet() {
-      
-      if let petBasicValues = petsRepository.fetchPetBasicValues() {
-        pet.basicValues = petBasicValues
-      }
-      
-      pet.name = name
-      pet.imageName = imageName
-      pet.selected = selected
-      pet.tasks = tasks
-      
-      petsRepository.saveOrRollback()
+    let pet = Pet()
+    pet.name = name
+    pet.imageName = imageName
+    pet.selected = selected
+    
+    if let petBasicValues = petsRepository.fetchPetBasicValues() {
+      pet.basicValues = petBasicValues
     } else {
       return
     }
+    
+    if petsRepository.add(pet) {
+      petsRepository.performChanges {
+        for task in tasks {
+          task.pet = pet
+        }
+      }
+    }
+    
   }
   
   func populateTaskInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) -> Task? {
@@ -293,48 +299,56 @@ class JsonPetsParser: JsonParser {
       }
     }
     
-    let realizations: NSMutableOrderedSet = []
+    var realizations = [Realization]()
     for jr in jsonRealizations {
       if let realization = populateRealizationInManagedObjectContext(fromJSONDictionary: jr) {
-        realizations.addObject(realization)
+        realizations.append(realization)
       }
     }
     
-    if let task = petsRepository.insertTask() {
-      task.typeId = typeId
-      
-      if let taskTypeItem = petsRepository.fetchTaskTypeItem(withId: task.typeId) {
-        task.typeItem = taskTypeItem
-      } else {
-        return nil
-      }
-      
-      task.name = name
-      
-      task.timesPerDay = timesPerDay
-      task.minutesForTimes = minutesForTimes
-      task.doseForTimes = doseForTimes
-      task.specialFeature = specialFeature
-      
-      task.startDate = startDate
-      task.frequency = frequency
-      
-      task.endDaysOrTimes = endDaysOrTimes
-      
-      if task.endDaysOrTimes != 0 {
-        task.countEndDate()
-      } else {
-        task.endDate = endDate
-      }
-      
-      task.comment = comment
-      task.realizations = realizations
-      
-      return task
-      
+    let task = Task()
+    
+    task.typeId = typeId
+    
+    if let taskTypeItem = petsRepository.fetchTaskTypeItem(withId: task.typeId) {
+      task.typeItem = taskTypeItem
     } else {
       return nil
     }
+    
+    task.name = name
+    
+    task.timesPerDay = timesPerDay
+    task.minutesForTimes = minutesForTimes
+    task.doseForTimes = doseForTimes
+    
+    task.specialFeature = specialFeature
+    
+    task.startDate = startDate
+    task.frequency = frequency
+    
+    task.endDaysOrTimes = endDaysOrTimes
+    
+    if task.endDaysOrTimes != 0 {
+      task.countEndDate()
+    } else {
+      task.endDate = endDate
+    }
+    
+    task.comment = comment
+    
+    if petsRepository.add(task) {
+      petsRepository.performChanges {
+        for realization in realizations {
+          realization.task = task
+        }
+      }
+      
+      return task
+    } else {
+      return nil
+    }
+    
   }
   
   func populateRealizationInManagedObjectContext(fromJSONDictionary dict: [String: AnyObject]) -> Realization? {
@@ -349,10 +363,11 @@ class JsonPetsParser: JsonParser {
       return nil
     }
     
-    if let realization = petsRepository.insertRealization() {
-      realization.date = date
-      realization.done = done
-      
+    let realization = Realization()
+    realization.date = date
+    realization.done = done
+    
+    if petsRepository.add(realization) {
       return realization
     } else {
       return nil

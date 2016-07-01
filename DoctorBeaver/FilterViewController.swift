@@ -124,7 +124,9 @@ class FilterViewController: UIViewController {
     
     for ind in 0..<pets.count {
       if pets[ind].selected != state {
-        pets[ind].selected = state
+        petsRepository.performChanges {
+          pets[ind].selected = state
+        }
         rows.append(ind)
       }
     }
@@ -261,7 +263,9 @@ extension FilterViewController: UITableViewDelegate {
     let cell = tableView.cellForRowAtIndexPath(indexPath)
     if let cell = cell as? FilterCell {
       let pet = pets[indexPath.row]
-      pet.selected = !pet.selected
+      petsRepository.performChanges {
+        pet.selected = !pet.selected
+      }
       
       configureCellDoneState(cell, forRowAtIndexPath: indexPath)
       

@@ -120,26 +120,22 @@ class PetsViewController: UIViewController {
   
   // Add-button
   func add(sender: UIButton) {
-    if let pet = petsRepository.insertPet() {
-      pet.configureWithBasicValues()
-      performSegueWithIdentifier(addPetSegueId, sender: pet)
-    }
+//    if let pet = petsRepository.insertPet() {
+//      pet.configureWithBasicValues()
+//      performSegueWithIdentifier(addPetSegueId, sender: pet)
+//    }
   }
   
   // fetch data, show warning or reload collection view
   func reloadPetsCollection(withFetchRequest withFetchRequest: Bool = false) {
     
     if withFetchRequest {
-      if petsRepository.countAll(Pet.entityName) == 0 {
-        pets = []
-      } else {
-        pets = petsRepository.fetchAllPets()
-        // get cropped version of all pets' icons
-        croppedPetImages = [ : ]
-        for pet in pets {
-          if let petImage = pet.image {
-            croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
-          }
+      pets = petsRepository.fetchAllPets()
+      // get cropped version of all pets' icons
+      croppedPetImages = [ : ]
+      for pet in pets {
+        if let petImage = pet.image {
+          croppedPetImages[pet.id] = petImage.cropCentralOneThirdSquare()
         }
       }
     }
@@ -324,8 +320,8 @@ extension PetsViewController: PetMenuViewControllerDelegate {
     }
     
     // delete pet and save it
-    petsRepository.deleteObject(pet)
-    petsRepository.saveOrRollback()
+//    petsRepository.deleteObject(pet)
+//    petsRepository.saveOrRollback()
     
     if pets.isEmpty {
       showWarningMessage("попробуйте сначала добавить хотя бы одного питомца")

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class ScheduleTableViewController: UIViewController {
   
@@ -157,13 +157,13 @@ class ScheduleTableViewController: UIViewController {
     
     for pet in pets {
       for task in pet.tasks {
-        if let task = task as? Task {
+        
           
           if task.dateInTaskStartEndRange(date) {
             tasks.append(task)
           }
         }
-      }
+      
     }
     
     return tasks
@@ -183,21 +183,21 @@ class ScheduleTableViewController: UIViewController {
         // task hasn't had a realiation-list -> need to calculate it
         let done = task.getDone(forDate: date)
         
-        if let realization = petsRepository.insertRealization() {
-          realization.task = task
-          realization.date = date
-          realization.done = done
-          
+        let realization = Realization()
+        realization.task = task
+        realization.date = date
+        realization.done = done
+        
+        if petsRepository.add(realization) {
           realizations.append(realization)
-          petsRepository.saveOrRollback()
-        }
+        }        
       }
     }
     return realizations
   }
   
   // find a realization for a specific date from realizations list
-  func getRealization(fromRealizations realizations: NSOrderedSet, forDate date: NSDate) -> Realization? {
+  func getRealization(fromRealizations realizations: LinkingObjects<Realization>, forDate date: NSDate) -> Realization? {
     for realization in realizations {
       if let realization = realization as? Realization {
         if DateHelper.compareDatesToDayUnit(firstDate: date, secondDate: realization.date) == .OrderedSame {
@@ -213,7 +213,7 @@ class ScheduleTableViewController: UIViewController {
     var timeRealizations: [TimeRealization] = []
     
     for realization in realizations {
-      for time in 0..<realization.task.timesPerDay {
+      for time in 0..<realization.task!.timesPerDay {
         // -1 - время не актуально
         if realization.done[time] != -1 {
           timeRealizations.append((timeInDay: time, realization: realization))
@@ -226,17 +226,17 @@ class ScheduleTableViewController: UIViewController {
   
   // sort (time, realization) by time and pet's name
   func sortedByMinutesAndNameASC(lh: TimeRealization, rh: TimeRealization) -> Bool {
-    if lh.realization.task.minutesForTimes[lh.timeInDay] == rh.realization.task.minutesForTimes[rh.timeInDay] {
+    if lh.realization.task!.minutesForTimes[lh.timeInDay] == rh.realization.task!.minutesForTimes[rh.timeInDay] {
       
-      return lh.realization.task.pet.name.localizedStandardCompare(rh.realization.task.pet.name) == .OrderedAscending
+      return lh.realization.task!.pet!.name.localizedStandardCompare(rh.realization.task!.pet!.name) == .OrderedAscending
     } else {
       
-      var lhm = lh.realization.task.minutesForTimes[lh.timeInDay]
+      var lhm = lh.realization.task!.minutesForTimes[lh.timeInDay]
       if minutesIsNight(lhm) {
         lhm += DateHelper.maxMinutes
       }
       
-      var rhm = rh.realization.task.minutesForTimes[rh.timeInDay]
+      var rhm = rh.realization.task!.minutesForTimes[rh.timeInDay]
       if minutesIsNight(rhm) {
         rhm += DateHelper.maxMinutes
       }
@@ -258,7 +258,7 @@ class ScheduleTableViewController: UIViewController {
     var partOfTheDayAmount: [Int] = [0, 0, 0, 0]
     
     for tr in timeRealizations {
-      switch tr.realization.task.minutesForTimes[tr.timeInDay] {
+      switch tr.realization.task!.minutesForTimes[tr.timeInDay] {
       // morning (from 5 to 11.59)
       case 300...719:
         partOfTheDayAmount[0] += 1
@@ -354,20 +354,20 @@ extension ScheduleTableViewController: UITableViewDataSource {
     
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
-    let minutes = tr.realization.task.minutesForTimes[tr.timeInDay]
+    let minutes = tr.realization.task!.minutesForTimes[tr.timeInDay]
     let minutesString = DateHelper.minutesToString(minutes)
     cell.timeLabel.text = minutesString
     
-    let iconName = tr.realization.task.typeItem.iconName
+    let iconName = tr.realization.task!.typeItem!.iconName
     cell.iconImageView.image = UIImage(named: iconName)
     
-    if tr.realization.task.name.isEmpty {
-      cell.taskTitleLabel.text = tr.realization.task.typeItem.name
+    if tr.realization.task!.name.isEmpty {
+      cell.taskTitleLabel.text = tr.realization.task!.typeItem!.name
     } else {
-      cell.taskTitleLabel.text = tr.realization.task.name
+      cell.taskTitleLabel.text = tr.realization.task!.name
     }
     
-    cell.taskDetailLabel.text = tr.realization.task.details(forTime: tr.timeInDay)
+    cell.taskDetailLabel.text = tr.realization.task!.details(forTime: tr.timeInDay)
     
     if let infoIcon = infoIcon {
       let detailButton = UIButton(type: .Custom)
@@ -395,8 +395,8 @@ extension ScheduleTableViewController: UITableViewDataSource {
     
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
-    cell.petNameLabel.text = tr.realization.task.pet.name
-    cell.petImageView.image = tr.realization.task.pet.image
+    cell.petNameLabel.text = tr.realization.task!.pet!.name
+    cell.petImageView.image = tr.realization.task!.pet!.image
   }
   
   func configureCellDoneState(cell: BasicPetCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -511,7 +511,7 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
     
     // delete task and save it
-    petsRepository.deleteObject(task)
+    //petsRepository.deleteObject(task)
     petsRepository.saveOrRollback()
     
     // try to reload table
@@ -528,14 +528,14 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
   func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task) {
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete outdated timeRealizations
     
-    let _ = task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
+    //let _ = task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
     
     for realization in task.realizations {
       if let realization = realization as? Realization {
-        petsRepository.deleteObject(realization)
+        //petsRepository.deleteObject(realization)
       }
     }
-    task.realizations = []
+    //task.realizations = []
     
     petsRepository.saveOrRollback()
     

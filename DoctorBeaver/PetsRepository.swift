@@ -110,7 +110,13 @@ class PetsRepository: PetsRepositoryStateSubject {
     return nil
   }
   
-  
+  func countAllObjects<T: Object>(ofType type: T.Type) -> Int {
+    if let realm = realm {
+      return realm.objects(type).count
+    } else {
+      return 0
+    }
+  }
 
   
 
@@ -134,29 +140,8 @@ class PetsRepository: PetsRepositoryStateSubject {
     return nil
   }
   
-  func insertTaskTypeItem() -> TaskTypeItem? {
-    nil
-  }
-  
-  func insertRealization() -> Realization? {
-    return nil
-  }
-  
-  func insertTask() -> Task? {
-    return nil
-  }
-  
-  func insertPetBasicValues() -> PetBasicValues? {
-    return nil
-  }
-  
-  func insertPet() -> Pet? {
-    return nil
-  }
-  
-  func insertProxyPet() -> Pet? { // is used to store copy of settings of already existing pet
-    nil
-  }
+
+
   
 // MARK: Counting
   func countAll(entityName: String) -> Int {
@@ -169,25 +154,13 @@ class PetsRepository: PetsRepositoryStateSubject {
     return []
   }
   
-  func fetchAllPets() -> [Pet] {
 
-  }
   
-  func fetchAllSelectedPets() -> [Pet] {
 
-    
-    return []
-  }
   
-  func fetchPetBasicValues() -> PetBasicValues? {
 
-    return nil
-  }
   
-  func fetchTaskTypeItem(withId id: Int) -> TaskTypeItem? {
 
-    return nil
-  }
   
   func fetchAllTaskTypeItems() -> [TaskTypeItem] {
 

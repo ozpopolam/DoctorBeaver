@@ -214,12 +214,12 @@ class PetMenuViewController: UIViewController {
       petNameWasEdited = petNameIsDifferent(fromPet: petWithInitialSettings)
       petImageWasEdited = petImageIsDifferent(fromPet: petWithInitialSettings)
       
-      petsRepository.deleteObject(petWithInitialSettings)
+      //petsRepository.deleteObject(petWithInitialSettings)
     }
     
     // if task for storing version of setting was created, need to delete it
     if let petWithPreviousSettings = petWithPreviousSettings {
-      petsRepository.deleteObject(petWithPreviousSettings)
+      //petsRepository.deleteObject(petWithPreviousSettings)
     }
     
     petsRepository.saveOrRollback()
@@ -255,22 +255,22 @@ class PetMenuViewController: UIViewController {
   
   // save initial settings of pet
   func saveInitialSettings() {
-    if petWithInitialSettings == nil {
-      petWithInitialSettings = petsRepository.insertProxyPet()
-      if let petWithInitialSettings = petWithInitialSettings {
-        petWithInitialSettings.copySettingsWithoutTasks(fromPet: pet)
-      }
-    }
+//    if petWithInitialSettings == nil {
+//      petWithInitialSettings = petsRepository.insertProxyPet()
+//      if let petWithInitialSettings = petWithInitialSettings {
+//        petWithInitialSettings.copySettingsWithoutTasks(fromPet: pet)
+//      }
+//    }
   }
   
   // save another version of settings
   func savePreviousSettings() {
-    if petWithPreviousSettings == nil {
-      petWithPreviousSettings = petsRepository.insertProxyPet()
-    }
-    if let petWithPreviousSettings = petWithPreviousSettings {
-      petWithPreviousSettings.copySettingsWithoutTasks(fromPet: pet)
-    }
+//    if petWithPreviousSettings == nil {
+//      petWithPreviousSettings = petsRepository.insertProxyPet()
+//    }
+//    if let petWithPreviousSettings = petWithPreviousSettings {
+//      petWithPreviousSettings.copySettingsWithoutTasks(fromPet: pet)
+//    }
   }
   
   // Cancel-button
@@ -279,7 +279,7 @@ class PetMenuViewController: UIViewController {
       deleteTemporarySettingsStorage()
       
       // delete newly created pet
-      petsRepository.deleteObject(pet)
+      //petsRepository.deleteObject(pet)
       petsRepository.saveOrRollback()
       
       navigationController?.popViewControllerAnimated(true)
@@ -560,7 +560,7 @@ extension PetMenuViewController: UITableViewDataSource {
     let (task, taskIsActive) = getTaskAndActiveness(forIndexPathRow: indexPath.row)
     
     if let task = task, let taskIsActive = taskIsActive {
-      cell.iconImageView.image = UIImage(named: task.typeItem.iconName)
+      cell.iconImageView.image = UIImage(named: task.typeItem!.iconName)
       cell.taskNameLabel.text = task.name
       cell.accessoryView = getAccessoryImageView(withIcon: infoIcon)
       
@@ -849,7 +849,7 @@ extension PetMenuViewController: TaskMenuViewControllerDelegate {
       menu.deleteOneCellForTask()
       
       // delete task and save it
-      petsRepository.deleteObject(task)
+      //petsRepository.deleteObject(task)
       petsRepository.saveOrRollback()
       
       tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: row, inSection: menu.taskSection)], withRowAnimation: .Automatic)

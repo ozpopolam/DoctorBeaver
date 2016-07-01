@@ -415,7 +415,7 @@ class TaskMenuConfiguration {
     switch tag {
       
     case startDatePickerTag:
-      let idDate = NSDate(timeIntervalSince1970: task.pet.id)
+      let idDate = NSDate(timeIntervalSince1970: task.pet!.id)
       if let miDate = DateHelper.calendar.dateByAddingUnit(.Month, value: -1, toDate: idDate, options: []) {
         return (initialDate: task.startDate, minimumDate: miDate)
       } else {

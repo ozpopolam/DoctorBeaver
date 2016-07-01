@@ -72,7 +72,7 @@ class TaskMenuViewController: UIViewController {
     super.viewDidLoad()
     
     decoratedNavigationBar.titleLabel.font = VisualConfiguration.navigationBarFont
-    decoratedNavigationBar.titleLabel.text = task.typeItem.name.uppercaseString
+    decoratedNavigationBar.titleLabel.text = task.typeItem!.name.uppercaseString
     
     // button "Delete" (will be hiden or shown depending on menuMode)
     decoratedNavigationBar.setButtonImage("trash", forButton: .CenterRight, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
@@ -204,11 +204,11 @@ class TaskMenuViewController: UIViewController {
       
       taskWasEdited = taskIsDifferent(fromTask: taskWithInitialSettings) // task was edited
       scheduleWasChanged = taskScheduleIsDifferent(fromTask: taskWithInitialSettings) // schedule was edited in that or some previous iteration
-      petsRepository.deleteObject(taskWithInitialSettings)
+      //petsRepository.deleteObject(taskWithInitialSettings)
     }
     // if task for storing version of setting was created, need to delete it
     if let taskWithPreviousSettings = taskWithPreviousSettings {
-      petsRepository.deleteObject(taskWithPreviousSettings)
+      //petsRepository.deleteObject(taskWithPreviousSettings)
     }
     
     petsRepository.saveOrRollback()
@@ -252,22 +252,22 @@ class TaskMenuViewController: UIViewController {
   
   // save initial settings of task
   func saveInitialSettings() {
-    if taskWithInitialSettings == nil {
-      taskWithInitialSettings = petsRepository.insertTask()
-      if let taskWithInitialSettings = taskWithInitialSettings {
-        taskWithInitialSettings.copySettings(fromTask: task, withPet: true)
-      }
-    }
+//    if taskWithInitialSettings == nil {
+//      taskWithInitialSettings = petsRepository.insertTask()
+//      if let taskWithInitialSettings = taskWithInitialSettings {
+//        taskWithInitialSettings.copySettings(fromTask: task, withPet: true)
+//      }
+//    }
   }
   
   // save another version of settings
   func savePreviousSettings() {
-    if taskWithPreviousSettings == nil {
-      taskWithPreviousSettings = petsRepository.insertTask()
-    }
-    if let taskWithPreviousSettings = taskWithPreviousSettings {
-      taskWithPreviousSettings.copySettings(fromTask: task, withPet: true)
-    }
+//    if taskWithPreviousSettings == nil {
+//      taskWithPreviousSettings = petsRepository.insertTask()
+//    }
+//    if let taskWithPreviousSettings = taskWithPreviousSettings {
+//      taskWithPreviousSettings.copySettings(fromTask: task, withPet: true)
+//    }
   }
   
   // Cancel-button
@@ -277,7 +277,7 @@ class TaskMenuViewController: UIViewController {
       deleteTemporarySettingsStorage()
       
       // delete newly created task
-      petsRepository.deleteObject(task)
+      //petsRepository.deleteObject(task)
       petsRepository.saveOrRollback()
       
       popTaskMenuViewController()
