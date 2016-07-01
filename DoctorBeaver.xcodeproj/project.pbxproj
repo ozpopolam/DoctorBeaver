@@ -51,7 +51,6 @@
 		628425171C84B1450016E32F /* MenuTitleSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628425161C84B1450016E32F /* MenuTitleSegmentCell.swift */; };
 		628425191C85BA5C0016E32F /* MenuHideShowSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628425181C85BA5C0016E32F /* MenuHideShowSegmentedControl.swift */; };
 		628E3CC41C963A55000C122A /* RuPets.json in Resources */ = {isa = PBXBuildFile; fileRef = 628E3CC31C963A55000C122A /* RuPets.json */; };
-		628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */; };
 		628E3CE31C999BF6000C122A /* Realization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E3CE21C999BF6000C122A /* Realization.swift */; };
 		62A785C51C7F77E9009BE27E /* TaskMenuConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */; };
 		62A83B331C6CE13000A8DE8D /* VisualConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A83B321C6CE13000A8DE8D /* VisualConfiguration.swift */; };
@@ -123,7 +122,6 @@
 		628425161C84B1450016E32F /* MenuTitleSegmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTitleSegmentCell.swift; sourceTree = "<group>"; };
 		628425181C85BA5C0016E32F /* MenuHideShowSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuHideShowSegmentedControl.swift; sourceTree = "<group>"; };
 		628E3CC31C963A55000C122A /* RuPets.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RuPets.json; sourceTree = "<group>"; };
-		628E3CC81C975947000C122A /* DoctorBeaver.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DoctorBeaver.xcdatamodel; sourceTree = "<group>"; };
 		628E3CE21C999BF6000C122A /* Realization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Realization.swift; sourceTree = "<group>"; };
 		62A785C41C7F77E9009BE27E /* TaskMenuConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskMenuConfiguration.swift; sourceTree = "<group>"; };
 		62A83B321C6CE13000A8DE8D /* VisualConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualConfiguration.swift; sourceTree = "<group>"; };
@@ -323,7 +321,6 @@
 			children = (
 				62C64DA81CE28C39006B4CEF /* PetsRepository.swift */,
 				620971F21D12EF7600EE9D6B /* ImageFileManager.swift */,
-				628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */,
 				62C64D561CD2D1E2006B4CEF /* Pet.swift */,
 				6277BA981CE9308B006E4607 /* PetBasicValues.swift */,
 				62C64D5A1CD2D1E2006B4CEF /* Task.swift */,
@@ -434,7 +431,6 @@
 				620995191D10B03100C4371D /* ImagePickerOptionsPopoverController.swift in Sources */,
 				6219167E1CEF40EF00F073C7 /* PetImageViewController.swift in Sources */,
 				6219B4741CA06605006E4E14 /* JsonParser.swift in Sources */,
-				628E3CC91C975947000C122A /* DoctorBeaver.xcdatamodeld in Sources */,
 				620372D11C6944CC00352617 /* ScheduleTableViewController.swift in Sources */,
 				627F2CA01C88444A00B9ADFF /* DataPickerView.swift in Sources */,
 				620372D81C6A621000352617 /* ManyPetsCell.swift in Sources */,
@@ -651,19 +647,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		628E3CC71C975947000C122A /* DoctorBeaver.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				628E3CC81C975947000C122A /* DoctorBeaver.xcdatamodel */,
-			);
-			currentVersion = 628E3CC81C975947000C122A /* DoctorBeaver.xcdatamodel */;
-			path = DoctorBeaver.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 620372441C66930300352617 /* Project object */;
 }
