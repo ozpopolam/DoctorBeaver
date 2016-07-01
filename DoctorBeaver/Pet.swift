@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 class Pet: Object {
-  dynamic var id: Double = 0
+  dynamic var id: Double = NSDate().timeIntervalSince1970
   dynamic var basicValues: PetBasicValues?
   
   dynamic var name = ""

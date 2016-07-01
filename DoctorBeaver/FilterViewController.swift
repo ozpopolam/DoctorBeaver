@@ -242,9 +242,8 @@ extension FilterViewController: UITableViewDataSource {
     
     // if there were no changes
     if newSelectedPetsID == selectedPetsID {
-      cancel()
+      delegate?.filterDidCancel(self)
     } else {
-      petsRepository.saveOrRollback()
       delegate?.filter(self, didPickPets: selectedPets)
     }
   }
@@ -252,7 +251,13 @@ extension FilterViewController: UITableViewDataSource {
   // cancel button pressed
   func cancel(sender: UIButton? = nil) {
     
-    petsRepository.rollback()
+    // rollback to initial selection state
+    for pet in pets {
+      petsRepository.performChanges {
+        pet.selected = selectedPetsID.contains(pet.id)
+      }
+    }
+    
     delegate?.filterDidCancel(self)
   }
   

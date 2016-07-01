@@ -342,7 +342,6 @@ extension ScheduleViewController: CalendarPopoverControllerDelegate {
 extension ScheduleViewController: FilterDelegate {
   func filter(flt: FilterViewController, didPickPets pets: [Pet]) {
     dismissViewControllerAnimated(true, completion: nil)
-    
     selectedPets = pets
     reloadSchedule(withNoFetchRequest: true)
   }

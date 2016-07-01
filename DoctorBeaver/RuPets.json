@@ -1,11 +1,11 @@
 {
   "pets": [{
-           "name": "Хеллоупет",
-           "imageName": "DefaultPetImages/cat0",
+           "name": "Белка",
+           "imageName": "DefaultPetImages/dog0",
            "selected": true,
            "tasks": [{
                      "typeId": 0,
-                     "name": "Витамины счастья",
+                     "name": "Витамины счастья Белки",
                      "timesPerDay": 3,
                      "minutesForTimes": [540, 930, 1260],
                      "doseForTimes": ["3|2/3", "1|1/4", " |1/4"],
@@ -14,25 +14,52 @@
                      "frequency": [],
                      "endTimes": 100,
                      "comment": "давать и не жадничать",
-                     "realizations": [{
-                                      "date": "21.06.2016",
-                                      "done": [1, 0, 0]
-                                      }]
+                     "realizations": []
                      }, {
                      "typeId": 6,
-                     "name": "Вакцинация",
+                     "name": "Вакцинация Белки",
                      "timesPerDay": 1,
                      "minutesForTimes": [540],
                      "doseForTimes": [],
                      "specialFeature": "",
                      "startDate": "15.06.2016 15:00",
                      "frequency": [],
-                     "endDate": "16.06.2016 12:00",
+                     "endDate": "16.07.2016 12:00",
                      "comment": "",
-                     "realizations": [{
-                                      "date": "16.06.2016",
-                                      "done": [1]
-                                      }]
+                     "realizations": []
                      }]
-           }]
+           },
+           
+           {
+           "name": "Мяуч",
+           "imageName": "DefaultPetImages/cat0",
+           "selected": true,
+           "tasks": [{
+                     "typeId": 0,
+                     "name": "Витамины счастья Мяуча",
+                     "timesPerDay": 3,
+                     "minutesForTimes": [540, 930, 1260],
+                     "doseForTimes": ["3|2/3", "1|1/4", " |1/4"],
+                     "specialFeature": "независимо от еды",
+                     "startDate": "20.06.2016 15:00",
+                     "frequency": [],
+                     "endTimes": 100,
+                     "comment": "давать и не жадничать",
+                     "realizations": []
+                     }, {
+                     "typeId": 6,
+                     "name": "Вакцинация Мяуча",
+                     "timesPerDay": 1,
+                     "minutesForTimes": [540],
+                     "doseForTimes": [],
+                     "specialFeature": "",
+                     "startDate": "117.06.2016 15:00",
+                     "frequency": [],
+                     "endDate": "20.07.2016 12:00",
+                     "comment": "",
+                     "realizations": []
+                     }]
+           }
+           
+           ]
 }

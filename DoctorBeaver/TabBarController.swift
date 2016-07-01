@@ -20,13 +20,13 @@ class TabBarController: UITabBarController {
     
     configureTabBar() // set visual part
     
-    if firstEverLaunch() {
+    //if firstEverLaunch() {
       preparePetsRepositoryForUse()
       populateManagedObjectContextWithJsonPetData()
-    }
+    //}
     
     self.selectedIndex = scheduleTabInd // begin with schedule tab
-    self.selectedIndex = petsTabInd // begin with pets tab
+    //self.selectedIndex = petsTabInd // begin with pets tab
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }
@@ -94,6 +94,7 @@ class TabBarController: UITabBarController {
   }
   
   func preparePetsRepositoryForUse() -> Bool {
+    petsRepository.deleteAll()
     let jsonBasicValuesParser = JsonTaskPrimaryValuesParser(forPetsRepository: petsRepository)
     return jsonBasicValuesParser.populateRepositoryWithBasicValues(withFileName: "RuBasicValues", andType: "json")
   }
