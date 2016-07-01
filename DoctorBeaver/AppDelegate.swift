@@ -13,10 +13,10 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
-  let petsRepository = PetsRepository(withModelName: "DoctorBeaver")
+  let petsRepository = PetsRepository()
   
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-    if let viewController = window!.rootViewController as? PetsRepositorySettable {
+    if let viewController = window!.rootViewController as? TabBarController {
       viewController.petsRepository = petsRepository
     }
     return true

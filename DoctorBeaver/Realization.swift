@@ -7,34 +7,32 @@
 //
 
 import Foundation
-import CoreData
+import RealmSwift
 
-extension Realization {
-  @NSManaged var task: Task
+class Realization: Object {
+  dynamic var task: Task?
   
-  @NSManaged var date: NSDate
+  dynamic var date = NSDate()
   
   // -1 - task shoudn't be performed
   // 0 - task hasn't performed yet
   // 1 - task was performed
-  @NSManaged var done: [Int]
-}
-
-class Realization: NSManagedObject {
-  
-  static var entityName: String {
+  private dynamic var done_: RealmIntArray?
+  var done: [Int] {
     get {
-      return "Realization"
+      if let done_ = done_ {
+        return done_.toArray()
+      } else { return [] }
+    }
+    set {
+      if done_ == nil {
+        done_ = RealmIntArray()
+      }
+      done_?.updateWith(newValue)
     }
   }
   
-  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
-    if let entity = NSEntityDescription.entityForName(Realization.entityName, inManagedObjectContext: managedContext) {
-      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      date = NSDate()
-      done = []
-    } else {
-      return nil
-    }
+  override static func ignoredProperties() -> [String] {
+    return ["done"]
   }
 }

@@ -7,35 +7,17 @@
 //
 
 import Foundation
-import CoreData
+import RealmSwift
 
-extension PetBasicValues {
-  @NSManaged var basicName: String
-  @NSManaged var namePlaceholder: String
-  @NSManaged var separator: String
+class PetBasicValues: Object {
   
-  @NSManaged var sectionTitles: String
-  @NSManaged var selectedTitle: String
-  @NSManaged var selectedForInitialization: Bool
+  dynamic var basicName = ""
+  dynamic var namePlaceholder = ""
+  dynamic var separator = ""
   
-  @NSManaged var pets: NSSet
-}
-
-class PetBasicValues: NSManagedObject {
+  dynamic var sectionTitles = ""
+  dynamic var selectedTitle = ""
+  dynamic var selectedForInitialization = true
   
-  static var entityName: String {
-    get {
-      return "PetBasicValues"
-    }
-  }
-  
-  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
-    if let entity = NSEntityDescription.entityForName(PetBasicValues.entityName, inManagedObjectContext: managedContext) {
-      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      pets = []
-    } else {
-      return nil
-    }
-  }
-  
+  let pets = LinkingObjects(fromType: Pet.self, property: "basicValues")
 }

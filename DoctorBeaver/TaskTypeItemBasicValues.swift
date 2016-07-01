@@ -7,50 +7,20 @@
 //
 
 import Foundation
-import CoreData
+import RealmSwift
 
-extension TaskTypeItemBasicValues {
-  @NSManaged var typeItem: NSSet
+class TaskTypeItemBasicValues: Object {
+  let typeItem = LinkingObjects(fromType: TaskTypeItem.self, property: "basicValues")
   
-  @NSManaged var taskNamePlaceholder: String
-  @NSManaged var separator: String
+  dynamic var taskNamePlaceholder = ""
+  dynamic var separator = ""
   
-  @NSManaged var startDateTitle: String
-  @NSManaged var daysOptions: String
-  @NSManaged var endDaysOrTimesTitle: String
-  @NSManaged var endDaysOrTimesSegmentTitles: String
-  @NSManaged var endDaysOrTimesOptionsPreposition: String
-  @NSManaged var timesOptions: String
+  dynamic var startDateTitle = ""
+  dynamic var daysOptions = ""
+  dynamic var endDaysOrTimesTitle = ""
+  dynamic var endDaysOrTimesSegmentTitles = ""
+  dynamic var endDaysOrTimesOptionsPreposition = ""
+  dynamic var timesOptions = ""
   
-  @NSManaged var commentPlaceholder: String
-}
-
-class TaskTypeItemBasicValues: NSManagedObject {
-  
-  static var entityName: String {
-    get {
-      return "TaskTypeItemBasicValues"
-    }
-  }
-  
-  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
-    if let entity = NSEntityDescription.entityForName(TaskTypeItemBasicValues.entityName, inManagedObjectContext: managedContext) {
-      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      
-      typeItem = []
-      taskNamePlaceholder = ""
-      separator = ""
-      startDateTitle = ""
-      daysOptions = ""
-      endDaysOrTimesTitle = ""
-      endDaysOrTimesSegmentTitles = ""
-      endDaysOrTimesOptionsPreposition = ""
-      timesOptions = ""
-      commentPlaceholder = ""
-      
-    } else {
-      return nil
-    }
-  }
-  
+  dynamic var commentPlaceholder = ""
 }

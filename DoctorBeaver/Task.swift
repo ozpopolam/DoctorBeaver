@@ -6,53 +6,130 @@
 //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
 //
 
-extension Task {
-  @NSManaged var pet: Pet
+import Foundation
+import RealmSwift
+
+class IntObject: Object {
+  dynamic var value = 0
   
-  @NSManaged var name: String
-  @NSManaged var typeId_: Int32
-  @NSManaged var typeItem: TaskTypeItem
-  
-  @NSManaged var timesPerDay_: Int32
-  @NSManaged var minutesForTimes: [Int]
-  @NSManaged var doseForTimes: [String]
-  @NSManaged var specialFeature: String
-  
-  @NSManaged var startDate: NSDate
-  @NSManaged var frequency: [Int]
-  
-  @NSManaged var endDaysOrTimes_: Int32
-  @NSManaged var endDate: NSDate
-  @NSManaged var comment: String
-  
-  @NSManaged var realizations: NSOrderedSet
+  convenience init(_ intValue: Int) {
+    self.init()
+    self.value = intValue
+  }
 }
 
-import Foundation
-import CoreData
-
-class Task: NSManagedObject {
+class RealmIntArray: Object {
+  let list = List<IntObject>()
   
-  static var entityName: String {
-    get {
-      return "Task"
+  func updateWith(array: [Int]) {
+    list.removeAll()
+    for value in array {
+      list.append(IntObject(value))
     }
   }
   
-  // Int32 conversion for Core Data
-  var typeId: Int {
-    get { return Int(typeId_) }
-    set { typeId_ = Int32(newValue) }
+  func toArray() -> [Int] {
+    var array = [Int]()
+    for ind in 0..<list.count {
+      array.append(list[ind].value)
+    }
+    return array
+  }
+}
+
+class StringObject: Object {
+  dynamic var value = ""
+  
+  convenience init(_ strValue: String) {
+    self.init()
+    self.value = strValue
+  }
+}
+
+class RealmStringArray: Object {
+  let list = List<StringObject>()
+  
+  func updateWith(array: [String]) {
+    list.removeAll()
+    for value in array {
+      list.append(StringObject(value))
+    }
   }
   
-  var timesPerDay: Int {
-    get { return Int(timesPerDay_) }
-    set { timesPerDay_ = Int32(newValue) }
+  func toArray() -> [String] {
+    var array = [String]()
+    for ind in 0..<list.count {
+      array.append(list[ind].value)
+    }
+    return array
+  }
+}
+
+class Task: Object {
+  dynamic var pet: Pet?
+  
+  dynamic var name = ""
+  dynamic var typeId = 0
+  dynamic var typeItem: TaskTypeItem?
+  
+  dynamic var timesPerDay = 0
+  private dynamic var minutesForTimes_: RealmIntArray?
+  var minutesForTimes: [Int] {
+    get {
+      if let minutesForTimes_ = minutesForTimes_ {
+        return minutesForTimes_.toArray()
+      } else { return [] }
+    }
+    set {
+      if minutesForTimes_ == nil {
+        minutesForTimes_ = RealmIntArray()
+      }
+      minutesForTimes_?.updateWith(newValue)
+    }
   }
   
-  var endDaysOrTimes: Int {
-    get { return Int(endDaysOrTimes_) }
-    set { endDaysOrTimes_ = Int32(newValue) }
+  private dynamic var doseForTimes_: RealmStringArray?
+  var doseForTimes: [String] {
+    get {
+      if let doseForTimes_ = doseForTimes_ {
+        return doseForTimes_.toArray()
+      } else { return [] }
+    }
+    set {
+      if doseForTimes_ == nil {
+        doseForTimes_ = RealmStringArray()
+      }
+      doseForTimes_?.updateWith(newValue)
+    }
+  }
+  
+  dynamic var specialFeature = ""
+  
+  dynamic var startDate = NSDate()
+  
+  private dynamic var frequency_: RealmIntArray?
+  var frequency: [Int] {
+    get {
+      if let frequency_ = frequency_ {
+        return frequency_.toArray()
+      } else { return [] }
+    }
+    set {
+      if frequency_ == nil {
+        frequency_ = RealmIntArray()
+      }
+      frequency_?.updateWith(newValue)
+    }
+  }
+  
+  dynamic var endDaysOrTimes = 0
+  dynamic var endDate = NSDate()
+  dynamic var comment = ""
+  
+  let realizations = LinkingObjects(fromType: Realization.self, property: "task")
+  
+  override static func ignoredProperties() -> [String] {
+    return ["minutesForTimes", "doseForTimes", "frequency"]
   }
   
   // endDate can be set specifically or calculated from startDate by adding some days or times
@@ -76,110 +153,102 @@ class Task: NSManagedObject {
     }
   }
   
-  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
-    if let entity = NSEntityDescription.entityForName(Task.entityName, inManagedObjectContext: managedContext) {
-      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      realizations = []
-    } else {
-      return nil
-    }
-  }
   
   func configure(withTypeItem typeItem: TaskTypeItem) {
-    self.typeItem = typeItem
-    
-    name = typeItem.name
-    typeId = typeItem.id
-    
-    timesPerDay = typeItem.timesPerDayForInitialization
-    minutesForTimes = [typeItem.minutesForTimesForInitialization]
-    doseForTimes = [typeItem.doseForTimesForInitialization]
-    specialFeature = typeItem.specialFeatureForInitialization
-
-    startDate = NSDate()
-    frequency = []
-    endDaysOrTimes = 0
-    
-    if let nextDay = DateHelper.calendar.dateByAddingUnit(.Day, value: 1, toDate: startDate, options: []) {
-      endDate = nextDay
-    } else {
-      endDate = startDate
-    }
-    
-    comment = ""
+    //    self.typeItem = typeItem
+    //
+    //    name = typeItem.name
+    //    typeId = typeItem.id
+    //
+    //    timesPerDay = typeItem.timesPerDayForInitialization
+    //    minutesForTimes = [typeItem.minutesForTimesForInitialization]
+    //    doseForTimes = [typeItem.doseForTimesForInitialization]
+    //    specialFeature = typeItem.specialFeatureForInitialization
+    //
+    //    startDate = NSDate()
+    //    frequency = []
+    //    endDaysOrTimes = 0
+    //
+    //    if let nextDay = DateHelper.calendar.dateByAddingUnit(.Day, value: 1, toDate: startDate, options: []) {
+    //      endDate = nextDay
+    //    } else {
+    //      endDate = startDate
+    //    }
+    //
+    //    comment = ""
   }
   
   var doseUnit: String {
     get {
-      return typeItem.doseUnit
+      return typeItem!.doseUnit
     }
   }
   
   var namePlaceholder: String {
     get {
-      return typeItem.basicValues.taskNamePlaceholder
+      return typeItem!.basicValues!.taskNamePlaceholder
     }
   }
   
   var separator: Character {
     get {
-      return typeItem.basicValues.separator.characters.first ?? " "
+      return typeItem!.basicValues!.separator.characters.first ?? " "
     }
   }
   
   var sectionTitles: [String] {
     get {
-      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.sectionTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem!.sectionTitles, withSeparator: separator)
     }
   }
   
   var timesPerDayTitle: String {
     get {
-      return typeItem.timesPerDayTitle
+      return typeItem!.timesPerDayTitle
     }
   }
   var timesPerDayOptions: [String] {
     get {
-      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.timesPerDayOptions, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem!.timesPerDayOptions, withSeparator: separator)
     }
   }
   
   var minutesForTimesTitle: String {
     get {
-      return typeItem.minutesForTimesTitle
+      return typeItem!.minutesForTimesTitle
     }
   }
   var minutesForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.minutesForTimesOrderTitles, withSeparator: separator)
+      let allOrderTitles = String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem!.minutesForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
   
   var doseForTimesTitle: String {
     get {
-      return typeItem.doseForTimesTitle
+      return typeItem!.doseForTimesTitle
     }
   }
   var doseForTimesOrderTitles: [String] {
     get {
-      let allOrderTitles = String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOrderTitles, withSeparator: separator)
+      let allOrderTitles = String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem!.doseForTimesOrderTitles, withSeparator: separator)
       return timesPerDay == 1 ? allOrderTitles[0] : allOrderTitles[1]
     }
   }
   var doseForTimesOptions: [[String]] {
     get {
-      return String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem.doseForTimesOptions, withSeparator: separator)
+      return String.getTwoDimArrayOfStrings(fromUnseparatedString: typeItem!.doseForTimesOptions, withSeparator: separator)
     }
   }
   var doseForTimesForInitialization: String {
     get {
-      return typeItem.doseForTimesForInitialization
+      return typeItem!.doseForTimesForInitialization
     }
   }
   var doseForTimesEqualTitle: String {
     get {
-      return typeItem.doseForTimesEqualTitle
+      return typeItem!.doseForTimesEqualTitle
     }
   }
   
@@ -213,29 +282,29 @@ class Task: NSManagedObject {
   
   var specialFeatureTitle: String {
     get {
-      return typeItem.specialFeatureTitle
+      return typeItem!.specialFeatureTitle
     }
   }
   var specialFeatureOptions: [String] {
     get {
-      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.specialFeatureOptions, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem!.specialFeatureOptions, withSeparator: separator)
     }
   }
   
   var startDateTitle: String {
     get {
-      return typeItem.basicValues.startDateTitle
+      return typeItem!.basicValues!.startDateTitle
     }
   }
   
   var frequencyTitle: String {
     get {
-      return typeItem.frequencyTitle
+      return typeItem!.frequencyTitle
     }
   }
   var frequencySegmentTitles: [String] {
     get {
-      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.frequencySegmentTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem!.frequencySegmentTitles, withSeparator: separator)
     }
   }
   var frequencyOptions: [[String]] {
@@ -243,20 +312,20 @@ class Task: NSManagedObject {
       
       guard !frequencyTitle.isEmpty else { return [] }
       
-      let daysOptions = String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.daysOptions, withSeparator: separator)
-      let daysOptionsWithPrepos = daysOptions.map { typeItem.frequencyPreposition + " " + $0 }
+      let daysOptions = String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem!.basicValues!.daysOptions, withSeparator: separator)
+      let daysOptionsWithPrepos = daysOptions.map { typeItem!.frequencyPreposition + " " + $0 }
       return [daysOptions, daysOptionsWithPrepos]
     }
   }
   
   var endDaysOrTimesTitle: String {
     get {
-      return typeItem.basicValues.endDaysOrTimesTitle
+      return typeItem!.basicValues!.endDaysOrTimesTitle
     }
   }
   var endDaysOrTimesSegmentTitles: [String] {
     get {
-      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem.basicValues.endDaysOrTimesSegmentTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: typeItem!.basicValues!.endDaysOrTimesSegmentTitles, withSeparator: separator)
     }
   }
   
@@ -271,22 +340,22 @@ class Task: NSManagedObject {
     
     var stringOptions = ""
     if endType == .EndDays {
-      stringOptions = typeItem.basicValues.daysOptions
+      stringOptions = typeItem!.basicValues!.daysOptions
     } else if endType == .EndTimes {
-      stringOptions = typeItem.basicValues.timesOptions
+      stringOptions = typeItem!.basicValues!.timesOptions
     }
     
-    let options = String.getOneDimArrayOfStrings(fromUnseparatedString: stringOptions, withSeparator: separator).map { typeItem.basicValues.endDaysOrTimesOptionsPreposition + " " + $0 }
+    let options = String.getOneDimArrayOfStrings(fromUnseparatedString: stringOptions, withSeparator: separator).map { typeItem!.basicValues!.endDaysOrTimesOptionsPreposition + " " + $0 }
     return options
   }
   
   var commentPlaceholder: String {
     get {
-      return typeItem.basicValues.commentPlaceholder
+      return typeItem!.basicValues!.commentPlaceholder
     }
   }
   
-// MARK: methods
+  // MARK: methods
   
   // count endDate if endDays or endTimes was set
   func countEndDate() {
@@ -713,7 +782,7 @@ class Task: NSManagedObject {
           doseForTimes.removeLast()
         }
       }
-    } 
+    }
   }
   
   func setAllDosesEqual() {

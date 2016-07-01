@@ -132,9 +132,3 @@ extension TabBarController: UITabBarControllerDelegate {
   }
 }
  
-extension TabBarController: PetsRepositorySettable {
-  func setPetsRepository(petsRepository: PetsRepository) {
-    self.petsRepository = petsRepository
-  }
-}
- 

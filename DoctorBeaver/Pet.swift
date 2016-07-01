@@ -6,40 +6,23 @@
 //  Copyright © 2016 Anastasia Stepanova-Kolupakhina. All rights reserved.
 //
 
-import UIKit
-import CoreData
+import Foundation
+import RealmSwift
 
-// @NSManaged
-extension Pet {
-  @NSManaged var id: Double
-  @NSManaged var basicValues: PetBasicValues
+class Pet: Object {
+  dynamic var id: Double = 0
+  dynamic var basicValues: PetBasicValues?
   
-  @NSManaged var name: String
-  @NSManaged var selected: Bool
+  dynamic var name = ""
+  dynamic var selected = true
   
-  var imageName: String {
-    set {
-      willChangeValueForKey(imageNameKey)
-      setPrimitiveValue(newValue, forKey: imageNameKey)
+  dynamic var imageName = "" {
+    didSet {
       temporaryImage = nil
-      didChangeValueForKey(imageNameKey)
-    }
-    get {
-      willAccessValueForKey(imageNameKey)
-      if let imNm = primitiveValueForKey(imageNameKey) as? String {
-        didAccessValueForKey(imageNameKey)
-        return imNm
-      } else {
-        didAccessValueForKey(imageNameKey)
-        return ""
-      }
     }
   }
   
-  @NSManaged var tasks: NSSet
-}
-
-class Pet: NSManagedObject {
+  let tasks = LinkingObjects(fromType: Task.self, property: "pet")
   
   private var temporaryImage: UIImage? // temporary storage for image with imageName
   var image: UIImage? {
@@ -71,37 +54,14 @@ class Pet: NSManagedObject {
     }
   }
   
-  let imageNameKey = "imageName"
-  
-  static var entityName: String {
-    get {
-      return "Pet"
-    }
-  }
-  
-  enum Keys: String {
-    case selected = "selected"
-  }
-  
-  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext!) {
-    if let entity = NSEntityDescription.entityForName(Pet.entityName, inManagedObjectContext: managedContext) {
-      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      tasks = []
-    } else {
-      return nil
-    }
+  override static func ignoredProperties() -> [String] {
+    return ["temporaryImage", "image"]
   }
   
   func configureWithBasicValues() {
-    name = basicValues.basicName
+    name = basicValues!.basicName
     selected = true
     imageName = VisualConfiguration.noImageName
-  }
-  
-  func addTask(task: Task) {
-    let mutableTasks = NSMutableSet(set: self.tasks)
-    mutableTasks.addObject(task)
-    self.tasks = mutableTasks
   }
   
   var hasNoTasks: Bool {
@@ -112,25 +72,25 @@ class Pet: NSManagedObject {
   
   var separator: Character {
     get {
-      return basicValues.separator.characters.first ?? " "
+      return basicValues!.separator.characters.first ?? " "
     }
   }
   
   var sectionTitles: [String] {
     get {
-      return String.getOneDimArrayOfStrings(fromUnseparatedString: basicValues.sectionTitles, withSeparator: separator)
+      return String.getOneDimArrayOfStrings(fromUnseparatedString: basicValues!.sectionTitles, withSeparator: separator)
     }
   }
   
   var namePlaceholder: String {
     get {
-      return basicValues.namePlaceholder
+      return basicValues!.namePlaceholder
     }
   }
   
   var selectedTitle: String {
     get {
-      return basicValues.selectedTitle
+      return basicValues!.selectedTitle
     }
   }
   
@@ -178,10 +138,10 @@ class Pet: NSManagedObject {
       (fd, sd) in
       return DateHelper.compareDatesToUnit(firstDate: fd, secondDate: sd, unit: NSCalendarUnit.Minute)
     }
-
+    
     var activeTasks = [Task]()
     var completedTasks = [Task]()
-
+    
     for task in tasks {
       if compareDatesToMinutes(firstDate: task.endDate, secondDate: date) == .OrderedDescending {
         activeTasks.append(task)
@@ -189,7 +149,7 @@ class Pet: NSManagedObject {
         completedTasks.append(task)
       }
     }
-
+    
     activeTasks.sortInPlace{ compareDatesToMinutes(firstDate: $0.endDate, secondDate: $1.endDate) == .OrderedAscending }
     completedTasks.sortInPlace{ compareDatesToMinutes(firstDate: $0.endDate, secondDate: $1.endDate) == .OrderedDescending }
     

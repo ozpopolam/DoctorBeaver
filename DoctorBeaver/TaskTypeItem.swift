@@ -7,107 +7,39 @@
 //
 
 import Foundation
-import CoreData
+import RealmSwift
 
-extension TaskTypeItem {
-  @NSManaged var id_: Int32
-  @NSManaged var name: String
-  @NSManaged var iconName: String
-  @NSManaged var doseUnit: String
+class TaskTypeItem: Object {
+  dynamic var id = 0
+  dynamic var name = ""
+  dynamic var iconName = ""
+  dynamic var doseUnit = ""
   
-  @NSManaged var sectionTitles: String
+  dynamic var sectionTitles = ""
   
-  @NSManaged var timesPerDayTitle: String
-  @NSManaged var timesPerDayOptions: String
-  @NSManaged var timesPerDayForInitialization_: Int32
+  dynamic var timesPerDayTitle = ""
+  dynamic var timesPerDayOptions = ""
+  dynamic var timesPerDayForInitialization = 0
   
-  @NSManaged var minutesForTimesTitle: String
-  @NSManaged var minutesForTimesOrderTitles: String
-  @NSManaged var minutesForTimesForInitialization_: Int32
+  dynamic var minutesForTimesTitle = ""
+  dynamic var minutesForTimesOrderTitles = ""
+  dynamic var minutesForTimesForInitialization = 0
   
-  @NSManaged var doseForTimesTitle: String
-  @NSManaged var doseForTimesEqualTitle: String
-  @NSManaged var doseForTimesOrderTitles: String
-  @NSManaged var doseForTimesOptions: String
-  @NSManaged var doseForTimesForInitialization: String
+  dynamic var doseForTimesTitle = ""
+  dynamic var doseForTimesEqualTitle = ""
+  dynamic var doseForTimesOrderTitles = ""
+  dynamic var doseForTimesOptions = ""
+  dynamic var doseForTimesForInitialization = ""
   
-  @NSManaged var specialFeatureTitle: String
-  @NSManaged var specialFeatureOptions: String
-  @NSManaged var specialFeatureForInitialization: String
+  dynamic var specialFeatureTitle = ""
+  dynamic var specialFeatureOptions = ""
+  dynamic var specialFeatureForInitialization = ""
   
-  @NSManaged var frequencyPreposition: String
-  @NSManaged var frequencySegmentTitles: String
-  @NSManaged var frequencyTitle: String
+  dynamic var frequencyPreposition = ""
+  dynamic var frequencySegmentTitles = ""
+  dynamic var frequencyTitle = ""
   
-  @NSManaged var tasks: NSSet
+  let tasks = LinkingObjects(fromType: Task.self, property: "typeItem")
   
-  @NSManaged var basicValues: TaskTypeItemBasicValues
-}
-
-class TaskTypeItem: NSManagedObject {
-  
-  static var entityName: String {
-    get {
-      return "TaskTypeItem"
-    }
-  }
-  
-  enum Keys: String {
-    case id = "id_"
-  }
-  
-  var id: Int {
-    get { return Int(id_) }
-    set { id_ = Int32(newValue) }
-  }
-  
-  var timesPerDayForInitialization: Int {
-    get { return Int(timesPerDayForInitialization_) }
-    set { timesPerDayForInitialization_ = Int32(newValue) }
-  }
-  
-  var minutesForTimesForInitialization: Int {
-    get { return Int(minutesForTimesForInitialization_) }
-    set { minutesForTimesForInitialization_ = Int32(newValue) }
-  }
-  
-  convenience init?(insertIntoManagedObjectContext managedContext: NSManagedObjectContext) {
-    if let entity = NSEntityDescription.entityForName(TaskTypeItem.entityName, inManagedObjectContext: managedContext) {
-      self.init(entity: entity, insertIntoManagedObjectContext: managedContext)
-      
-      id = -1
-      name = ""
-      iconName = ""
-      doseUnit = ""
-      
-      sectionTitles = ""
-      
-      timesPerDayTitle = ""
-      timesPerDayOptions = ""
-      timesPerDayForInitialization = 0
-
-      minutesForTimesTitle = ""
-      minutesForTimesOrderTitles = ""
-      minutesForTimesForInitialization = 0
-
-      doseForTimesTitle = ""
-      doseForTimesEqualTitle = ""
-      doseForTimesOrderTitles = ""
-      doseForTimesOptions = ""
-      doseForTimesForInitialization = ""
-
-      specialFeatureTitle = ""
-      specialFeatureOptions = ""
-      specialFeatureForInitialization = ""
-
-      frequencyPreposition = ""
-      frequencySegmentTitles = ""
-      frequencyTitle = ""
-      
-      tasks = []
-    } else {
-      return nil
-    }
-  }
-  
+  dynamic var basicValues: TaskTypeItemBasicValues?
 }
