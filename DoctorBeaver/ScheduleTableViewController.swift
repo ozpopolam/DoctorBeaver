@@ -509,7 +509,6 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
   func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
     
-    // delete task
     petsRepository.delete(task)
     
     // try to reload table
