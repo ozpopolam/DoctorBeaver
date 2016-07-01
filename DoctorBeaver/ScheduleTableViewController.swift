@@ -199,10 +199,8 @@ class ScheduleTableViewController: UIViewController {
   // find a realization for a specific date from realizations list
   func getRealization(fromRealizations realizations: LinkingObjects<Realization>, forDate date: NSDate) -> Realization? {
     for realization in realizations {
-      if let realization = realization as? Realization {
-        if DateHelper.compareDatesToDayUnit(firstDate: date, secondDate: realization.date) == .OrderedSame {
-          return realization
-        }
+      if DateHelper.compareDatesToDayUnit(firstDate: date, secondDate: realization.date) == .OrderedSame {
+        return realization
       }
     }
     return nil
@@ -482,14 +480,16 @@ extension ScheduleTableViewController: UITableViewDelegate {
     let tr = timeRealizationForRowAtIndexPath(indexPath)
     
     if tr.realization.done[tr.timeInDay] == 0 {
-      tr.realization.done[tr.timeInDay] = 1
+      petsRepository.performChanges {
+        tr.realization.done[tr.timeInDay] = 1
+      }
     } else {
       if tr.realization.done[tr.timeInDay] == 1 {
-        tr.realization.done[tr.timeInDay] = 0
+        petsRepository.performChanges {
+          tr.realization.done[tr.timeInDay] = 0
+        }
       }
     }
-    
-    petsRepository.saveOrRollback()
     
     if let cell = tableView.cellForRowAtIndexPath(indexPath) as? BasicPetCell {
       configureCellDoneState(cell, forRowAtIndexPath: indexPath)
@@ -507,12 +507,10 @@ extension ScheduleTableViewController: UITableViewDelegate {
 extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
   
   func taskMenuViewController(viewController: TaskMenuViewController, didDeleteTask task: Task) {
-    
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete timeRealizations of task, which is about to be deleted itself
     
-    // delete task and save it
-    //petsRepository.deleteObject(task)
-    petsRepository.saveOrRollback()
+    // delete task
+    petsRepository.delete(task)
     
     // try to reload table
     prepareDataSourceAndReloadTable()

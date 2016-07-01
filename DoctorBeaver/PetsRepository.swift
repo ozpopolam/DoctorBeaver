@@ -60,6 +60,12 @@ class PetsRepository: PetsRepositoryStateSubject {
     }
   }
   
+  func delete(object: Object) -> Bool {
+    return performChanges {
+      realm?.delete(object)
+    }
+  }
+  
   // adding data
   func add(object: Object) -> Bool {
     return performChanges {
