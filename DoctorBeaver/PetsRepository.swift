@@ -9,10 +9,6 @@
 import Foundation
 import CoreData
 
-protocol PetsRepositorySettable: class { // can get and set PetsRepository
-  var petsRepository: PetsRepository! { get set }
-}
-
 // Obverver-subject protocol
 protocol PetsRepositoryStateSubject: class {
   var observers: [WeakPetsRepositoryStateObserver] { get set }
