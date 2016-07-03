@@ -45,7 +45,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     do {
       if let realm = realm {
         try realm.write(changes)
-        
+        notifyObservers()
         return true
       }
     } catch {
