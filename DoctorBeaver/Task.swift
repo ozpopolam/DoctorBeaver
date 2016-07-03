@@ -65,7 +65,7 @@ class RealmStringArray: Object {
   }
 }
 
-class Task: Object {
+class Task: Object, CascadeDeletable {
   dynamic var pet: Pet?
   
   dynamic var name = ""
@@ -127,6 +127,15 @@ class Task: Object {
   dynamic var comment = ""
   
   let realizations = LinkingObjects(fromType: Realization.self, property: "task")
+  
+  // CascadeDeletable
+  var linkedObjectsToDelete: [Object] {
+    var objects = [Object]()
+    for realization in realizations {
+      objects.append(realization)
+    }
+    return objects
+  }
   
   override static func ignoredProperties() -> [String] {
     return ["minutesForTimes", "doseForTimes", "frequency"]

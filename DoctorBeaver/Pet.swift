@@ -9,7 +9,11 @@
 import Foundation
 import RealmSwift
 
-class Pet: Object {
+protocol CascadeDeletable: class {
+  var linkedObjectsToDelete: [Object] { get }
+}
+
+class Pet: Object, CascadeDeletable {
   dynamic var id: Double = NSDate().timeIntervalSince1970
   dynamic var basicValues: PetBasicValues?
   
@@ -52,6 +56,15 @@ class Pet: Object {
     set {
       temporaryImage = newValue
     }
+  }
+  
+  // CascadeDeletable
+  var linkedObjectsToDelete: [Object] {
+    var objects = [Object]()
+    for task in tasks {
+      objects.append(task)
+    }
+    return objects
   }
   
   override static func ignoredProperties() -> [String] {

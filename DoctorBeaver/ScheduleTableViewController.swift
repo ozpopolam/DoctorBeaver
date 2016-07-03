@@ -524,18 +524,7 @@ extension ScheduleTableViewController: TaskMenuViewControllerDelegate {
   
   func taskMenuViewController(viewController: TaskMenuViewController, didFullyEditScheduleOfTask task: Task) {
     timeRealizations = timeRealizations.filter { $0.realization.task != task } // delete outdated timeRealizations
-    
-    //let _ = task.realizations.map{petsRepository.deleteObject($0 as! NSManagedObject)}
-    
-    for realization in task.realizations {
-      if let realization = realization as? Realization {
-        //petsRepository.deleteObject(realization)
-      }
-    }
-    //task.realizations = []
-    
-    petsRepository.saveOrRollback()
-    
+    let _ = task.realizations.map{petsRepository.delete($0)}
     updateScheduleTable(withTask: task)
   }
   

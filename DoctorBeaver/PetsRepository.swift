@@ -61,7 +61,17 @@ class PetsRepository: PetsRepositoryStateSubject {
   }
   
   func delete(object: Object) -> Bool {
-    return performChanges {
+    if let object = object as? CascadeDeletable { // object need to perform cascade deletion for its linked objects
+      let linkedObjectsToDelete = object.linkedObjectsToDelete
+      
+      for object in linkedObjectsToDelete {
+        performChanges {
+          realm?.delete(object)
+        }
+      }
+    }
+    
+    return performChanges { // delete object itself
       realm?.delete(object)
     }
   }
