@@ -100,12 +100,14 @@ class TaskTypeViewController: UIViewController {
   
   // Done-button
   func done(sender: UIButton) {
-//    if let task = petsRepository.insertTask() {
-//      task.pet = pet
-//      task.configure(withTypeItem: typeItems[selectedTypeItemsInd])
-//      self.task = task // save in a variable
-//      performSegueWithIdentifier(addTaskSegueId, sender: task)
-//    }
+    if let task = petsRepository.addTask() {
+      petsRepository.performChanges {
+        task.pet = pet
+        task.configure(withTypeItem: typeItems[selectedTypeItemsInd])
+      }
+      self.task = task // save in a variable
+      performSegueWithIdentifier(addTaskSegueId, sender: task)
+    }
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

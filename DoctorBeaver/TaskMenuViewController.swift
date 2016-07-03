@@ -204,14 +204,12 @@ class TaskMenuViewController: UIViewController {
       
       taskWasEdited = taskIsDifferent(fromTask: taskWithInitialSettings) // task was edited
       scheduleWasChanged = taskScheduleIsDifferent(fromTask: taskWithInitialSettings) // schedule was edited in that or some previous iteration
-      //petsRepository.deleteObject(taskWithInitialSettings)
+      petsRepository.delete(taskWithInitialSettings)
     }
     // if task for storing version of setting was created, need to delete it
     if let taskWithPreviousSettings = taskWithPreviousSettings {
-      //petsRepository.deleteObject(taskWithPreviousSettings)
+      petsRepository.delete(taskWithPreviousSettings)
     }
-    
-    petsRepository.saveOrRollback()
   }
   
   func popTaskMenuViewController() {
@@ -252,22 +250,27 @@ class TaskMenuViewController: UIViewController {
   
   // save initial settings of task
   func saveInitialSettings() {
-//    if taskWithInitialSettings == nil {
-//      taskWithInitialSettings = petsRepository.insertTask()
-//      if let taskWithInitialSettings = taskWithInitialSettings {
-//        taskWithInitialSettings.copySettings(fromTask: task, withPet: true)
-//      }
-//    }
+    if taskWithInitialSettings == nil {
+      if let copyTask = petsRepository.addTask() {
+        taskWithInitialSettings = copyTask
+        petsRepository.performChanges {
+          taskWithInitialSettings?.copySettings(fromTask: task, withPet: true)
+        }
+      }
+    }
   }
   
   // save another version of settings
   func savePreviousSettings() {
-//    if taskWithPreviousSettings == nil {
-//      taskWithPreviousSettings = petsRepository.insertTask()
-//    }
-//    if let taskWithPreviousSettings = taskWithPreviousSettings {
-//      taskWithPreviousSettings.copySettings(fromTask: task, withPet: true)
-//    }
+    if taskWithPreviousSettings == nil {
+      if let copyTask = petsRepository.addTask() {
+        taskWithPreviousSettings = copyTask
+      }
+    }
+    
+    petsRepository.performChanges {
+      taskWithPreviousSettings?.copySettings(fromTask: task, withPet: true)
+    }
   }
   
   // Cancel-button
@@ -277,8 +280,7 @@ class TaskMenuViewController: UIViewController {
       deleteTemporarySettingsStorage()
       
       // delete newly created task
-      //petsRepository.deleteObject(task)
-      petsRepository.saveOrRollback()
+      petsRepository.delete(task)
       
       popTaskMenuViewController()
       return

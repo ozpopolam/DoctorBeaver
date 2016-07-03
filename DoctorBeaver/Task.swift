@@ -164,27 +164,27 @@ class Task: Object, CascadeDeletable {
   
   
   func configure(withTypeItem typeItem: TaskTypeItem) {
-    //    self.typeItem = typeItem
-    //
-    //    name = typeItem.name
-    //    typeId = typeItem.id
-    //
-    //    timesPerDay = typeItem.timesPerDayForInitialization
-    //    minutesForTimes = [typeItem.minutesForTimesForInitialization]
-    //    doseForTimes = [typeItem.doseForTimesForInitialization]
-    //    specialFeature = typeItem.specialFeatureForInitialization
-    //
-    //    startDate = NSDate()
-    //    frequency = []
-    //    endDaysOrTimes = 0
-    //
-    //    if let nextDay = DateHelper.calendar.dateByAddingUnit(.Day, value: 1, toDate: startDate, options: []) {
-    //      endDate = nextDay
-    //    } else {
-    //      endDate = startDate
-    //    }
-    //
-    //    comment = ""
+    self.typeItem = typeItem
+    
+    name = typeItem.name
+    typeId = typeItem.id
+    
+    timesPerDay = typeItem.timesPerDayForInitialization
+    minutesForTimes = [typeItem.minutesForTimesForInitialization]
+    doseForTimes = [typeItem.doseForTimesForInitialization]
+    specialFeature = typeItem.specialFeatureForInitialization
+    
+    startDate = NSDate()
+    frequency = []
+    endDaysOrTimes = 0
+    
+    if let nextDay = DateHelper.calendar.dateByAddingUnit(.Day, value: 1, toDate: startDate, options: []) {
+      endDate = nextDay
+    } else {
+      endDate = startDate
+    }
+    
+    comment = ""
   }
   
   var doseUnit: String {

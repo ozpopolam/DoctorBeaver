@@ -92,11 +92,16 @@ class PetsRepository: PetsRepositoryStateSubject {
         return pet
       }
     }
-    
     return nil
   }
   
-
+  func addTask() -> Task? {
+    let task = Task()
+    if add(task) {
+      return task
+    }
+    return nil
+  }
   
   // fetching data
   func fetchAllPets() -> [Pet] {
@@ -141,6 +146,19 @@ class PetsRepository: PetsRepositoryStateSubject {
     return nil
   }
   
+  func fetchAllTaskTypeItems() -> [TaskTypeItem] {
+    var typeItems = [TaskTypeItem]()
+    
+    if let realm = realm {
+      let results = realm.objects(TaskTypeItem)
+      for result in results {
+        typeItems.append(result)
+      }
+    }
+    
+    return typeItems
+  }
+  
   func countAllObjects<T: Object>(ofType type: T.Type) -> Int {
     if let realm = realm {
       return realm.objects(type).count
@@ -152,7 +170,7 @@ class PetsRepository: PetsRepositoryStateSubject {
   
 
   
-
+//////
   
 
   
@@ -174,38 +192,8 @@ class PetsRepository: PetsRepositoryStateSubject {
 
 
   
-// MARK: Counting
-  func countAll(entityName: String) -> Int {
-    return 0
-  }
-  
-// MARK: Fetching
-  func fetchAllObjects(forEntityName entityName: String) -> [NSManagedObject] {
-
-    return []
-  }
-  
 
   
-
-  
-
-  
-
-  
-  func fetchAllTaskTypeItems() -> [TaskTypeItem] {
-
-    return []
-  }
-  
-// MARK: Deletion
-  func deleteObject(object: NSManagedObject) {
-
-  }
-  
-  func deleteAllObjects(forEntityName entityName: String) {
-
-  }
   
 // MARK: PetsRepositoryStateSubject
   var observers = [WeakPetsRepositoryStateObserver]() // observers for PetsRepository's state change
