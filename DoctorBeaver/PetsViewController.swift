@@ -120,10 +120,12 @@ class PetsViewController: UIViewController {
   
   // Add-button
   func add(sender: UIButton) {
-//    if let pet = petsRepository.insertPet() {
-//      pet.configureWithBasicValues()
-//      performSegueWithIdentifier(addPetSegueId, sender: pet)
-//    }
+    if let pet = petsRepository.addPet() {
+      petsRepository.performChanges {
+        pet.configureWithBasicValues()
+      }
+      performSegueWithIdentifier(addPetSegueId, sender: pet)
+    }
   }
   
   // fetch data, show warning or reload collection view

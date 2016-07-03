@@ -27,6 +27,7 @@ enum PetMenuCellState {
 }
 
 class PetMenuConfiguration {
+  var petsRepository: PetsRepository!
   var pet: Pet!
   
   // structure of menu, consisting of cell
@@ -48,7 +49,8 @@ class PetMenuConfiguration {
   var petHasNoTasksSectionTitle = ""
   
   // configuration of menu
-  func configure(withPet pet: Pet, forMenuMode menuMode: PetMenuMode) {
+  func configure(withPetsRepository petsRepository: PetsRepository, withPet pet: Pet, forMenuMode menuMode: PetMenuMode) {
+    self.petsRepository = petsRepository
     self.pet = pet
     
     sectionTitles = pet.sectionTitles
@@ -118,13 +120,17 @@ class PetMenuConfiguration {
   // after updating task, some cells, which are supposed to show this data, must be reloaded - return their tags
   func updatePet(byTextFieldWithTag tag: Int, byString string: String) {
     if tag == nameTag {
-      pet.name = string
+      petsRepository.performChanges {
+        pet.name = string
+      }
     }
   }
   
   func updatePet(byStateSwitchWithTag tag: Int, byState state: Bool) {
     if tag == selectedTitleTag {
-      pet.selected = state
+      petsRepository.performChanges {
+        pet.selected = state
+      }
     }
   }
   

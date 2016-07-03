@@ -20,8 +20,13 @@ class Pet: Object, CascadeDeletable {
   dynamic var name = ""
   dynamic var selected = true
   
-  dynamic var imageName = "" {
-    didSet {
+  private dynamic var imageName_ = ""
+  var imageName: String {
+    get {
+      return imageName_
+    }
+    set {
+      imageName_ = newValue
       temporaryImage = nil
     }
   }
@@ -112,13 +117,13 @@ class Pet: Object, CascadeDeletable {
     var actTsks = 0
     
     for task in tasks {
-      if let task = task as? Task {
+     
         if DateHelper.calendar.compareDate(task.startDate, toDate: date, toUnitGranularity: .Minute) != .OrderedDescending &&
           DateHelper.calendar.compareDate(date, toDate: task.endDate, toUnitGranularity: .Minute) != .OrderedDescending
         {
           actTsks += 1
         }
-      }
+      
     }
     return actTsks
   }
@@ -142,9 +147,9 @@ class Pet: Object, CascadeDeletable {
   func tasksSortedByActiveness(forDate date: NSDate) -> (active: [Task], completed: [Task]) {
     var tasks = [Task]()
     for task in self.tasks {
-      if let task = task as? Task {
+   
         tasks.append(task)
-      }
+      
     }
     
     let compareDatesToMinutes: (firstDate: NSDate, secondDate: NSDate) -> NSComparisonResult = {

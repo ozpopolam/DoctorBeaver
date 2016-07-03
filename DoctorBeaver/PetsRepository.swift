@@ -45,6 +45,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     do {
       if let realm = realm {
         try realm.write(changes)
+        
         return true
       }
     } catch {
@@ -82,6 +83,20 @@ class PetsRepository: PetsRepositoryStateSubject {
       realm?.add(object)
     }
   }
+  
+  func addPet() -> Pet? {
+    let pet = Pet()
+    if let basicValues = fetchPetBasicValues() {
+      pet.basicValues = basicValues
+      if add(pet) {
+        return pet
+      }
+    }
+    
+    return nil
+  }
+  
+
   
   // fetching data
   func fetchAllPets() -> [Pet] {

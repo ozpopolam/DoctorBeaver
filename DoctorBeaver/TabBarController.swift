@@ -25,8 +25,8 @@ class TabBarController: UITabBarController {
       populateManagedObjectContextWithJsonPetData()
     //}
     
-    self.selectedIndex = scheduleTabInd // begin with schedule tab
-    //self.selectedIndex = petsTabInd // begin with pets tab
+    //self.selectedIndex = scheduleTabInd // begin with schedule tab
+    self.selectedIndex = petsTabInd // begin with pets tab
     delegate = self
     tabBarController(self, didSelectViewController: viewControllers![selectedIndex])
   }

@@ -105,7 +105,7 @@ class PetMenuViewController: UIViewController {
     
     tableView.tableFooterView = UIView(frame: .zero) // hide footer
     
-    menu.configure(withPet: pet, forMenuMode: menuMode)
+    menu.configure(withPetsRepository: petsRepository, withPet: pet, forMenuMode: menuMode)
     
     tasksSortedByActiveness = pet.tasksSortedByActiveness(forDate: NSDate())
     tableView.reloadData()
@@ -214,12 +214,12 @@ class PetMenuViewController: UIViewController {
       petNameWasEdited = petNameIsDifferent(fromPet: petWithInitialSettings)
       petImageWasEdited = petImageIsDifferent(fromPet: petWithInitialSettings)
       
-      //petsRepository.deleteObject(petWithInitialSettings)
+      petsRepository.delete(petWithInitialSettings)
     }
     
     // if task for storing version of setting was created, need to delete it
     if let petWithPreviousSettings = petWithPreviousSettings {
-      //petsRepository.deleteObject(petWithPreviousSettings)
+      petsRepository.delete(petWithPreviousSettings)
     }
     
     petsRepository.saveOrRollback()
@@ -255,22 +255,27 @@ class PetMenuViewController: UIViewController {
   
   // save initial settings of pet
   func saveInitialSettings() {
-//    if petWithInitialSettings == nil {
-//      petWithInitialSettings = petsRepository.insertProxyPet()
-//      if let petWithInitialSettings = petWithInitialSettings {
-//        petWithInitialSettings.copySettingsWithoutTasks(fromPet: pet)
-//      }
-//    }
+    if petWithInitialSettings == nil {
+      if let copyPet = petsRepository.addPet() {
+        petWithInitialSettings = copyPet
+        petsRepository.performChanges {
+          petWithInitialSettings?.copySettingsWithoutTasks(fromPet: pet)
+        }
+      }
+    }
   }
   
   // save another version of settings
   func savePreviousSettings() {
-//    if petWithPreviousSettings == nil {
-//      petWithPreviousSettings = petsRepository.insertProxyPet()
-//    }
-//    if let petWithPreviousSettings = petWithPreviousSettings {
-//      petWithPreviousSettings.copySettingsWithoutTasks(fromPet: pet)
-//    }
+    if petWithPreviousSettings == nil {
+      if let copyPet = petsRepository.addPet() {
+        petWithPreviousSettings = copyPet
+      }
+    }
+    
+    petsRepository.performChanges {
+      petWithPreviousSettings?.copySettingsWithoutTasks(fromPet: pet)
+    }
   }
   
   // Cancel-button
@@ -279,8 +284,7 @@ class PetMenuViewController: UIViewController {
       deleteTemporarySettingsStorage()
       
       // delete newly created pet
-      //petsRepository.deleteObject(pet)
-      petsRepository.saveOrRollback()
+      petsRepository.delete(pet)
       
       navigationController?.popViewControllerAnimated(true)
       return
@@ -323,7 +327,9 @@ class PetMenuViewController: UIViewController {
           if newCustomImage.imageName == pet.imageName { // last remembered custom image is desired image to save
             
             // save new custom image to file system
-            pet.imageName = String(pet.id)
+            petsRepository.performChanges {
+              pet.imageName = String(pet.id)
+            }
             let imageFileManager = ImageFileManager()
             imageFileManager.saveImage(newCustomImage.image, withName: pet.imageName)
           }
@@ -339,7 +345,9 @@ class PetMenuViewController: UIViewController {
   // restore previous settings of task
   func loadPreviousSettings() {
     if let petWithPreviousSettings = petWithPreviousSettings {
-      pet.copySettingsWithoutTasks(fromPet: petWithPreviousSettings)
+      petsRepository.performChanges {
+        pet.copySettingsWithoutTasks(fromPet: petWithPreviousSettings)
+      }
     }
   }
   
@@ -780,14 +788,16 @@ extension PetMenuViewController: StateSwitchDelegate {
   func stateSwitch(stateSwitch: UISwitch, didSetOn setOn: Bool) {
     deactivateAllActiveTextFields()
     menu.updatePet(byStateSwitchWithTag: stateSwitch.tag, byState: setOn)
-    print(pet.selected)
   }
 }
 
 extension PetMenuViewController: PetImageViewControllerDelegate {
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String) {
-    pet.imageName = imageName
+    
+    petsRepository.performChanges {
+      pet.imageName = imageName
+    }
     
     if let cell = getMenuTitleImageCell() {
       cell.imageImageView.image = pet.image
@@ -796,8 +806,10 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
   }
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImage newImage: UIImage, withName newImageName: String) {
-    pet.imageName = newImageName
-    pet.image = newImage
+    petsRepository.performChanges {
+      pet.imageName = newImageName
+      pet.image = newImage
+    }
     
     newCustomImage = (image: newImage, imageName: newImageName)
     
@@ -820,7 +832,10 @@ extension PetMenuViewController: PetImageViewControllerDelegate {
   }
   
   func petImageViewController(viewController: PetImageViewController, didSelectNewImageName imageName: String, andNewImage newImage: UIImage) {
-    pet.imageName = imageName
+    petsRepository.performChanges {
+      pet.imageName = imageName
+    }
+    
   }
   
 }
