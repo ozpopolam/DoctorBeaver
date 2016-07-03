@@ -40,7 +40,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     }
   }()
   
-  // saving data
+// MARK: Saving data
   func performChanges(@noescape changes: () -> Void) -> Bool {
     do {
       if let realm = realm {
@@ -54,7 +54,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     return false
   }
   
-  // deleting data
+// MARK: Deleting data
   func deleteAll() -> Bool {
     return performChanges {
       realm?.deleteAll()
@@ -77,7 +77,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     }
   }
   
-  // adding data
+// MARK: Adding data
   func add(object: Object) -> Bool {
     return performChanges {
       realm?.add(object)
@@ -103,7 +103,7 @@ class PetsRepository: PetsRepositoryStateSubject {
     return nil
   }
   
-  // fetching data
+// MARK: Fetching data
   func fetchAllPets() -> [Pet] {
     var pets = [Pet]()
     
@@ -183,16 +183,6 @@ class PetsRepository: PetsRepositoryStateSubject {
     return true
 
   }
-  
-// MARK: Insertion
-  func insertTaskTypeItemBasicValues() -> TaskTypeItemBasicValues? {
-    return nil
-  }
-  
-
-
-  
-
   
   
 // MARK: PetsRepositoryStateSubject

@@ -324,7 +324,9 @@ class TaskMenuViewController: UIViewController {
   // restore previous settings of task
   func loadPreviousSettings() {
     if let taskWithPreviousSettings = taskWithPreviousSettings {
-      task.copySettings(fromTask: taskWithPreviousSettings)
+      petsRepository.performChanges {
+        task.copySettings(fromTask: taskWithPreviousSettings)
+      }
     }
   }
   
