@@ -23,6 +23,7 @@ enum MinutesDoseMenuCellState {
 }
 
 class MinutesDoseMenuConfiguration {
+  var petsRepository: PetsRepository!
   var task: Task!
   var menuType = MinutesDoseMenuType.Minutes
   
@@ -46,7 +47,8 @@ class MinutesDoseMenuConfiguration {
   var equalDoseSwitchOn = false
   
   // configuration of menu
-  func configure(withTask task: Task, andType type: MinutesDoseMenuType) {
+  func configure(withPetsRepository petsRepository: PetsRepository, withTask task: Task, andType type: MinutesDoseMenuType) {
+    self.petsRepository = petsRepository
     self.task = task
     menuType = type
     equalDoseSwitchOn = task.allDosesAreEqual()
@@ -163,7 +165,6 @@ class MinutesDoseMenuConfiguration {
     } else if menuType == .Dose {
       let time = ( tag - doseStartTag ) / 2
       strValue = task.dosePrintable(forTime: time) + " " + task.doseUnit
-      //tskCnfg.doseString(atInd: indInDoseForTimes) + " " + task.type.doseUnit()
     }
     
     titleValueValues[tag] = strValue
@@ -192,14 +193,6 @@ class MinutesDoseMenuConfiguration {
     return nil
   }
   
-//  func minutesForTimesTitle() -> String {
-//    return task.minutesForTimesTitle
-//  }
-//  
-//  func doseForTimesTitle() -> String {
-//    return task.doseForTimesTitle
-//  }
-  
   func indexPathForTag(tag: Int) -> NSIndexPath? {
     for s in 0..<cellsTagTypeState.count {
       for r in 0..<cellsTagTypeState[s].count {
@@ -211,7 +204,7 @@ class MinutesDoseMenuConfiguration {
     return nil
   }
   
-// MARK: get initial values for picker
+  // MARK: get initial values for picker
   func initialDataPickerValues(withTag tag: Int) -> [String] {
     if tagIsInDoseTags(tag) {
       let time = ( tag - doseStartTag ) / 2
@@ -228,15 +221,6 @@ class MinutesDoseMenuConfiguration {
       return false
     }
   }
-  
-//  func initialDateTimePickerTime(withTag tag: Int) -> Int {
-//    if tagIsInMinutesTags(tag) {
-//      let indInMinutesForTimes = ( tag - minutesStartTag ) / 2
-//      return task.minutesForTimes[indInMinutesForTimes]
-//    } else {
-//      return -1
-//    }
-//  }
   
   func initialDateTimePickerTime(withTag tag: Int) -> (selectedMinutes: Int, minimumMinutes: Int, maximumMinutes: Int) {
     
@@ -269,7 +253,7 @@ class MinutesDoseMenuConfiguration {
     }
   }
   
-// MARK: update task by entered data from cells
+  // MARK: update task by entered data from cells
   // after updating task, some cells, which are supposed to show this data, must be reloaded - return their tags
   func updateTask(byPickerViewWithTag tag: Int, byStrings strings: [String]) -> [Int] {
     
@@ -282,11 +266,15 @@ class MinutesDoseMenuConfiguration {
       
       if equalDoseSwitchOn { // all doses must be equal - set selected dose to all doses of task
         for ind in 0..<task.doseForTimes.count {
-          task.doseForTimes[ind] = dose
+          petsRepository.performChanges {
+            task.doseForTimes[ind] = dose
+          }
         }
       } else { // set selected dose to only one dose of task
         let indInDoseForTimes = ( tag - doseStartTag ) / 2
-        task.doseForTimes[indInDoseForTimes] = dose
+        petsRepository.performChanges {
+          task.doseForTimes[indInDoseForTimes] = dose
+        }
       }
       
       return tagsToUpdate
@@ -303,7 +291,9 @@ class MinutesDoseMenuConfiguration {
     
     if tagIsInMinutesTags(tag) {
       let indInMinutesForTimes = ( tag - minutesStartTag ) / 2
-      task.minutesForTimes[indInMinutesForTimes] = minutes
+      petsRepository.performChanges {
+        task.minutesForTimes[indInMinutesForTimes] = minutes
+      }
       return tagsToUpdate
       
     } else {

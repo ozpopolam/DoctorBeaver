@@ -29,6 +29,7 @@ enum TaskMenuCellState {
 }
 
 class TaskMenuConfiguration {
+  var petsRepository: PetsRepository!
   var task: Task!
   
   // structure of menu, consisting of cell
@@ -80,7 +81,8 @@ class TaskMenuConfiguration {
   var previousDaysTimesDate: (days: Int, times: Int, date: NSDate) = (days: 1, times: 1, date: NSDate())
   
   // configuration of menu
-  func configure(withTask task: Task) {
+  func configure(withPetsRepository petsRepository: PetsRepository, withTask task: Task) {
+    self.petsRepository = petsRepository
     self.task = task
     
     sectionTitles = task.sectionTitles // start with the whole pack pf titles (even empty)
@@ -125,13 +127,13 @@ class TaskMenuConfiguration {
     savePreviousFrequency()
     savePreviousDaysTimesDate()
   }
-
+  
   // forimg the structure of cells, forming the menu
   func configureCellTagTypeState() {
     
     guard sectionTitles.count == 4 else { return }
     
-  //  basic structure of menu
+    //  basic structure of menu
     //    cellTagTypeState = [
     //      [(00, .TextFieldCell, .Visible)],
     //      [
@@ -281,7 +283,7 @@ class TaskMenuConfiguration {
     
     var strValue: String = ""
     switch tag {
-
+      
     case nameTag:
       strValue = task.name
       
@@ -348,11 +350,11 @@ class TaskMenuConfiguration {
     
     titleValueValues[tag] = strValue
   }
-
- // MARK: get initial values for picker
+  
+  // MARK: get initial values for picker
   func initialDataPickerValues(withTag tag: Int, andNewEndType endType: Task.EndType? = nil) -> [String] {
     switch tag {
-
+      
     case timesPerDayPickerTag:
       if task.timesPerDay - 1 >= 0 {
         return [task.timesPerDayOptions[task.timesPerDay - 1]]
@@ -364,7 +366,7 @@ class TaskMenuConfiguration {
       } else {
         return []
       }
-
+      
     case specialFeaturePickerTag:
       return [task.specialFeature]
       
@@ -429,18 +431,21 @@ class TaskMenuConfiguration {
     }
   }
   
- // MARK: update task by entered data from cells
+  // MARK: update task by entered data from cells
   // after updating task, some cells, which are supposed to show this data, must be reloaded - return their tags
   func updateTask(byTextFieldWithTag tag: Int, byString string: String) -> [Int] {
     
     let tagsToUpdate = [tag]
     switch tag {
-
+      
     case nameTag:
-      task.name = string
-
+      petsRepository.performChanges {
+        task.name = string
+      }
     case commentTag:
-      task.comment = string
+      petsRepository.performChanges {
+        task.comment = string
+      }
     default:
       break
     }
@@ -453,37 +458,50 @@ class TaskMenuConfiguration {
     var tagsToUpdate = [tag - 1]
     
     switch tag {
-
+      
     case timesPerDayPickerTag:
       let strValue = strings[0]
       if let ind = task.timesPerDayOptions.indexOf(strValue) {
-        task.timesPerDay = ind + 1
-        
+        petsRepository.performChanges {
+          task.timesPerDay = ind + 1
+        }
         if let pm = previousMinutes[task.timesPerDay] {
-          task.minutesForTimes = pm
+          petsRepository.performChanges {
+            task.minutesForTimes = pm
+          }
         } else {
-          task.correctMinutes()
+          petsRepository.performChanges {
+            task.correctMinutes()
+          }
           savePreviousMinutes()
         }
         
         if let pd = previousDose[task.timesPerDay] {
-          task.doseForTimes = pd
+          petsRepository.performChanges {
+            task.doseForTimes = pd
+          }
         } else {
-          task.correctDose()
+          petsRepository.performChanges {
+            task.correctDose()
+          }
           savePreviousDose()
         }
       }
-
+      
       tagsToUpdate.append(minutesForTimesTitleTag)
       tagsToUpdate.append(doseForTimesTitleTag)
       
     case doseForTimesPickerTag:
-      task.doseForTimes = []
-      task.doseForTimes.append("")
-      task.doseForTimes[0] = task.doseFromArrayOfStrings(strings)
+      petsRepository.performChanges {
+        task.doseForTimes = []
+        task.doseForTimes.append("")
+        task.doseForTimes[0] = task.doseFromArrayOfStrings(strings)
+      }
       
     case specialFeaturePickerTag:
-      task.specialFeature = strings[0]
+      petsRepository.performChanges {
+        task.specialFeature = strings[0]
+      }
       
     case frequencyPickerTag:
       let frequencyOptions = task.frequencyOptions
@@ -491,10 +509,14 @@ class TaskMenuConfiguration {
       let passiveDaysInd = 1
       
       if let ind = frequencyOptions[activeDaysInd].indexOf(strings[activeDaysInd]) {
-        task.frequency[activeDaysInd] = ind + 1
+        petsRepository.performChanges {
+          task.frequency[activeDaysInd] = ind + 1
+        }
       }
       if let ind = frequencyOptions[passiveDaysInd].indexOf(strings[passiveDaysInd]) {
-        task.frequency[passiveDaysInd] = ind + 1
+        petsRepository.performChanges {
+          task.frequency[passiveDaysInd] = ind + 1
+        }
       }
       savePreviousFrequency()
       
@@ -512,9 +534,13 @@ class TaskMenuConfiguration {
       if let ind = endOptions.indexOf(strings[0]) {
         
         if endType == .EndDays {
-          task.endDaysOrTimes = -(ind + 1)
+          petsRepository.performChanges {
+            task.endDaysOrTimes = -(ind + 1)
+          }
         } else {
-          task.endDaysOrTimes = ind + 1
+          petsRepository.performChanges {
+            task.endDaysOrTimes = ind + 1
+          }
         }
         
         savePreviousDaysTimesDate()
@@ -529,7 +555,9 @@ class TaskMenuConfiguration {
   func updateTask(byPickerViewWithTag tag: Int, byMinutes minutes: Int) -> [Int] {
     let tagsToUpdate = [tag - 1]
     if tag == minutesForTimesPickerTag {
-      task.minutesForTimes = [minutes]
+      petsRepository.performChanges {
+        task.minutesForTimes = [minutes]
+      }
     }
     return tagsToUpdate
   }
@@ -539,25 +567,31 @@ class TaskMenuConfiguration {
     
     if tag == startDatePickerTag {
       tagsToUpdate = [startDateTitleTag]
-      task.startDate = value
+      petsRepository.performChanges {
+        task.startDate = value
+      }
       
       let order = DateHelper.calendar.compareDate(task.startDate, toDate: task.endDate,
-        toUnitGranularity: .Minute)
-
+                                                  toUnitGranularity: .Minute)
+      
       if order == .OrderedDescending {
-        task.endDate = task.startDate
-
+        petsRepository.performChanges {
+          task.endDate = task.startDate
+        }
+        
         if task.endType == .EndDate {
           tagsToUpdate.append(endDateTitleTag)
         }
       }
       
     } else {
-
+      
       if tag == endDatePickerTag {
         tagsToUpdate = [endDateTitleTag]
-        task.endDaysOrTimes = 0
-        task.endDate = value
+        petsRepository.performChanges {
+          task.endDaysOrTimes = 0
+          task.endDate = value
+        }
         savePreviousDaysTimesDate()
       }
     }
@@ -571,16 +605,20 @@ class TaskMenuConfiguration {
       
       if segment == 0 { // first option - everyday
         if task.frequency != [] {
-          task.frequency = []
+          petsRepository.performChanges {
+            task.frequency = []
+          }
           tagsToUpdate = [tag]
         }
         
       } else {
         if segment == 1 { // second option - periodically
           if task.frequency == [] {
-            task.frequency = previousFrequency
+            petsRepository.performChanges {
+              task.frequency = previousFrequency
+            }
             tagsToUpdate = [tag]
-          }          
+          }
         }
       }
     }

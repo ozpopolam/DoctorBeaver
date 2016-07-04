@@ -22,12 +22,10 @@ enum MinutesDoseMenuMode {
 }
 
 class MinutesDoseMenuViewController: UIViewController {
-  
   @IBOutlet weak var decoratedNavigationBar: DecoratedNavigationBarView!
   @IBOutlet weak var tableView: UITableView!
   
   var petsRepository: PetsRepository!
-  
   var task: Task! // task's minutes or dose to show or edit
   typealias MinutesDose = (minutes: [Int], dose: [String])
   var minutesDosePreviousSettings: MinutesDose? // needed to store first, second, third... version of values
@@ -74,7 +72,7 @@ class MinutesDoseMenuViewController: UIViewController {
   }
   
   func reloadMinutesDoseMenuTable() {
-    menu.configure(withTask: task, andType: menuType)
+    menu.configure(withPetsRepository: petsRepository, withTask: task, andType: menuType)
     tableView.reloadData()
   }
   
@@ -100,7 +98,7 @@ class MinutesDoseMenuViewController: UIViewController {
       decoratedNavigationBar.rightButton.addTarget(self, action: #selector(done(_:)), forControlEvents: .TouchUpInside)
       
     } else if menuMode == .Show {
-       // browsing settings of task
+      // browsing settings of task
       
       // button "Back"
       decoratedNavigationBar.setButtonImage("back", forButton: .Left, withTintColor: UIColor.fogColor(), withAnimationDuration: animationDuration)
@@ -150,7 +148,7 @@ class MinutesDoseMenuViewController: UIViewController {
     }
   }
   
-// MARK: Actions for buttons
+  // MARK: Actions for buttons
   // Back-button
   func back(sender: UIButton) {
     navigationController?.popViewControllerAnimated(true)
@@ -176,7 +174,7 @@ class MinutesDoseMenuViewController: UIViewController {
       switchWithPreviousSetting = menu.equalDoseSwitchOn // for Dose-type we need to store previous position of all-equal-switch
     }
   }
- 
+  
   // Cancel-button
   func cancel(sender: UIButton) {
     menuMode = .Show // stop editing settings
@@ -218,9 +216,13 @@ class MinutesDoseMenuViewController: UIViewController {
     
     if let minutesDosePreviousSettings = minutesDosePreviousSettings {
       if menuType == .Minutes {
-        task.minutesForTimes = minutesDosePreviousSettings.minutes
+        petsRepository.performChanges {
+          task.minutesForTimes = minutesDosePreviousSettings.minutes
+        }
       } else if menuType == .Dose {
-        task.doseForTimes = minutesDosePreviousSettings.dose
+        petsRepository.performChanges {
+          task.doseForTimes = minutesDosePreviousSettings.dose
+        }
       }
     }
     
@@ -291,8 +293,8 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
       cell.selectionStyle = .None
     }
   }
-
-// MARK: Configuration of cells of different types  
+  
+  // MARK: Configuration of cells of different types
   func configureTitleValueCell(cell: MenuTitleValueCell, forRowAtIndexPath indexPath: NSIndexPath) {
     let section = indexPath.section
     let row = indexPath.row
@@ -323,7 +325,7 @@ extension MinutesDoseMenuViewController: UITableViewDataSource {
     cell.titleLabel.text = menu.doseForTimesEqualTitle
     cell.stateSwitch.userInteractionEnabled = menuMode == .Edit
     configureSwitchTintColor(cell.stateSwitch)
-
+    
     //let allDosesAreEqual = menu.allDosesAreEqual()
     cell.stateSwitch.setOn(menu.equalDoseSwitchOn, animated: false)
   }
@@ -453,7 +455,7 @@ extension MinutesDoseMenuViewController: UITableViewDelegate {
   }
   
   
-// MARK: additional methods to control cells' state
+  // MARK: additional methods to control cells' state
   // change state of open picker cells and return its index paths
   func closeAllOpenPickerCells() -> [NSIndexPath] {
     var rowsToReload: [NSIndexPath] = []
@@ -524,7 +526,7 @@ extension MinutesDoseMenuViewController: UITableViewDelegate {
             rowsToReload.append(NSIndexPath(forRow: r, inSection: s))
           }
         }
-      
+        
       }
     }
     return rowsToReload
@@ -554,7 +556,9 @@ extension MinutesDoseMenuViewController: StateSwitchDelegate {
     
     // check, whether the equal dose was chosen
     if menuType == .Dose && menu.equalDoseSwitchOn {
-      task.setAllDosesEqual()
+      petsRepository.performChanges {
+        task.setAllDosesEqual()
+      }
       menu.configureTitleValueValues()
     }
     
@@ -600,5 +604,5 @@ extension MinutesDoseMenuViewController: DatePickerDelegate {
     return false
   }
 }
-  
+
 

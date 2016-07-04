@@ -131,7 +131,7 @@ class TaskMenuViewController: UIViewController {
   
   // fully reload table with data of task
   func reloadTaskMenuTable() {
-    menu.configure(withTask: task)
+    menu.configure(withPetsRepository: petsRepository, withTask: task)
     tableView.reloadData()
   }
   
@@ -188,7 +188,9 @@ class TaskMenuViewController: UIViewController {
       // task was edited
       if scheduleWasChanged {
         // time frame of task changed
-        task.countEndDate()
+        petsRepository.performChanges {
+          task.countEndDate()
+        }
         delegate?.taskMenuViewController(self, didFullyEditScheduleOfTask: task)
       } else {
         delegate?.taskMenuViewController(self, didSlightlyEditScheduleOfTask: task)
@@ -342,8 +344,9 @@ class TaskMenuViewController: UIViewController {
     if segue.identifier == minutesDoseMenuSegueId {
       if let destinationViewController = segue.destinationViewController as? MinutesDoseMenuViewController {
         if let cell = sender as? MenuTitleValueCell {
+          destinationViewController.petsRepository = petsRepository
           destinationViewController.task = task
-          //destinationViewController.delegate = self
+
           destinationViewController.menuType = menu.getMinutesDoseMenuType(ofTag: cell.tag)
           destinationViewController.menuMode = menuMode == .Show ? .Show : .Edit
           
